@@ -1,0 +1,69 @@
+---
+title: Workshop Python Image Analysis
+jupyter: python3
+---
+
+*Martijn Wehrens, September 2025*
+
+
+
+```{python}
+# The following parameters will detect more white cars:
+MIN_SIZE1 = 400; DISK_SIZE=4; MIN_SIZE2=300 
+```
+
+```{python}
+def gc_content(seq: str) -> float:
+    """Return GC content as a fraction of sequence length."""
+    gc_count = sum(1 for base in seq if base in ["G", "C"])
+    return gc_count / len(seq)
+
+
+def reverse_complement(seq: str) -> str:
+    """Return the reverse complement of a DNA sequence."""
+    complement = {"A": "T", "T": "A", "G": "C", "C": "G"}
+    return "".join(complement[base] for base in reversed(seq))
+
+
+# Now we can reuse the functions on multiple sequences
+sequences = [
+    "ATGCGTATAGCTAGCTAGGCTA",
+    "GGGGCCCCAAAA",
+    "ATATATATAT",
+]
+
+for s in sequences:
+    print(f"Sequence: {s}")
+    print(f"  GC content: {gc_content(s):.2f}")
+    print(f"  Reverse complement: {reverse_complement(s)}")
+    print()
+```
+
+## Answers to exercises 03
+
+```{python}
+img_path = 'images/car/chatGPT_shadybusiness_zoomlow-8bit.tif'
+img_carpark = tiff.imread(img_path)
+
+# threshold such that dark features in the image are selected
+thresh = np.percentile(img_carpark,20)
+img_carpark_bin = img_carpark < thresh
+# select areas that are larger than 500 pixels
+img_carpark_bin = sk.morphology.remove_small_objects(img_carpark_bin, min_size=2000)
+# apply moprhological closing
+img_carpark_bin = sk.morphology.binary_opening(img_carpark_bin, footprint=sk.morphology.disk(4))
+# 2nd size selection
+img_carpark_bin = sk.morphology.remove_small_objects(img_carpark_bin, min_size=1000)
+# get bbox
+labeled_img, n_labels = ndimage.label(img_carpark_bin)
+# highlight the result
+plt.imshow(img_carpark, cmap='gray')
+#plt.contour(img_carpark_bin, colors='r', linewidths=0.5, levels=[0.5])
+# bbox
+for region in sk.measure.regionprops(labeled_img):
+    minr, minc, maxr, maxc = region.bbox
+    rect = plt.Rectangle((minc, minr), maxc - minc, maxr - minr,
+                         fill=False, edgecolor='blue', linewidth=1)
+    plt.gca().add_patch(rect)
+```
+

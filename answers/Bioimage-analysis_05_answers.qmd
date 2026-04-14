@@ -1,0 +1,315 @@
+---
+title: Workshop Python Image Analysis
+jupyter: python3
+---
+
+*Martijn Wehrens, September 2025*
+
+
+
+# Additional convenient code
+
+```{python}
+# Generate a shuffled colormap to be used to color labeled images
+def generate_shuffled_cmap(n_labels=255, seed=42):
+    """ Generate a shuffled colormap to be used to color labeled images,
+    with the first color set to black. """
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import matplotlib.colors as mcolors
+
+    # Generate a colormap with n_labels distinct colors
+    cmap = plt.cm.get_cmap('tab20', n_labels)
+    colors = cmap(np.arange(n_labels))
+
+    # Shuffle the colors except the first one
+    np.random.seed(seed)
+    shuffled_colors = colors.copy()
+    np.random.shuffle(shuffled_colors)  
+
+    # Set the first color to black
+    shuffled_colors[0] = [0, 0, 0, 1]
+
+    # Create a new colormap from the shuffled colors
+    shuffled_cmap = mcolors.ListedColormap(shuffled_colors)
+
+    return shuffled_cmap
+
+shuffled_map = generate_shuffled_cmap()
+```
+
+
+# Collect the relevant code we had earlier
+
+```{python}
+import matplotlib.pyplot as plt
+import seaborn as sns
+import tifffile as tiff
+import numpy as np
+
+import skimage as sk
+from scipy import stats
+from scipy import ndimage
+
+FIGSIZE21 = (10/2.54,5/2.54) 
+FIGSIZE22 = (10/2.54,10/2.54) 
+```
+
+```{python}
+def my_plot_12(img1, img2, mycmap='viridis'):
+    # plot two images side by side
+    fig, axs = plt.subplots(1,2, figsize=FIGSIZE21)
+    _ = axs[0].imshow(img1, cmap=mycmap)
+    _ = axs[1].imshow(img2, cmap=mycmap)  
+    plt.tight_layout()  
+    
+def my_plot_1(img1, mycmap='gray', myfigsize=(5/2.54,5/2.54)):
+    fig, ax = plt.subplots(1,1, figsize=myfigsize)
+    _=plt.imshow(img1, cmap=mycmap)   
+```
+
+```{python}
+# Let's also load an image of some bacteria (Wehrens et al.)
+path_img_ecoli = '../images/biological/microcolony_ecoli.tif'
+img_ecoli = tiff.imread(path_img_ecoli)
+# invert image
+img_ecoli_inv = np.max(img_ecoli)-img_ecoli
+```
+
+```{python}
+# Show the results of LoG on the bacteria
+img_ecoli_gauss = sk.filters.gaussian(img_ecoli_inv, sigma=3)
+edges_log = sk.filters.laplace(img_ecoli_gauss)
+# show both
+my_plot_12(img_ecoli_gauss, edges_log, mycmap='viridis')
+```
+
+```{python}
+# Threshold edges_log by triangle method
+mask_ecoli_log = edges_log > sk.filters.threshold_triangle(edges_log)
+my_plot_1(mask_ecoli_log)
+```
+
+```{python}
+# Let's erode this by 5 px
+mask_ecoli_log_eroded = sk.morphology.erosion(mask_ecoli_log, footprint=sk.morphology.disk(5))
+
+# Show
+my_plot_1(mask_ecoli_log_eroded)
+```
+
+```{python}
+# Triangle threshold
+mask_ecoli_triangle = img_ecoli_inv > sk.filters.threshold_triangle(img_ecoli_inv)
+my_plot_1(mask_ecoli_triangle)
+```
+
+```{python}
+# Let's combine with our original triangle mask
+
+# first remove small objects
+mask_ecoli_triangle_filtered   = sk.morphology.remove_small_objects(mask_ecoli_triangle, min_size=50)
+mask_ecoli_log_eroded_filtered = sk.morphology.remove_small_objects(mask_ecoli_log_eroded, min_size=50)
+
+# Combine
+mask_bacteria_slim = np.logical_and(mask_ecoli_triangle_filtered, mask_ecoli_log_eroded)
+# And label
+mask_bacteria_slim_labeled = sk.measure.label(mask_bacteria_slim)
+my_plot_1(mask_bacteria_slim_labeled, mycmap='viridis')
+```
+
+```{python}
+# This is a great tool to separate one of earlier bacterial images.
+# Apply watershed to mask_ecoli_log, using mask_bacteria_slim_labeled as seeds
+mask_bacteria_combined = sk.segmentation.watershed(-edges_log, markers=mask_bacteria_slim_labeled, mask=mask_ecoli_log)
+
+# Show the result
+my_plot_1(mask_bacteria_combined, mycmap='viridis')
+```
+
+# Creating sensible functions to achieve segmentation
+
+```{python}
+# (img_ecoli_inv needs to be loaded earlier)
+
+
+def my_detect_edges(the_img):
+    """ Detect edges using LoG (Laplacian of Gaussian) """
+    the_img = sk.filters.gaussian(the_img, sigma=3)
+    the_img = sk.filters.laplace(the_img)
+    return the_img
+
+img_ecoli_edges = my_detect_edges(img_ecoli_inv)
+my_plot_1(img_ecoli_edges)
+```
+
+```{python}
+
+def apply_triangle_n_polish(the_img):
+    """ Apply triangle threshold and remove small parts"""
+    the_mask = the_img > sk.filters.threshold_triangle(the_img)
+    the_mask_filtered = sk.morphology.remove_small_objects(the_mask, min_size=50)
+    return the_mask_filtered
+
+mask_ecoli = apply_triangle_n_polish(img_ecoli_inv)
+mask_ecoli_edges = apply_triangle_n_polish(img_ecoli_edges)
+
+my_plot_12(mask_ecoli, mask_ecoli_edges)
+```
+
+```{python}
+
+# Get foreground 
+mask_foreground = sk.morphology.dilation(mask_ecoli, footprint=sk.morphology.disk(5))
+
+def produce_seeds(mask_ecoli_edges, mask_foreground):
+    """ Combine edge and raw mask to produce regions that correspond to 
+    single E. coli, which can be used as seeds."""
+    
+    # Let's erode this by 5 px
+    mask_ecoli_edges_eroded = sk.morphology.erosion(mask_ecoli_edges, footprint=sk.morphology.disk(5))
+
+    # Combine them to get seeds
+    mask_seeds = np.logical_and(mask_ecoli_edges_eroded, 
+                                mask_foreground)
+    
+    # Label
+    mask_seeds_labeled = sk.measure.label(mask_seeds)
+    
+    return mask_seeds_labeled
+
+mask_seeds_labeled = produce_seeds(mask_ecoli_edges, mask_ecoli)
+
+# my_plot_12(mask_ecoli_edges_eroded, mask_ecoli_dilated)
+my_plot_1(mask_seeds_labeled)
+```
+
+```{python}
+
+# Apply the watershed    
+mask_bacteria_watershed = sk.segmentation.watershed(~mask_ecoli_edges, markers=mask_seeds_labeled, mask=mask_ecoli_log)
+
+my_plot_12(~mask_ecoli_edges, mask_seeds_labeled)
+
+# Show the result
+my_plot_1(mask_bacteria_watershed, mycmap='viridis')
+```
+
+# The segmentation strategy using subfunctions
+
+```{python}
+#def segment_bacterial_img(img_ecoli):
+#    """ Combine multiple operations to get segmented image from microscopy picture """
+    
+img_ecoli = tiff.imread(path_img_ecoli)
+
+img_ecoli_inv = np.max(img_ecoli)-img_ecoli
+img_ecoli_edges = my_detect_edges(img_ecoli_inv)
+mask_ecoli = apply_triangle_n_polish(img_ecoli_inv)
+mask_ecoli_edges = apply_triangle_n_polish(img_ecoli_edges)
+my_plot_12(mask_ecoli, mask_ecoli_edges)
+
+mask_foreground = sk.morphology.dilation(mask_ecoli, footprint=sk.morphology.disk(5))
+mask_seeds_labeled = produce_seeds(mask_ecoli_edges, mask_foreground)
+my_plot_12(mask_foreground, mask_seeds_labeled)
+
+mask_ecoli_watershed = sk.segmentation.watershed(~mask_ecoli_edges, markers=mask_seeds_labeled, mask=mask_ecoli_edges)
+my_plot_1(mask_ecoli_watershed)    
+    
+```
+
+### (Optional) Function to remove large areas
+
+```{python}
+
+# img_ecoli = tiff.imread(path_img_ecoli)
+img_ecoli = tiff.imread('/Users/m.wehrens/Data_notbacked/2025_Py-Image-wokshop_Filamentation-example-data/images/pos3crop-p-2-1247.tif')
+
+img_ecoli_inv = np.max(img_ecoli)-img_ecoli
+img_ecoli_edges = my_detect_edges(img_ecoli_inv)
+mask_ecoli = apply_triangle_n_polish(img_ecoli_inv)
+mask_ecoli_edges = apply_triangle_n_polish(img_ecoli_edges)
+my_plot_12(mask_ecoli, mask_ecoli_edges)
+
+mask_foreground = sk.morphology.dilation(mask_ecoli, footprint=sk.morphology.disk(5))
+mask_seeds_labeled = produce_seeds(mask_ecoli_edges, mask_foreground)
+my_plot_12(mask_foreground, mask_seeds_labeled)
+
+mask_ecoli_watershed = sk.segmentation.watershed(~mask_ecoli_edges, markers=mask_seeds_labeled, mask=mask_ecoli_edges)
+my_plot_1(mask_ecoli_watershed, mycmap=shuffled_map)  
+
+def remove_large_objects(the_img, min_size=400**2):
+
+    mask_large_obj_to_remove = sk.morphology.remove_small_objects(the_img, min_size=min_size)
+    the_img[mask_large_obj_to_remove>0] = 0
+    return the_img
+
+mask_ecoli_watershed_nolarge = remove_large_objects(mask_ecoli_watershed)
+my_plot_1(mask_ecoli_watershed_nolarge, mycmap=shuffled_map)  
+
+
+    
+    
+```
+
+# Creating one segmentation function
+
+```{python}
+def segment_bacterial_img(img_ecoli, min_size=160000):
+    """ Combine multiple operations to get segmented image from microscopy picture """
+        
+    img_ecoli_inv = np.max(img_ecoli)-img_ecoli
+    img_ecoli_edges = my_detect_edges(img_ecoli_inv)
+    mask_ecoli = apply_triangle_n_polish(img_ecoli_inv)
+    mask_ecoli_edges = apply_triangle_n_polish(img_ecoli_edges)
+    # my_plot_12(mask_ecoli, mask_ecoli_edges)
+
+    # detect foreground
+    mask_foreground = sk.morphology.dilation(mask_ecoli, footprint=sk.morphology.disk(5)) # option 1    
+    
+    mask_seeds_labeled = produce_seeds(mask_ecoli_edges, mask_foreground)
+    # my_plot_12(mask_foreground, mask_seeds_labeled)
+
+    mask_ecoli_watershed = sk.segmentation.watershed(~mask_ecoli_edges, markers=mask_seeds_labeled, 
+                                                     mask=mask_ecoli_edges)
+    # my_plot_1(mask_ecoli_watershed)
+    
+    # optional, large object removal
+    mask_ecoli_watershed = remove_large_objects(mask_ecoli_watershed, 
+                                                min_size=min_size)
+            
+    return mask_ecoli_watershed
+
+mask_ecoli_watershed = segment_bacterial_img(img_ecoli)
+my_plot_1(mask_ecoli_watershed, mycmap='viridis')
+```
+
+```{python}
+# now apply it to a few other images
+
+# 1247
+img_ecoli_1247 = tiff.imread('/Users/m.wehrens/Data_notbacked/2025_Py-Image-wokshop_Filamentation-example-data/images/pos3crop-p-2-1247.tif')
+mask_ecoli_1247  = segment_bacterial_img(img_ecoli_1247)
+my_plot_1(mask_ecoli_1247, mycmap=shuffled_map, myfigsize=(10/2.54,10/2.54))
+
+# 1498
+img_ecoli_1498 = tiff.imread('/Users/m.wehrens/Data_notbacked/2025_Py-Image-wokshop_Filamentation-example-data/images/pos3crop-p-2-1498.tif')
+mask_ecoli_1498 = segment_bacterial_img(img_ecoli_1498)
+my_plot_1(mask_ecoli_1498, mycmap=shuffled_map, myfigsize=(10/2.54,10/2.54))
+```
+
+```{python}
+# A histogram of areas in mask_ecoli_1247
+props_1247 = sk.measure.regionprops(mask_ecoli_1247)
+plt.figure(figsize=(5/2.54,5/2.54))
+sns.histplot(areas_1247, bins=30, kde=True)
+plt.title('areas_1247')
+
+# Also for mask_ecoli_watershed
+props_ecoli = sk.measure.regionprops(mask_ecoli_watershed)
+plt.figure(figsize=(5/2.54,5/2.54))
+sns.histplot(areas_ecoli, bins=30, kde=True)
+plt.title('areas_ecoli')
+```
+
+
