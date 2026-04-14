@@ -133,7 +133,7 @@ _ = ax[2].imshow(img_KTR[0, 2, 0:200, 0:200], cmap='gray')
 
 ```{python}
 # Saving an image
-tiff.imwrite(file='export/img_bw.tif', data=img_bw)
+tiff.imwrite('output-test/img_bw.tif', data=img_bw)
 ```
 
 ### Exercises

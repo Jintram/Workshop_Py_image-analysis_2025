@@ -49,11 +49,13 @@ See also [this blog post](https://www.biodsc.nl/posts/installing_conda_python.ht
 
 #### Images to download
 
-<font color=red size=6>To do: make image sets available.</font>
-
-```
-XXXX ARRANGE THIS XXXX
-```
+- Example images;
+    - [https://surfdrive.surf.nl/s/bRY8tGHsYaMP9Yk](https://surfdrive.surf.nl/s/bRY8tGHsYaMP9Yk)
+- KTR example data;
+    - [https://surfdrive.surf.nl/s/dHCHgk66DTd7Hnz](https://surfdrive.surf.nl/s/dHCHgk66DTd7Hnz)
+- <font color=red>Bacterial filamentation data;</font>
+    - `<insert surf file sender link here to>`
+    - `/Users/m.wehrens/Data_notbacked/2025_Py-Image-workshop_Filamentation-example-data`
 
 #### Contact us
 

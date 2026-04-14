@@ -302,14 +302,18 @@ my_plot_1(mask_ecoli_1498, mycmap=shuffled_map, myfigsize=(10/2.54,10/2.54))
 # A histogram of areas in mask_ecoli_1247
 props_1247 = sk.measure.regionprops(mask_ecoli_1247)
 plt.figure(figsize=(5/2.54,5/2.54))
-sns.histplot(areas_1247, bins=30, kde=True)
-plt.title('areas_1247')
+
+# TO DO: FIX A BUG HERE..
+# sns.histplot(areas_1247, bins=30, kde=True)
+# plt.title('areas_1247')
 
 # Also for mask_ecoli_watershed
 props_ecoli = sk.measure.regionprops(mask_ecoli_watershed)
 plt.figure(figsize=(5/2.54,5/2.54))
-sns.histplot(areas_ecoli, bins=30, kde=True)
-plt.title('areas_ecoli')
+
+# TO DO: FIX A BUG HERE..
+# sns.histplot(areas_ecoli, bins=30, kde=True)
+# plt.title('areas_ecoli')
 ```
 
 

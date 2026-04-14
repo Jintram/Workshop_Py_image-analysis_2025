@@ -171,9 +171,9 @@ Adapt the code below to load the images you were asked to draw earlier.
 # (https://en.wikipedia.org/wiki/MNIST_database)
 
 # Two image paths
-img_happy_path = '/Users/m.wehrens/Documents/git_repos/_UVA/2025_teaching_Py_image-analysis/Workshop_Py_image-analysis_2025/images/ML/smile.tif'
-img_sad_path   = '/Users/m.wehrens/Documents/git_repos/_UVA/2025_teaching_Py_image-analysis/Workshop_Py_image-analysis_2025/images/ML/sad.tif'
-img_sad2_path   = '/Users/m.wehrens/Documents/git_repos/_UVA/2025_teaching_Py_image-analysis/Workshop_Py_image-analysis_2025/images/ML/sad2.tif'
+img_happy_path = 'images/ML/smile.tif'
+img_sad_path   = 'images/ML/sad.tif'
+img_sad2_path   = 'images/ML/sad2.tif'
 
 # Load images
 img_happy = tiff.imread(img_happy_path)

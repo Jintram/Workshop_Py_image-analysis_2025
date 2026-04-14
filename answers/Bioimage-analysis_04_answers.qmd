@@ -5,7 +5,16 @@ jupyter: python3
 
 *Martijn Wehrens, September 2025*
 
+```{python}
 
+# imports 
+import numpy as np
+import matplotlib.pyplot as plt
+import tifffile as tiff
+import skimage as sk
+from scipy import ndimage
+
+```
 
 ```{python}
 # The following parameters will detect more white cars:
@@ -42,7 +51,7 @@ for s in sequences:
 ## Answers to exercises 03
 
 ```{python}
-img_path = 'images/car/chatGPT_shadybusiness_zoomlow-8bit.tif'
+img_path = '../images/car/chatGPT_shadybusiness_zoomlow-8bit.tif'
 img_carpark = tiff.imread(img_path)
 
 # threshold such that dark features in the image are selected

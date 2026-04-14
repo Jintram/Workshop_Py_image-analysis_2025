@@ -13,7 +13,9 @@ jupyter: python3
 ### Data types determine what information can be stored
 
 #### Types of data
+
 Multiple data types exist. There are three important distinctions between these types:
+
 - The bit-depth; 
     - Determines how many values can be stored, e.g. 0-255 values for a bit depth of 8 (unsigned).
     - More depth takes more disk space.
