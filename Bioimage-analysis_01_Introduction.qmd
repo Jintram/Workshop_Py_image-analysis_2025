@@ -3,7 +3,7 @@ title: Workshop Python Image Analysis
 jupyter: python3
 ---
 
-*Martijn Wehrens, April 2026*
+*Martijn Wehrens, 2026-04*
 
 ## Chapter I: Preface & Introduction
 

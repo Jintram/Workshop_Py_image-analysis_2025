@@ -7,8 +7,7 @@ jupyter: python3
 
 **Estimated time:** XX mins presenting + YY mins exercises
 
-## Chapter 3: Image Processing (part 2)
-
+## Chapter IIIB: Image Processing (part 2)
 
 ### Two experiments
 

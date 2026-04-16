@@ -3,12 +3,11 @@ title: Workshop Python Image Analysis
 jupyter: python3
 ---
 
-*Martijn Wehrens, September 2025*
+*Martijn Wehrens, 2026-04*
 
 **Estimated time:** 20 mins presenting
 
-## Chapter 3: Storing data, the nitty gritty
-
+## Chapter IIB: How computers represent numbers
 
 ### Data types determine what information can be stored
 
@@ -58,8 +57,8 @@ img_path8bit = 'images/biological/exampleHeLa-8bit.tif'
 img_HeLa_8bit = tiff.imread(img_path8bit)
 
 # Display information about the image
-print('The type of this image is: ', img_HeLa_8bit.dtype)
-print('uint16 has ', 2**8, ' possible values')
+print('The type of this image is: ', img_HeLa_8bit.dtype.name)
+print('uint8 has ', 2**8, ' possible values')
 
 # Show the image
 _ = plt.imshow(np.log(img_HeLa_8bit+1), cmap='viridis')
@@ -76,7 +75,7 @@ img_path = 'images/biological/exampleHeLa.tif'
 img_HeLa = tiff.imread(img_path)
 
 # Display information about the image
-print('The type of this image is: ', img_HeLa.dtype)
+print('The type of this image is: ', img_HeLa.dtype.name)
 print('uint16 has ', 2**16, ' possible values')
 
 _ = plt.imshow(np.log(img_HeLa[0:250,1575:1700]+1), 
@@ -102,8 +101,8 @@ _ = plt.imshow(np.log(img_HeLa[0:250,1575:1700]+1),
 ```{python}
 # Example image
 img = tiff.imread('images/biological/microcolony_ecoli.tif')
-plt.imshow(img, cmap="gray")
-plt.xlabel('x [pixels]'); plt.ylabel('y [pixels]')
+_ = plt.imshow(img, cmap="gray")
+_ = plt.xlabel('x [pixels]'); _ = plt.ylabel('y [pixels]')
 ```
 
 ```{python}
@@ -125,44 +124,85 @@ plt.xlabel("x [µm]")
 plt.ylabel("y [µm]")
 plt.show()
 
-# This is a particular example, but determining lengths
+# This is a specific example, but determining lengths
 # or areas can often be relevant, in which case you
 # need to know the pixel size.
 ```
 
-## Not sure yet below sections are useful
-
-#### Statistics
-
 ```{python}
-# Image statistics
-print('Mean: ',img_HeLa.mean())
-print('Min: ', img_HeLa.min())
-print('Max: ', img_HeLa.max())
-print('Standard dev: ', img_HeLa.std())
+# Note the confusing x,y vs. img[i,j] conventions
 
-# Now the mode and percentiles
-print('Mode: ', np.bincount(img_HeLa.ravel()).argmax())
-print('5th percentile: ', np.percentile(img_HeLa, 5))
-print('95th percentile: ', np.percentile(img_HeLa, 95))
+# generate 100 x 500 image with noise
+img_example = np.random.random((100, 500))
+plt.imshow(img_example)
+
+# now set extent explicitly
+plt.imshow(img_example, extent=[0,5,0,1])
 ```
 
-```{python}
-# For further image processing we could remove outliers from the image
-new_max = np.percentile(img_HeLa, 99.9)
-print('New maximum determined at: ', new_max)
-img_HeLa_norm = img_HeLa.copy()
-img_HeLa_norm[img_HeLa_norm > new_max] = new_max
-img_HeLa_norm = (img_HeLa_norm / new_max) * 2**16
-# Show the result
-_ = plt.imshow(img_HeLa_norm, cmap='viridis', vmin=0, vmax=2**16)
-
-# Don't throw away your raw images! 
-# If you save modified images like this, create a copy.
-```
+## Type conversions
 
 ```{python}
-_ = plt.hist(img_HeLa_norm.ravel(), bins=256)
+# what happens here?
+plt.title('naive conversion to uint8')
+plt.imshow(img.astype('uint8'))
+plt.show()
+
+plt.title('Original histogram')
+plt.hist(img.ravel(), bins=256)
+plt.show()
+
+plt.title('After conversion to uint8')
+plt.hist(img.astype('uint8').ravel(), bins=256)
+plt.show()
+
+# OPTIONAL
+# .. because cyclical indexing
+# .. this equals ..
+plt.imshow(img % 256)
+
+# So rescale first
+from skimage import exposure
+img_rescaled8bit = exposure.rescale_intensity(img, out_range=(0, 255)).astype('uint8')
+    # could also use shortcut out_range='uint8'
+    # img_rescaled8bit = exposure.rescale_intensity(img, out_range='uint8')
+plt.title('After proper conversion to uint8')
+plt.imshow(img_rescaled8bit)
+plt.show()
+plt.title('After proper conversion to uint8')
+plt.hist(img_rescaled8bit.ravel(), bins=256)
+plt.show()
 ```
 
+## Lossy and lossless data storage
 
+```{python}
+# reading/writing jpg, tiff, png, etc
+import imageio as iio
+    # imageio 
+    #  - collection of plugins
+    #  - supports many formats
+    #  - no setting, selects lib through prioritized table:
+    #       - https://imageio.readthedocs.io/en/stable/formats/index.html
+    #       - tiffile is #1 for tiff
+    # (skimage.io is deprecated; was a wrapper around iio anyways)
+
+iio.imsave('output-test/exampleHeLa_05.jpg', img_rescaled8bit, quality=5)
+iio.imsave('output-test/exampleHeLa_50.jpg', img_rescaled8bit, quality=50)
+iio.imsave('output-test/exampleHeLa_100.jpg', img_rescaled8bit, quality=100)
+
+# Inspect the output
+# Can you explain what happened?
+
+# jpg (lossy) will lead to imprecise storage of your image data
+# tiff (lossless) will compress, but precisely store data values
+
+# Would you save your data as jpg, at all?
+    
+```
+
+For further reading, check out [lossless](https://en.wikipedia.org/wiki/Lossless_compression) and [lossy](https://en.wikipedia.org/wiki/Lossy_compression) compression at Wikipedia.
+
+See [imageio](https://imageio.readthedocs.io/en/stable/formats/index.html)'s documentation
+for a list of supported formats, and which libraries are preferentially used
+to read files.

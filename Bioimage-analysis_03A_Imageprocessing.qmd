@@ -3,33 +3,23 @@ title: Workshop Python Image Analysis
 jupyter: python3
 ---
 
-*Martijn Wehrens, September 2025*
+*Martijn Wehrens, 2026-04*
 
 **Estimated time:** XX mins presenting + YY mins exercises
 
-## Chapter 3: Image Processing
+## Chapter IIIA: Image Processing
+
+Image processing entails modifying images, using mathematical operations, 
+in order to enhance them, or to later being able to better extract information from them.
+
+Main topics of this chapter include:
 
 
-<font color=red>
-USE https://bioimagebook.github.io/chapters/2-processing/1-processing_and_analysis/processing_and_analysis.html
-</font>
 
-<font face=blue>
-### Some notes to self beforehand
-
-- Image processing vs. image analysis
-- Point vs. neighborhood operations
-
-</font>
-
-
-## Adjusting contrast
-
-When looking at an image you might see striking features, and think that's all your looking at.
-
-However, both for humans looking at pictures, and for computers analyzing pictures, features can remain depending on display or processing.
+### Math can be applied to images
 
 ```{python}
+# libraries
 import matplotlib.pyplot as plt
 import seaborn as sns
 import tifffile as tiff
@@ -39,6 +29,63 @@ import numpy as np
 import skimage as sk
 from scipy import stats
 from scipy import ndimage
+```
+
+```{python}
+# Load a picture of fluorescently labeled HeLa cells
+img_path = 'images/biological/exampleHeLa.tif'
+img_HeLa = tiff.imread(img_path)
+
+# Image statistics
+print('Mean: ',img_HeLa.mean())
+print('Min: ', img_HeLa.min())
+print('Max: ', img_HeLa.max())
+print('Standard dev: ', img_HeLa.std())
+
+# Now the mode and percentiles
+print('Mode: ', np.bincount(img_HeLa.ravel()).argmax())
+print('5th percentile: ', np.percentile(img_HeLa, 5))
+print('95th percentile: ', np.percentile(img_HeLa, 95))
+```
+
+```{python}
+
+# Adjust contrast 
+new_min = np.percentile(img_HeLa, 3)
+new_max = np.percentile(img_HeLa, 95)
+print([new_min, new_max])
+
+# Changing the image values according formula
+img_HeLa_norm = img_HeLa.copy()
+img_HeLa_norm[img_HeLa_norm < new_min] = new_min
+img_HeLa_norm[img_HeLa_norm > new_max] = new_max
+img_HeLa_norm = (img_HeLa_norm - new_min)/( new_max-new_min ) * 2**16
+
+# Plot the original once more
+_ = plt.imshow(img_HeLa, cmap='viridis', vmin=0, vmax=2**16)
+plt.show()
+# And the normalized image
+_ = plt.imshow(img_HeLa_norm, cmap='viridis', vmin=0, vmax=2**16)
+plt.show()
+# Only change the display
+_ = plt.imshow(img_HeLa, cmap='viridis', vmin=new_min, vmax=new_max)
+plt.show()
+
+# Don't throw away your raw images! 
+# If you save modified images like this, create a copy.
+```
+
+```{python}
+_ = plt.hist(img_HeLa_norm.ravel(), bins=256)
+```
+
+### Further adjusting contrast
+
+When looking at an image you might see striking features, and think that's all your looking at.
+
+However, both for humans looking at pictures, and for computers analyzing pictures, features can remain unseen depending on display or processing.
+
+```{python}
 
 # something convenient for later
 FIGSIZE21 = (10/2.54,5/2.54) 
@@ -46,6 +93,8 @@ FIGSIZE22 = (10/2.54,10/2.54)
 ```
 
 ```{python}
+# More advanced contrast adjustment
+
 # Let's say we're investigating marine microogranism E. moji, 
 # and we've taken the microscopy image below.
 
@@ -71,26 +120,32 @@ _ = plt.imshow(img_emoji, cmap='viridis')
 # There appears to be an import signal in the low range
 #   "high dynamic range"
 
-# For visual inspection, let's
+# "Nice looking" figure with contrast enhancements
 
 fig, axs = plt.subplots(2,3)
 # Apply gamma transformation
 img_emoji_gamma = sk.exposure.adjust_gamma(img_emoji, gamma=0.5)
 _ = axs[0,0].imshow(img_emoji_gamma)
+_ = axs[0,0].set_title(f'Gamma ($\\gamma=0.5$)')
+    # see also 
+    # https://docs.python.org/3/tutorial/inputoutput.html
+    # https://matplotlib.org/stable/users/explain/text/mathtext.html    
 # Use a simple log
 img_emoji_log = np.log(1+img_emoji/255*254)
 _ = axs[0,1].imshow(img_emoji_log)
+_ = axs[0,1].set_title('Log')
 # Normalize the image by 20
 img_emoji_norm = img_emoji.copy()
 img_emoji_norm[img_emoji_norm>20] = 20
 img_emoji_norm = img_emoji_norm/20*255
 _ = axs[0,2].imshow(img_emoji_norm)
+_ = axs[0,2].set_title('Rescaled')
 #_ = axs[2].imshow(sk.exposure.adjust_gamma(img_emoji, gamma=2.0))
 
 # Show the corresponding histograms
-_ = axs[1,0].hist(img_emoji_gamma.ravel(), bins=100)
-_ = axs[1,1].hist(img_emoji_log.ravel(), bins=100)
-_ = axs[1,2].hist(img_emoji_norm.ravel(), bins=100)
+_ = axs[1,0].hist(img_emoji_gamma.ravel(), bins=50)
+_ = axs[1,1].hist(img_emoji_log.ravel(), bins=50)
+_ = axs[1,2].hist(img_emoji_norm.ravel(), bins=50)
 
 plt.tight_layout()
 ```
@@ -110,7 +165,7 @@ _ = ax.set_ylabel('New px value')
 
 Note that these operations **won't magically put new information** into the picture. But they can be really usefull for **visualization** purposes. Especially **combined with histograms**.
 
-## Segmentation (1)
+### Segmentation (1)
 
 Segmentation is a prime example of image processing usful for biologists.
 
@@ -191,7 +246,7 @@ areas = [r.area for r in regions]
 _=plt.hist(areas)
 ```
 
-## Exercises part I
+### Exercises part I
 
 #### E. moji
 - Try to segment the "E. moji" image, both the *E. mojis* and the other organism (*S. hark*?) that's present.

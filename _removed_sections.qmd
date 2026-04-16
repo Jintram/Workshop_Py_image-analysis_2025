@@ -1,0 +1,18 @@
+---
+title: "Untitled"
+format: html
+---
+
+<font color=red>
+USE https://bioimagebook.github.io/chapters/2-processing/1-processing_and_analysis/processing_and_analysis.html
+</font>
+
+<font face=blue>
+### Some notes to self beforehand
+
+- Image processing vs. image analysis
+    - Processing: modifying the image data (e.g. adjusting brightness)
+    - Analysis: extracting abstract information (e.g. cell length)
+- Point vs. neighborhood operations
+
+</font>

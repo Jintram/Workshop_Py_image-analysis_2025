@@ -3,12 +3,12 @@ title: Workshop Python Image Analysis
 jupyter: python3
 ---
 
-*Martijn Wehrens, September 2025*
+*Martijn Wehrens, 2026-04*
 
 **Estimated time:** 30 mins presenting + 30 mins exercises
 
 
-## Chapter II: Reading, modifying and displaying images
+## Chapter IIA: Reading, modifying and displaying images
 
 ```{python}
 # Importing libraries
@@ -23,7 +23,13 @@ import tifffile as tiff
     # there are multiple libraries that can read image
     # from general purpose to science-specialized
     # other options:
-    # skimage.io.imread(), imageio.imread(), ..
+    # PIL.Image.open(), imageio.imread(), skimage.io.imread() (old), ..
+    #
+    # tiffile is geared for scientific data;
+    # handles metadata, large files, bit depth, and stacks well
+    #
+    # imageio is very useful to read various formats,
+    # actually uses tiffile library
 import numpy as np
     # for general math, matrix operations, etc
 ```

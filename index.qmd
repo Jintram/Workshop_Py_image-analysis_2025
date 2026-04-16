@@ -9,16 +9,32 @@ title: "Workshop Python Image Analysis"
 ### Tutorials
 
 1. [Preface & Introduction](Bioimage-analysis_01_Introduction.qmd)
-2. Reading, modifying and displaying images & storing data
+2. Working with images
     a. [Reading, modifying and displaying images](Bioimage-analysis_02A_Readingwritingmodifying.qmd)
-    b. [Storing data, the nitty gritty](Bioimage-analysis_02B_Storingdata.qmd)
+    b. [How computers represent numbers](Bioimage-analysis_02B_Computersrepresentingdata.qmd)
+        - **Topics**
+            - Images are tables with values (arrays)
+            - Working with arrays
+            - Data types
+            - Relating pixels to real-world units
 3. Image Processing
     a. [Image Processing](Bioimage-analysis_03A_Imageprocessing.qmd)
-    b. [Image Processing (part 2)](Bioimage-analysis_03B_Imageprocessing.qmd)
+    b. [Image Processing (part 2)](Bioimage-analysis_03B_Imageprocessing.qmd)    
+        - **Topics**
+            - Applying math to images
+            - Segmentation of images
+                - Masks, labels and regions
+            - Convolutions
+            - Morphology operations     
 4. [Good coding practices](Bioimage-analysis_04_Intermezzo-goodcodingpractices.qmd)
 5. [Combining building blocks into a pipeline](Bioimage-analysis_05_Pipelines.qmd)
 6. [A very basic introduction into machine learning](Bioimage-analysis_06_MachineLearning-basics.qmd)
 7. [Plotting](Bioimage-analysis_07_Plotting.qmd)
+
+#### Topics to still include
+
+- Background corrections
+- Thresholding, specificially global vs. local
 
 ![](images/misc/thunder.jpg){height=100px}
 
