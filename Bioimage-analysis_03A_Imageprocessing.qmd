@@ -260,7 +260,7 @@ _=plt.hist(areas)
 #### E. moji
 - Try to segment the "E. moji" image, both the *E. mojis* and the other organism (*S. hark*?) that are present.
     - With the methods outlined earlier, this won't be perfect.
-    - You can improve your mask by "filling holes", using the function `scipy.ndimage.binary_fill_holes(mask_emoji)`. But that's **optional**.
+    - **[Optional]** You can improve your mask by "filling holes", using the function `scipy.ndimage.binary_fill_holes(mask_emoji)`. 
 - Make a histogram of the object sizes.
 - Why does the histogram look the way it looks?
 
@@ -288,7 +288,8 @@ Use the `.centroid` property of the region to obtain points to plot as centers.
 
 :::
     
-#### (Optional) Dodgy guys
+#### [Optional] Dodgy guys
+
 - Load the picture `images/car/dodgy-guys.tif`
     - Can you count the amount of dodgy guys with python?
     - Can you identify where they are in the image (plot crosses on top of the image)?
