@@ -21,31 +21,64 @@ In addition, there are exercise parts, which participants can do on their own, s
 ### Requirements
 
 Regarding your experience:
+
 - We require you to have followed our "introduction to python" course, OR ..
 - .. require you to be familiar with the topics we taught there.
 
 On your computer, we require you to have:
+
 - A working conda environment with python installed ([link](https://www.biodsc.nl/posts/installing_conda_python.html)).
 - The software "FIJI" ([link](https://imagej.net/software/fiji/)).
 - And editor in which you can edit and run python code (see also [link](https://www.biodsc.nl/posts/installing_conda_python.html)).
 - The libraries listed below installed.
 - Download the datasets linked below.
 
+If you have trouble with installing any of these, **please contact us before
+the workshop**!
+
 #### Libraries to install
 
 You can create and activate an envirnoment, plus install the required libraries, with the commands below.
 
-```{sh}
+```{bash}
 # Create and activate conda environment
 conda create -n 2025_py_image_workshop
 conda activate 2025_py_image_workshop
 # Add "conda-forge" to default channels
 conda config --add channels conda-forge
 # Libraries to install
-conda install matplotlib seaborn tifffile numpy scikit-image scipy glob2 ipykernel
+conda install matplotlib seaborn tifffile numpy scikit-image scipy imageio ipykernel
+
+# You can choose to also install pytorch (doesn't work on all computers)
+# or use google colab for that chapter.
+conda install pytorch -c pytorch
 ```
 
 See also [this blog post](https://www.biodsc.nl/posts/installing_conda_python.html) to find out how to install Conda and an editor.
+
+#### Google Colab 
+
+There is a Google Colab document, which allows you to perform this
+workshop online:
+
+See:
+[https://colab.research.google.com/drive/1qJgibG2-ACfXJZky_VMP8Wjm3quhpgY_?usp=sharing](https://colab.research.google.com/drive/1qJgibG2-ACfXJZky_VMP8Wjm3quhpgY_?usp=sharing)
+
+I recommend using your own IDE, such that you can later easily analyze your
+own data. However, for the section on machine learning, this might be necessary,
+as not all platforms easily allow pytorch installation and configuration.
+
+##### For reference: specifying the (Colab) environment
+
+You can set up a new colab document using the following code:
+
+```
+# These are likely already installed on Google Colab:
+!pip install numpy matplotlib seaborn scipy torch
+
+# These might need to be installed explicitly:
+!pip install scikit-image tifffile imageio
+```
 
 #### Images to download
 
@@ -54,7 +87,7 @@ See also [this blog post](https://www.biodsc.nl/posts/installing_conda_python.ht
 - KTR example data;
     - [https://surfdrive.surf.nl/s/dHCHgk66DTd7Hnz](https://surfdrive.surf.nl/s/dHCHgk66DTd7Hnz)
 - <font color=red>Bacterial filamentation data;</font>
-    - `<insert surf file sender link here to>`
+    - `<add another surfdrive link to zipped files on my local pc>`
     - `/Users/m.wehrens/Data_notbacked/2025_Py-Image-workshop_Filamentation-example-data`
 
 #### Contact us
@@ -95,7 +128,7 @@ In case of any problems, please do contact us (info@biodsc.nl)!
 </font>
 
 
-### Source materials
+### Acknowledgements
 
 This course is (very loosely) based on https://bioimagebook.github.io/, which is available under the [Creative Commons license](https://creativecommons.org/licenses/by/4.0/).
 
@@ -106,7 +139,7 @@ We'll be using two example image sets for this tutorial, plus some additional si
 
 
 
-## Introduction
+## Let's start: Introduction
 
 ### Organization
 

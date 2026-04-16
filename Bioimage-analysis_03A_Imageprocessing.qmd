@@ -12,10 +12,6 @@ jupyter: python3
 Image processing entails modifying images, using mathematical operations, 
 in order to enhance them, or to later being able to better extract information from them.
 
-Main topics of this chapter include:
-
-
-
 ### Math can be applied to images
 
 ```{python}
@@ -123,6 +119,7 @@ _ = plt.imshow(img_emoji, cmap='viridis')
 # "Nice looking" figure with contrast enhancements
 
 fig, axs = plt.subplots(2,3)
+
 # Apply gamma transformation
 img_emoji_gamma = sk.exposure.adjust_gamma(img_emoji, gamma=0.5)
 _ = axs[0,0].imshow(img_emoji_gamma)
@@ -130,10 +127,12 @@ _ = axs[0,0].set_title(f'Gamma ($\\gamma=0.5$)')
     # see also 
     # https://docs.python.org/3/tutorial/inputoutput.html
     # https://matplotlib.org/stable/users/explain/text/mathtext.html    
+    
 # Use a simple log
 img_emoji_log = np.log(1+img_emoji/255*254)
 _ = axs[0,1].imshow(img_emoji_log)
 _ = axs[0,1].set_title('Log')
+
 # Normalize the image by 20
 img_emoji_norm = img_emoji.copy()
 img_emoji_norm[img_emoji_norm>20] = 20
@@ -163,18 +162,18 @@ _ = ax.set_xlabel('Old px value')
 _ = ax.set_ylabel('New px value')
 ```
 
-Note that these operations **won't magically put new information** into the picture. But they can be really usefull for **visualization** purposes. Especially **combined with histograms**.
+Note that these operations **won't magically put new information** into the picture. But they can be really useful for **visualization** purposes. Especially **combined with histograms**.
 
 ### Segmentation (1)
 
-Segmentation is a prime example of image processing usful for biologists.
+Segmentation is a prime example of image processing useful for biologists.
 
 Say you want to 
 - quantify bacterial growth, 
 - take measurements on individual cultured cells, 
 - or quantify leaf damage, 
 
-the computer will have to understand **which pixel belongs to which cell** to quantify anything.
+the computer will have to understand **which pixel relates to which object** (e.g. a cell) to quantify anything.
 
 In later sections, we'll look at **how to process these annotated regions**.
 
@@ -190,12 +189,15 @@ plt.tight_layout()
 ```
 
 ```{python}
-# A simple *manual* threshold mask suffices
+
+# Could we determine a manual threshold? 
+# .. (audience)
+# yes!
 mask_nuclei = img_nuclei>700
 _=plt.imshow(mask_nuclei)
 ```
 
-### Looking into statistics
+### Extracting information
 
 We'll progress to somewhat more realistic examples later, but let's say we want to **quantify the size of the nuclei**.
 
@@ -208,12 +210,19 @@ _ = plt.imshow(labeled_nuclei)
 ```
 
 ```{python}
-# The labeled map is a great tool for inspecting object properties
+# The labeled map 
+# Great tool to get
+#   - object properties
 _ = plt.imshow(labeled_nuclei==1)
+    # continuous regions of pixels 
+    # unique integer values
+    
+# Size 1 nucleus:
+print(f"Area nuclei 1 (px): {np.sum(labeled_nuclei==1)}")
 ```
 
 ```{python}
-# Similarly we can count the sizes
+# Count all sizes
 nuclei_sizes = np.array([np.sum(labeled_nuclei==label) 
                          for label in range(1,np.max(labeled_nuclei))])
 print(nuclei_sizes[0:10])
@@ -249,7 +258,9 @@ _=plt.hist(areas)
 ### Exercises part I
 
 #### E. moji
-- Try to segment the "E. moji" image, both the *E. mojis* and the other organism (*S. hark*?) that's present.
+- Try to segment the "E. moji" image, both the *E. mojis* and the other organism (*S. hark*?) that are present.
+    - With the methods outlined earlier, this won't be perfect.
+    - You can improve your mask by "filling holes", using the function `scipy.ndimage.binary_fill_holes(mask_emoji)`. But that's **optional**.
 - Make a histogram of the object sizes.
 - Why does the histogram look the way it looks?
 
@@ -260,11 +271,28 @@ _=plt.hist(areas)
     - And put a cross in their centers?
     - **[Optional]** Use the functions `np.random.rand()` and `ListedColormap()` to create a colormap that's a bit more useful to display the labeled nuclei.
     
+::: {.callout-note collapse="true"}
+## Hints
+
+#### Finding the scale using FIJI
+
+Open your image in FIJI, and check out `image > properties`, or `analyze > set scale`.
+
+#### Adding contours
+
+Use the function `plt.contour` with a smart `bins = ..` setting.
+
+#### Adding cross in centers
+
+Use the `.centroid` property of the region to obtain points to plot as centers.
+
+:::
+    
 #### (Optional) Dodgy guys
 - Load the picture `images/car/dodgy-guys.tif`
     - Can you count the amount of dodgy guys with python?
-    - Can you identify where they are in the image (put a cross in a plot)?
-    - Can you put the sizes of each of the heads on top of their heads in a plot?
-    - Can you now easily spot which of the faces only occurs once in this image?
+    - Can you identify where they are in the image (plot crosses on top of the image)?
+    - Can you annotate the sizes of each of the heads on top of their heads in a plot?
+    - Can you now easily identify which of the faces only occurs once in this image?
 
 

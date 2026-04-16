@@ -18,7 +18,7 @@ title: "Workshop Python Image Analysis"
             - Data types
             - Relating pixels to real-world units
 3. Image Processing
-    a. [Image Processing](Bioimage-analysis_03A_Imageprocessing.qmd)
+    a. [Image Processing (part 1)](Bioimage-analysis_03A_Imageprocessing.qmd)
     b. [Image Processing (part 2)](Bioimage-analysis_03B_Imageprocessing.qmd)    
         - **Topics**
             - Applying math to images
@@ -46,3 +46,4 @@ title: "Workshop Python Image Analysis"
     b. [Answers to exercises 03b](answers/Bioimage-analysis_03b_answers.qmd)
 4. [Answers to exercises 04](answers/Bioimage-analysis_04_answers.qmd)
 5. [Answers to exercises 05](answers/Bioimage-analysis_05_answers.qmd)
+
