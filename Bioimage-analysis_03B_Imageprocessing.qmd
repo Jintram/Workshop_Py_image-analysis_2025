@@ -13,13 +13,13 @@ jupyter: python3
 
 #### Tracking a kinase translocation reporter (KTR)
 
-To assess the activity of kinases in single live cells, which can e.g. activate and deactivate proteins, researchers have developed kinase translocation reporters (KTRs). These are fluorescently tagged proteins (or protein domain) whose location inside the cell changes (translocates) depending on whether a specific kinase is active (see also figure 1 of [Kudo et al.](http://doi.org/10.1038/nprot.2017.128)).
+To assess the activity of kinases in single live cells, which can e.g. activate and deactivate proteins, researchers have developed kinase translocation reporters (KTRs). These are fluorescently tagged proteins (or protein domains) whose location inside the cell changes (translocates) depending on whether a specific kinase is active (see also figure 1 of [Kudo et al.](http://doi.org/10.1038/nprot.2017.128)).
 
 The paper [Chavez-Abiega et al.](http://doi.org/10.1242/jcs.259685) presents an image analysis pipeline to analyze KTR signals from single cells (and uses it to study kinase behavior). We'll use their data, and try to reproduce part of that analysis.
 
 <img src=images/figures/kudo_fig1b.png height=200>
 
-*Fig 1b of Kudo et al., When kinase activity is high, KTRs predominantly localize to the cytoplasm due to reduced nuclear localization signal and increased nuclear export signal.*
+*Fig 1b of Kudo et al., When kinase activity is high, KTRs predominantly localize to the cytoplasm due to reduced nuclear localization signal and increased nuclear export signal, and vice versa.*
 
 #### Quantifying bacterial size
 
@@ -43,8 +43,7 @@ from scipy import stats
 from scipy import ndimage
 
 # something convenient for later
-FIGSIZE21 = (10/2.54,5/2.54) 
-FIGSIZE22 = (10/2.54,10/2.54) 
+FIGSIZE21 = (10/2.54, 5/2.54)
 ```
 
 ```{python}
@@ -66,17 +65,16 @@ _ = axs[1].imshow(img_ecoli, cmap='gray')
 plt.show()
 ```
 
-## Step 1: segmentation
+## Segmentation
 
 - We aim to quantify 
     - **nuclear vs. cytoplasmic signal** in the KTR dataset, 
     - and **bacterial sizes** the bacterial dataset. 
-- To achieve both, we first need to **segment** both **nuclei** and **bacteria**.
-- Global **manual thresholds** are **labor intensive and subjective**. Let's try to do this automatically.
+- To achieve both, we first need to **segment** both nuclei and bacteria.
+- A manual threshold is labor intensive (and subjective).
+    - Aim for automatic solution.
 
-### Background information
-
-#### Different types of challenges
+### Different types of challenges
 
 - Generally, the segmentation approach depends on type of data.
 - Global thresholds are based on statistics visualized well by histograms.
@@ -87,23 +85,63 @@ plt.show()
 
 *Image taken from [biobook](https://bioimagebook.github.io/chapters/2-processing/3-thresholding/thresholding.html) (fig. 68).*
 
-## Automated global thresholds
+```{python}
+#| code-fold: true
+img_page = tiff.imread("images/misc/page_original.tif")
+fig, axs = plt.subplots(1,2, figsize=(15/2.54, 5/2.54))
+_ = axs[0].set_title("Text (changing absolute values)")
+_ = axs[0].imshow(img_page, cmap='gray')
+_ = axs[1].hist(img_page.ravel(), bins=256)
+_ = axs[1].set_xlabel("Pixel value"); _ = axs[1].set_ylabel("Count")
+plt.tight_layout()
+plt.show()
+```
+
+Each of the images above require a different strategy.
+
+- The bimodal histogram
+    - Statistics both peaks can be used
+    - Find good divide between the two peaks
+- The unimodal histogram
+    - The spots don't have above-average values
+    - Only spatial relationship reveals ROI
+    - Direct application global threshold useless
+- Dominant background
+    - Statistic of background accessible
+    - Estimate above-background cutoff
+- Changing absolute values
+    - Background and foreground values not absolute
+    - Histogram doesn't work well
+    - Use local contrast
+
+### Automated global thresholds
+
+
+------------------------------------
+
+I WAS EDITING HERE; MAYBE MAKE LIST BELOW MORE CONCISE, AND FOCUSSED AROUND
+DIFFERENT USE CASES
+
+------------------------------------
 
 #### Otsu's method
 
-Otsu’s method, introduced in 1979, has become an extremely popular approach to determining a threshold. It’s commonly described, somewhat intimidatingly, as ‘minimizing the intra-class intensity variance’. In essence, calculating a threshold using Otsu’s method involves adding the variance of the background pixels to the variance of the foreground pixels, for all possible thresholds. The threshold that is selected is the one for which the sum of the variances is smallest.
+_"Otsu’s method, introduced in 1979, has become an extremely popular approach to determining a threshold. It’s commonly described, somewhat intimidatingly, as ‘minimizing the intra-class intensity variance’. In essence, calculating a threshold using Otsu’s method involves adding the variance of the background pixels to the variance of the foreground pixels, for all possible thresholds. The threshold that is selected is the one for which the sum of the variances is smallest."_
 
-*Source: [biobook](https://bioimagebook.github.io/chapters/2-processing/3-thresholding/thresholding.html).*
+<div style="text-align: right">
+-- [biobook](https://bioimagebook.github.io/chapters/2-processing/3-thresholding/thresholding.html)
+</div>
 
 #### More thresholding-finding algorithms
 
 Other methods include:
+
 - Threshold determined by estimate of background
 - Triangle method
 - Yen method
 - (..)
 
-**A list can be found at** [scikit image's documentation](https://scikit-image.org/docs/0.23.x/auto_examples/segmentation/plot_thresholding.html).
+A few examples of cannonical thresholding algorithms and their output can be found at [scikit image's documentation](https://scikit-image.org/docs/0.23.x/auto_examples/segmentation/plot_thresholding.html).
 
 ### Applying automatic thresholding
 
