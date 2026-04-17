@@ -139,7 +139,7 @@ os.chdir("/Users/m.wehrens/Documents/git_repos/_UVA/_Teaching/2025_teaching_Py_i
 -->
 <section id="answers-to-exercises-03" class="level2">
 <h2 class="anchored" data-anchor-id="answers-to-exercises-03">Answers to exercises 03</h2>
-<div id="542d3253" class="cell" data-execution_count="1">
+<div id="dc2094a1" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tifffile <span class="im">as</span> tiff</span>
@@ -163,61 +163,73 @@ os.chdir("/Users/m.wehrens/Documents/git_repos/_UVA/_Teaching/2025_teaching_Py_i
 <span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()     </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="counting-spots" class="level2">
-<h2 class="anchored" data-anchor-id="counting-spots">Counting spots</h2>
-<div id="f553379d" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read the image</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>img_spots <span class="op">=</span> tiff.imread(<span class="st">"../images/bioimagebook/spots.tif"</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.title(<span class="st">"Original spots image"</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.imshow(img_spots)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a local mean convolution kernel</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>a_disk     <span class="op">=</span> sk.morphology.disk(<span class="dv">5</span>)</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>the_kernel <span class="op">=</span> a_disk<span class="op">/</span>np.<span class="bu">sum</span>(a_disk)</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply it to the image `images/bioimagebook/spots.tif`.</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>img_spots_convolved <span class="op">=</span> ndimage.convolve(img_spots, the_kernel)</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Show the result</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.title(<span class="st">"Result of local averaging"</span>)</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.imshow(img_spots_convolved)</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.title(<span class="st">"Result after local averaging"</span>)</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.hist(img_spots_convolved.ravel(), bins <span class="op">=</span> np.arange(<span class="dv">0</span>, <span class="dv">255</span>, <span class="dv">5</span>))</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Segment based on new image</span></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>threshold_triangle <span class="op">=</span> sk.filters.threshold_triangle(img_spots_convolved)</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>mask_spots <span class="op">=</span> img_spots_convolved <span class="op">&gt;</span> threshold_triangle</span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="co">#  Make a plot with contours</span></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.title(<span class="st">"Identified spots (using triangle algorithm)"</span>)</span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.imshow(img_spots_convolved)</span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.contour(mask_spots, colors<span class="op">=</span><span class="st">'w'</span>, linewidths<span class="op">=</span><span class="dv">1</span>, levels<span class="op">=</span>[<span class="fl">0.5</span>])</span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Count the spots</span></span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>regionprops_spots <span class="op">=</span> regionprops(label(mask_spots))</span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>areas_spots <span class="op">=</span> np.array([r.area <span class="cf">for</span> r <span class="kw">in</span> regionprops_spots])</span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's count a spot if area&gt;3</span></span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Total nr of spots:"</span>, np.<span class="bu">sum</span>(areas_spots<span class="op">&gt;</span><span class="dv">3</span>))</span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="co"># In case we're perfectionists</span></span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>img_mode <span class="op">=</span> np.bincount(img_spots_convolved.ravel()).argmax()</span>
-<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>img_max  <span class="op">=</span> np.<span class="bu">max</span>(img_spots_convolved)</span>
-<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>threshold_margin <span class="op">=</span> (img_max<span class="op">-</span>img_mode)<span class="op">/</span><span class="dv">5</span></span>
-<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>mask_spots2   <span class="op">=</span> img_spots_convolved <span class="op">&gt;</span> (threshold_triangle<span class="op">+</span>threshold_margin)</span>
-<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>rprops_spots2 <span class="op">=</span> regionprops(label(mask_spots2))</span>
-<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a><span class="co"># And plot</span></span>
-<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.title(<span class="st">'Identified spots (triangle, using "Zack" margin)'</span>)</span>
-<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.imshow(img_spots_convolved)</span>
-<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.contour(mask_spots2, colors<span class="op">=</span><span class="st">'w'</span>, linewidths<span class="op">=</span><span class="dv">1</span>, levels<span class="op">=</span>[<span class="fl">0.5</span>])</span>
-<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a><span class="co"># add labels</span></span>
-<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, r <span class="kw">in</span> <span class="bu">enumerate</span>(rprops_spots2):</span>
-<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>    minr, minc, maxr, maxc <span class="op">=</span> r.bbox</span>
-<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>    _ <span class="op">=</span> plt.text(maxc<span class="op">+</span><span class="dv">5</span>, maxr, <span class="bu">str</span>(i<span class="op">+</span><span class="dv">1</span>), color<span class="op">=</span><span class="st">'w'</span>)</span>
-<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="creating-segmentation-functions" class="level2">
+<h2 class="anchored" data-anchor-id="creating-segmentation-functions">Creating segmentation functions</h2>
+<div id="e63d7a0f" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> seg_bacterium(input_img):</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Segment bacteria in an image using LoG edge detection and watershed.</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Gaussian blur</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    img_gauss <span class="op">=</span> sk.filters.gaussian(input_img, sigma<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Laplacian of Gaussian for edge detection</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    edges_log <span class="op">=</span> sk.filters.laplace(img_gauss)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Threshold edges using triangle method</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    mask_edges <span class="op">=</span> edges_log <span class="op">&gt;</span> sk.filters.threshold_triangle(edges_log)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Erode to separate touching bacteria</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    mask_eroded <span class="op">=</span> sk.morphology.erosion(mask_edges, footprint<span class="op">=</span>sk.morphology.disk(<span class="dv">5</span>))</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Remove small objects</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    mask_eroded_filtered <span class="op">=</span> sk.morphology.remove_small_objects(mask_eroded, min_size<span class="op">=</span><span class="dv">50</span>)</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Triangle threshold on original</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    mask_triangle <span class="op">=</span> input_img <span class="op">&gt;</span> sk.filters.threshold_triangle(input_img)</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    mask_triangle_filtered <span class="op">=</span> sk.morphology.remove_small_objects(mask_triangle, min_size<span class="op">=</span><span class="dv">50</span>)</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Combine masks</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    mask_combined <span class="op">=</span> np.logical_and(mask_triangle_filtered, mask_eroded_filtered)</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    mask_labeled <span class="op">=</span> sk.measure.label(mask_combined)</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Watershed to separate touching bacteria</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    result <span class="op">=</span> sk.segmentation.watershed(<span class="op">-</span>edges_log, markers<span class="op">=</span>mask_labeled, mask<span class="op">=</span>mask_edges)</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> result</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> seg_nuclei(input_img):</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a><span class="co">    Segment nuclei in an image using triangle thresholding.</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Apply triangle threshold method</span></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>    thresh <span class="op">=</span> sk.filters.threshold_triangle(input_img)</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>    mask <span class="op">=</span> input_img <span class="op">&gt;</span> thresh</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Remove small objects and label</span></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>    mask_filtered <span class="op">=</span> sk.morphology.remove_small_objects(mask, min_size<span class="op">=</span><span class="dv">50</span>)</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>    result <span class="op">=</span> sk.measure.label(mask_filtered)</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> result</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a><span class="co"># Now let's test the above functions</span></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a><span class="co"># Bacteria</span></span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>img_ecoli <span class="op">=</span> tiff.imread(<span class="st">'../images/biological/microcolony_ecoli.tif'</span>)</span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>mask_bacteria <span class="op">=</span> seg_bacterium(np.<span class="bu">max</span>(img_ecoli)<span class="op">-</span>img_ecoli)</span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.imshow(mask_bacteria)</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a><span class="co"># Nuclei</span></span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>img_path_KTR <span class="op">=</span> <span class="st">'/Users/m.wehrens/Data_notbacked/2025_Py-Image-workshop_KTR-example-data/raw/Composite_KTR.tif'</span></span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>img_nuclei <span class="op">=</span> tiff.imread(img_path_KTR)[<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>:<span class="dv">200</span>, <span class="dv">0</span>:<span class="dv">200</span>]</span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>mask_nuclei <span class="op">=</span> seg_nuclei(img_nuclei)</span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.imshow(mask_nuclei)</span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -232,17 +244,88 @@ os.chdir("/Users/m.wehrens/Documents/git_repos/_UVA/_Teaching/2025_teaching_Py_i
 </figure>
 </div>
 </div>
+</div>
+</section>
+<section id="counting-spots" class="level2">
+<h2 class="anchored" data-anchor-id="counting-spots">Counting spots</h2>
+<div id="5bc2eb2c" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read the image</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>img_spots <span class="op">=</span> tiff.imread(<span class="st">"../images/bioimagebook/spots.tif"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.title(<span class="st">"Original spots image"</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.imshow(img_spots)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a local mean convolution kernel</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>a_disk     <span class="op">=</span> sk.morphology.disk(<span class="dv">5</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>the_kernel <span class="op">=</span> a_disk<span class="op">/</span>np.<span class="bu">sum</span>(a_disk)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply it to the image `images/bioimagebook/spots.tif`.</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>img_spots_convolved <span class="op">=</span> ndimage.convolve(img_spots, the_kernel)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Show the result</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.title(<span class="st">"Result of local averaging"</span>)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.imshow(img_spots_convolved)</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.title(<span class="st">"Result after local averaging"</span>)</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.hist(img_spots_convolved.ravel(), bins <span class="op">=</span> np.arange(<span class="dv">0</span>, <span class="dv">255</span>, <span class="dv">5</span>))</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Segment based on new image</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>threshold_triangle <span class="op">=</span> sk.filters.threshold_triangle(img_spots_convolved)</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>mask_spots <span class="op">=</span> img_spots_convolved <span class="op">&gt;</span> threshold_triangle</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="co">#  Make a plot with contours</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.title(<span class="st">"Identified spots (using triangle algorithm)"</span>)</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.imshow(img_spots_convolved)</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.contour(mask_spots, colors<span class="op">=</span><span class="st">'w'</span>, linewidths<span class="op">=</span><span class="dv">1</span>, levels<span class="op">=</span>[<span class="fl">0.5</span>])</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Count the spots</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>regionprops_spots <span class="op">=</span> regionprops(label(mask_spots))</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>areas_spots <span class="op">=</span> np.array([r.area <span class="cf">for</span> r <span class="kw">in</span> regionprops_spots])</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's count a spot if area&gt;3</span></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Total nr of spots:"</span>, np.<span class="bu">sum</span>(areas_spots<span class="op">&gt;</span><span class="dv">3</span>))</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="co"># In case we're perfectionists</span></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>img_mode <span class="op">=</span> np.bincount(img_spots_convolved.ravel()).argmax()</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>img_max  <span class="op">=</span> np.<span class="bu">max</span>(img_spots_convolved)</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>threshold_margin <span class="op">=</span> (img_max<span class="op">-</span>img_mode)<span class="op">/</span><span class="dv">5</span></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>mask_spots2   <span class="op">=</span> img_spots_convolved <span class="op">&gt;</span> (threshold_triangle<span class="op">+</span>threshold_margin)</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>rprops_spots2 <span class="op">=</span> regionprops(label(mask_spots2))</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a><span class="co"># And plot</span></span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.title(<span class="st">'Identified spots (triangle, using "Zack" margin)'</span>)</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.imshow(img_spots_convolved)</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.contour(mask_spots2, colors<span class="op">=</span><span class="st">'w'</span>, linewidths<span class="op">=</span><span class="dv">1</span>, levels<span class="op">=</span>[<span class="fl">0.5</span>])</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a><span class="co"># add labels</span></span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, r <span class="kw">in</span> <span class="bu">enumerate</span>(rprops_spots2):</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>    minr, minc, maxr, maxc <span class="op">=</span> r.bbox</span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>    _ <span class="op">=</span> plt.text(maxc<span class="op">+</span><span class="dv">5</span>, maxr, <span class="bu">str</span>(i<span class="op">+</span><span class="dv">1</span>), color<span class="op">=</span><span class="st">'w'</span>)</span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Bioimage-analysis_03b_answers_files/figure-html/cell-3-output-3.png" class="img-fluid figure-img"></p>
+<p><img src="Bioimage-analysis_03b_answers_files/figure-html/cell-4-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Bioimage-analysis_03b_answers_files/figure-html/cell-3-output-4.png" class="img-fluid figure-img"></p>
+<p><img src="Bioimage-analysis_03b_answers_files/figure-html/cell-4-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Bioimage-analysis_03b_answers_files/figure-html/cell-4-output-3.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Bioimage-analysis_03b_answers_files/figure-html/cell-4-output-4.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -252,7 +335,7 @@ os.chdir("/Users/m.wehrens/Documents/git_repos/_UVA/_Teaching/2025_teaching_Py_i
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Bioimage-analysis_03b_answers_files/figure-html/cell-3-output-6.png" class="img-fluid figure-img"></p>
+<p><img src="Bioimage-analysis_03b_answers_files/figure-html/cell-4-output-6.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -260,33 +343,10 @@ os.chdir("/Users/m.wehrens/Documents/git_repos/_UVA/_Teaching/2025_teaching_Py_i
 </section>
 <section id="license-plate" class="level2">
 <h2 class="anchored" data-anchor-id="license-plate">License plate</h2>
-<div id="3e6b8fa7" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>img_shady <span class="op">=</span> tiff.imread(<span class="st">'../images/car/chatGPT_shadybusiness_licensehigh-8bit.tif'</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>img_shady_inv <span class="op">=</span> np.<span class="bu">max</span>(img_shady)<span class="op">-</span>img_shady</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>my_plot_1(img_shady_inv, mycmap<span class="op">=</span><span class="st">'viridis'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Bioimage-analysis_03b_answers_files/figure-html/cell-4-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<div id="f2fb8416" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Segment the symbols on the license plate</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># apply triangle thresholding</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>thresh <span class="op">=</span> sk.filters.threshold_otsu(img_shady_inv)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># get the mask</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>mask_shady <span class="op">=</span> img_shady_inv<span class="op">&gt;</span>thresh</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>mask_shady_labeled <span class="op">=</span> sk.measure.label(mask_shady)</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>props_shady <span class="op">=</span> sk.measure.regionprops(mask_shady_labeled)</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co"># retain labels that are &gt;10, &lt;100 in area</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>mask_shady_filt <span class="op">=</span> np.isin(mask_shady_labeled, </span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>                          [p.label <span class="cf">for</span> p <span class="kw">in</span> props_shady <span class="cf">if</span> p.area<span class="op">&gt;</span><span class="dv">5</span> <span class="kw">and</span> p.area<span class="op">&lt;</span><span class="dv">200</span>])</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co"># show result</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>my_plot_12(mask_shady, mask_shady_filt, mycmap<span class="op">=</span><span class="st">'gray'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="37afc090" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>img_shady <span class="op">=</span> tiff.imread(<span class="st">'../images/car/chatGPT_shadybusiness_licensehigh-8bit.tif'</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>img_shady_inv <span class="op">=</span> np.<span class="bu">max</span>(img_shady)<span class="op">-</span>img_shady</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>my_plot_1(img_shady_inv, mycmap<span class="op">=</span><span class="st">'viridis'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -295,18 +355,21 @@ os.chdir("/Users/m.wehrens/Documents/git_repos/_UVA/_Teaching/2025_teaching_Py_i
 </div>
 </div>
 </div>
-<div id="ffaaa29b" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># acquire labels and regionprops</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>mask_shady_filt_label <span class="op">=</span> sk.measure.label(mask_shady_filt)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>props_shady <span class="op">=</span> sk.measure.regionprops(mask_shady_filt_label)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># plot every bbox separately</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="bu">len</span>(props_shady), figsize<span class="op">=</span>(<span class="bu">len</span>(props_shady)<span class="op">*</span><span class="dv">5</span><span class="op">/</span><span class="fl">2.54</span>,<span class="dv">5</span><span class="op">/</span><span class="fl">2.54</span>))</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, p <span class="kw">in</span> <span class="bu">enumerate</span>(props_shady):</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    minr, minc, maxr, maxc <span class="op">=</span> p.bbox</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Plot (and remove axes)</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    _ <span class="op">=</span> axs[i].imshow(img_shady_inv[minr:maxr, minc:maxc], cmap<span class="op">=</span><span class="st">'magma'</span>)</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    axs[i].axis(<span class="st">'off'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="8f88a208" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Segment the symbols on the license plate</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># apply triangle thresholding</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>thresh <span class="op">=</span> sk.filters.threshold_otsu(img_shady_inv)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># get the mask</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>mask_shady <span class="op">=</span> img_shady_inv<span class="op">&gt;</span>thresh</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>mask_shady_labeled <span class="op">=</span> sk.measure.label(mask_shady)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>props_shady <span class="op">=</span> sk.measure.regionprops(mask_shady_labeled)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co"># retain labels that are &gt;10, &lt;100 in area</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>mask_shady_filt <span class="op">=</span> np.isin(mask_shady_labeled, </span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>                          [p.label <span class="cf">for</span> p <span class="kw">in</span> props_shady <span class="cf">if</span> p.area<span class="op">&gt;</span><span class="dv">5</span> <span class="kw">and</span> p.area<span class="op">&lt;</span><span class="dv">200</span>])</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co"># show result</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>my_plot_12(mask_shady, mask_shady_filt, mycmap<span class="op">=</span><span class="st">'gray'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -315,59 +378,79 @@ os.chdir("/Users/m.wehrens/Documents/git_repos/_UVA/_Teaching/2025_teaching_Py_i
 </div>
 </div>
 </div>
-</section>
-<section id="distance-transform" class="level2">
-<h2 class="anchored" data-anchor-id="distance-transform">Distance transform</h2>
-<div id="039f72f6" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load images</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>img_path_KTR <span class="op">=</span> <span class="st">'/Users/m.wehrens/Data_notbacked/2025_Py-Image-workshop_KTR-example-data/raw/Composite_KTR.tif'</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>img_nuclei <span class="op">=</span> tiff.imread(img_path_KTR)[<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>:<span class="dv">200</span>, <span class="dv">0</span>:<span class="dv">200</span>]</span>
+<div id="26c33dd9" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># acquire labels and regionprops</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>mask_shady_filt_label <span class="op">=</span> sk.measure.label(mask_shady_filt)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>props_shady <span class="op">=</span> sk.measure.regionprops(mask_shady_filt_label)</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's also load an image of some bacteria (Wehrens et al.)</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>path_img_ecoli <span class="op">=</span> <span class="st">'../images/biological/microcolony_ecoli.tif'</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>img_ecoli <span class="op">=</span> tiff.imread(path_img_ecoli)</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>img_ecoli_inv <span class="op">=</span> np.<span class="bu">max</span>(img_ecoli)<span class="op">-</span>img_ecoli <span class="co"># invert image</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co"># create mask</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>mask_nuclei_triangle <span class="op">=</span> img_nuclei <span class="op">&gt;</span> sk.filters.threshold_triangle(img_nuclei)</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>mask_ecoli_triangle <span class="op">=</span> img_ecoli_inv <span class="op">&gt;</span> sk.filters.threshold_triangle(img_ecoli_inv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="109b3f81" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform a distance perform on the bacterial image</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>distance_nuclei <span class="op">=</span> ndimage.distance_transform_edt(mask_nuclei_triangle)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>distance_ecoli  <span class="op">=</span> ndimage.distance_transform_edt(mask_ecoli_triangle)</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Show it</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">2</span>)</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>_<span class="op">=</span>axs[<span class="dv">0</span>].imshow(distance_nuclei, cmap<span class="op">=</span><span class="st">'magma'</span>)</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>_<span class="op">=</span>axs[<span class="dv">1</span>].imshow(distance_ecoli, cmap<span class="op">=</span><span class="st">'magma'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># plot every bbox separately</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="bu">len</span>(props_shady), figsize<span class="op">=</span>(<span class="bu">len</span>(props_shady)<span class="op">*</span><span class="dv">5</span><span class="op">/</span><span class="fl">2.54</span>,<span class="dv">5</span><span class="op">/</span><span class="fl">2.54</span>))</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, p <span class="kw">in</span> <span class="bu">enumerate</span>(props_shady):</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    minr, minc, maxr, maxc <span class="op">=</span> p.bbox</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Plot (and remove axes)</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    _ <span class="op">=</span> axs[i].imshow(img_shady_inv[minr:maxr, minc:maxc], cmap<span class="op">=</span><span class="st">'magma'</span>)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    axs[i].axis(<span class="st">'off'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Bioimage-analysis_03b_answers_files/figure-html/cell-8-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="Bioimage-analysis_03b_answers_files/figure-html/cell-7-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-<div id="40b7c44e" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get local maxima for the nuclei</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>local_max_nuclei <span class="op">=</span> sk.feature.peak_local_max(distance_nuclei, </span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                                             min_distance <span class="op">=</span> <span class="dv">10</span>,</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>                                             threshold_abs <span class="op">=</span> <span class="dv">3</span>,</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>                                             footprint<span class="op">=</span>sk.morphology.disk(<span class="dv">10</span>),</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>                                             exclude_border<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the nuclei picture, and plot the local maxima on top as crosses</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> ax.imshow(img_nuclei, cmap<span class="op">=</span><span class="st">'viridis'</span>)</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> local_max_nuclei[:, <span class="dv">1</span>]</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> local_max_nuclei[:, <span class="dv">0</span>]</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> ax.plot(x, y, <span class="st">'r+'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="distance-transform" class="level2">
+<h2 class="anchored" data-anchor-id="distance-transform">Distance transform</h2>
+<div id="c76e459b" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load images</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>img_path_KTR <span class="op">=</span> <span class="st">'/Users/m.wehrens/Data_notbacked/2025_Py-Image-workshop_KTR-example-data/raw/Composite_KTR.tif'</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>img_nuclei <span class="op">=</span> tiff.imread(img_path_KTR)[<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>:<span class="dv">200</span>, <span class="dv">0</span>:<span class="dv">200</span>]</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's also load an image of some bacteria (Wehrens et al.)</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>path_img_ecoli <span class="op">=</span> <span class="st">'../images/biological/microcolony_ecoli.tif'</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>img_ecoli <span class="op">=</span> tiff.imread(path_img_ecoli)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>img_ecoli_inv <span class="op">=</span> np.<span class="bu">max</span>(img_ecoli)<span class="op">-</span>img_ecoli <span class="co"># invert image</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co"># create mask</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>mask_nuclei_triangle <span class="op">=</span> img_nuclei <span class="op">&gt;</span> sk.filters.threshold_triangle(img_nuclei)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>mask_ecoli_triangle <span class="op">=</span> img_ecoli_inv <span class="op">&gt;</span> sk.filters.threshold_triangle(img_ecoli_inv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="d72dc9ce" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform a distance perform on the bacterial image</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>distance_nuclei <span class="op">=</span> ndimage.distance_transform_edt(mask_nuclei_triangle)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>distance_ecoli  <span class="op">=</span> ndimage.distance_transform_edt(mask_ecoli_triangle)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Show it</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">2</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>_<span class="op">=</span>axs[<span class="dv">0</span>].imshow(distance_nuclei, cmap<span class="op">=</span><span class="st">'magma'</span>)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>_<span class="op">=</span>axs[<span class="dv">1</span>].imshow(distance_ecoli, cmap<span class="op">=</span><span class="st">'magma'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
 <p><img src="Bioimage-analysis_03b_answers_files/figure-html/cell-9-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="c20ed1a3" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get local maxima for the nuclei</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>local_max_nuclei <span class="op">=</span> sk.feature.peak_local_max(distance_nuclei, </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                                             min_distance <span class="op">=</span> <span class="dv">10</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>                                             threshold_abs <span class="op">=</span> <span class="dv">3</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>                                             footprint<span class="op">=</span>sk.morphology.disk(<span class="dv">10</span>),</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>                                             exclude_border<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the nuclei picture, and plot the local maxima on top as crosses</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> ax.imshow(img_nuclei, cmap<span class="op">=</span><span class="st">'viridis'</span>)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> local_max_nuclei[:, <span class="dv">1</span>]</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> local_max_nuclei[:, <span class="dv">0</span>]</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> ax.plot(x, y, <span class="st">'r+'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Bioimage-analysis_03b_answers_files/figure-html/cell-10-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>

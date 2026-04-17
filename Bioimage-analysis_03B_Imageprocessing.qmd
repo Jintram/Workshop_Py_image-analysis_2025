@@ -65,6 +65,7 @@ _ = axs[0].axis('off')
 _ = axs[1].imshow(img_ecoli, cmap='gray')
 _ = axs[1].axis('off')
 plt.show()
+
 ```
 
 ## Segmentation
@@ -201,15 +202,47 @@ threshold_triangle()
 threshold_yen()
 ```
 
-See the [documentation](https://scikit-image.org/docs/stable/api/skimage.filters.html) for a 
-more extensive description.
+See the [documentation](https://scikit-image.org/docs/stable/api/skimage.filters.html) 
+for documentation on these function. See [this guide](https://scikit-image.org/docs/stable/auto_examples/applications/plot_thresholding_guide.html) for more information on thresholding.
 
 #### Local thresholding
 
+If there is a contrast that is local (e.g. due to uneven illumination),
+local thresholding can be very useful.
 
-threshold_local()
+This can be done with the function `threshold_local()`.
 
-### Applying automatic thresholding
+```{python}
+
+# Let's use the page as an example
+img_page = tiff.imread("images/misc/page_original.tif")
+img_page_inv = np.max(img_page)-img_page
+thresh_local = sk.filters.threshold_local(img_page_inv, block_size=35, offset=-10)
+    # block size is the size of the neighborhood
+    # offset is the local contrast (is subtracted to create threshold)
+    # 
+    # NOT FOR PRESENTATION (technical note for reference)
+    # - this function works by convolution
+    # - either method = gaussian, mean or median kernel of neighborhood
+    # - the convoluted value IS the threshold
+    # - offset parameter adjusts the cutoff
+    # https://scikit-image.org/docs/stable/api/skimage.filters.html#skimage.filters.threshold_local
+
+_ = plt.imshow(img_page_inv>thresh_local, cmap='gray')
+plt.show()
+
+# Note that the image should be inverted to get correct foreground/background
+# Note that the offset parameter is subtracted from preliminary threshold, therefor -10
+
+```
+
+--------------------------------------------------
+
+<font color=red size=40>I was editing here!</font>
+
+--------------------------------------------------
+
+### Applying automatic thresholding (EDIT THIS FOR BACTERIA ONLY)
 
 ```{python}
 def my_plot_12(img1, img2, mycmap='viridis'):
@@ -425,13 +458,6 @@ for x,y,lbl in [(p.centroid[1], p.centroid[0], p.label) for p in props]:
     - Remember that pixels were 0.041 um wide. An average bacterium is ~1-2 μm long and .5-1 μm wide. Are bacterial sizes we observe consistent with this?
 - Write a function to segment a picture of nuclei, e.g. `seg_nuclei(input_img)`.
     - Test that it works.
-    
-    
-```{python}
-
-
-
-```    
     
 ## Additional exercises
 

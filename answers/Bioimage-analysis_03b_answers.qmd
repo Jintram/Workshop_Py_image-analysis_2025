@@ -35,6 +35,78 @@ def my_plot_12(img1, img2, mycmap='viridis', myfigsize=(10/2.54,5/2.54)):
     plt.tight_layout()     
 ```
 
+## Creating segmentation functions
+    
+```{python}
+
+def seg_bacterium(input_img):
+    """
+    Segment bacteria in an image using LoG edge detection and watershed.
+    """
+    
+    # Gaussian blur
+    img_gauss = sk.filters.gaussian(input_img, sigma=3)
+    
+    # Laplacian of Gaussian for edge detection
+    edges_log = sk.filters.laplace(img_gauss)
+    
+    # Threshold edges using triangle method
+    mask_edges = edges_log > sk.filters.threshold_triangle(edges_log)
+    
+    # Erode to separate touching bacteria
+    mask_eroded = sk.morphology.erosion(mask_edges, footprint=sk.morphology.disk(5))
+    
+    # Remove small objects
+    mask_eroded_filtered = sk.morphology.remove_small_objects(mask_eroded, min_size=50)
+    
+    # Triangle threshold on original
+    mask_triangle = input_img > sk.filters.threshold_triangle(input_img)
+    mask_triangle_filtered = sk.morphology.remove_small_objects(mask_triangle, min_size=50)
+    
+    # Combine masks
+    mask_combined = np.logical_and(mask_triangle_filtered, mask_eroded_filtered)
+    mask_labeled = sk.measure.label(mask_combined)
+    
+    # Watershed to separate touching bacteria
+    result = sk.segmentation.watershed(-edges_log, markers=mask_labeled, mask=mask_edges)
+    
+    return result
+
+
+def seg_nuclei(input_img):
+    """
+    Segment nuclei in an image using triangle thresholding.
+    """
+    
+    # Apply triangle threshold method
+    thresh = sk.filters.threshold_triangle(input_img)
+    mask = input_img > thresh
+    
+    # Remove small objects and label
+    mask_filtered = sk.morphology.remove_small_objects(mask, min_size=50)
+    result = sk.measure.label(mask_filtered)
+    
+    return result
+
+# Now let's test the above functions
+
+
+# Bacteria
+img_ecoli = tiff.imread('../images/biological/microcolony_ecoli.tif')
+mask_bacteria = seg_bacterium(np.max(img_ecoli)-img_ecoli)
+_ = plt.imshow(mask_bacteria)
+plt.show()
+
+# Nuclei
+img_path_KTR = '/Users/m.wehrens/Data_notbacked/2025_Py-Image-workshop_KTR-example-data/raw/Composite_KTR.tif'
+img_nuclei = tiff.imread(img_path_KTR)[0, 0, 0:200, 0:200]
+mask_nuclei = seg_nuclei(img_nuclei)
+_ = plt.imshow(mask_nuclei)
+plt.show()
+
+```    
+    
+
 ## Counting spots
 
 ```{python}
@@ -93,7 +165,6 @@ for i, r in enumerate(rprops_spots2):
 plt.show()
 
 ```
-
 
 ## License plate
 
