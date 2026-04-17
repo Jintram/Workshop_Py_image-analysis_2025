@@ -83,12 +83,14 @@ You can set up a new colab document using the following code:
 #### Images to download
 
 - Example images;
-    - [https://surfdrive.surf.nl/s/bRY8tGHsYaMP9Yk](https://surfdrive.surf.nl/s/bRY8tGHsYaMP9Yk)
+    - [https://surfdrive.surf.nl/s/m2GE3GBwaxWKSDF](https://surfdrive.surf.nl/s/m2GE3GBwaxWKSDF)
+    <!-- This is a direct link to the repo.. -->
 - KTR example data;
     - [https://surfdrive.surf.nl/s/dHCHgk66DTd7Hnz](https://surfdrive.surf.nl/s/dHCHgk66DTd7Hnz)
-- <font color=red>Bacterial filamentation data;</font>
-    - `<add another surfdrive link to zipped files on my local pc>`
-    - `/Users/m.wehrens/Data_notbacked/2025_Py-Image-workshop_Filamentation-example-data`
+    <!-- Links to folder /Users/m.wehrens/Data_UVA/teaching/2026-04-Py_Img_Workshop -->
+- Bacterial filamentation data
+    - [https://surfdrive.surf.nl/s/FHaHjGWRNTxxzLT](https://surfdrive.surf.nl/s/FHaHjGWRNTxxzLT)
+    <!-- Links to folder /Users/m.wehrens/Data_UVA/teaching/2026-04-Py_Img_Workshop -->
 
 #### Contact us
 

@@ -61,7 +61,9 @@ img_ecoli_inv = np.max(img_ecoli)-img_ecoli
 # Display the images
 fig, axs = plt.subplots(1,2, figsize=FIGSIZE21)
 _ = axs[0].imshow(img_nuclei, cmap='magma')
+_ = axs[0].axis('off')
 _ = axs[1].imshow(img_ecoli, cmap='gray')
+_ = axs[1].axis('off')
 plt.show()
 ```
 
@@ -88,9 +90,10 @@ plt.show()
 ```{python}
 #| code-fold: true
 img_page = tiff.imread("images/misc/page_original.tif")
-fig, axs = plt.subplots(1,2, figsize=(15/2.54, 5/2.54))
-_ = axs[0].set_title("Text (changing absolute values)")
+fig, axs = plt.subplots(1,2, figsize=(15/2.54, 6/2.54))
+_ = axs[0].set_title(f"Text\n(absolute values change)")
 _ = axs[0].imshow(img_page, cmap='gray')
+_ = axs[0].axis('off')
 _ = axs[1].hist(img_page.ravel(), bins=256)
 _ = axs[1].set_xlabel("Pixel value"); _ = axs[1].set_ylabel("Count")
 plt.tight_layout()
@@ -114,34 +117,97 @@ Each of the images above require a different strategy.
     - Histogram doesn't work well
     - Use local contrast
 
-### Automated global thresholds
+#### Automated global thresholds
 
+Several algorithms exist, to determine a global threshold that can
+be applied to the image.
 
-------------------------------------
+##### The bimodal histogram
 
-I WAS EDITING HERE; MAYBE MAKE LIST BELOW MORE CONCISE, AND FOCUSSED AROUND
-DIFFERENT USE CASES
+One algorithm that works well is Otsu's method. It will try to find a threshold
+that minimizes the variance in the intensities that respectively fall above
+and below that threshold. 
+(For more info, see [biobook](https://bioimagebook.github.io/chapters/2-processing/3-thresholding/thresholding.html).)
 
-------------------------------------
+```{python}
+# Illustrate bimodal + otsu
+# Load 
+img_happycell = tiff.imread("images/bioimagebook/happy_cell_noise.tif")
+# Inspect
+_ = plt.imshow(img_happycell, cmap='grey')
+plt.show()
+_ = plt.hist(img_happycell.ravel(), bins=256)
+plt.show()
+```
 
-#### Otsu's method
+```{python}
+# Determine otsu threshold
+thresh_otsu = sk.filters.threshold_otsu(img_happycell)
+# Inspect
+_ = plt.hist(img_happycell.ravel(), bins=256)
+_ = plt.axvline(thresh_otsu, color='red')
+plt.show()
+_ = plt.imshow(img_happycell>thresh_otsu, cmap='grey')
+plt.show()
+```
 
-_"Otsu’s method, introduced in 1979, has become an extremely popular approach to determining a threshold. It’s commonly described, somewhat intimidatingly, as ‘minimizing the intra-class intensity variance’. In essence, calculating a threshold using Otsu’s method involves adding the variance of the background pixels to the variance of the foreground pixels, for all possible thresholds. The threshold that is selected is the one for which the sum of the variances is smallest."_
+##### The dominant background
 
-<div style="text-align: right">
--- [biobook](https://bioimagebook.github.io/chapters/2-processing/3-thresholding/thresholding.html)
-</div>
+A method that's suitable for the "dominant background" case is the "triangle
+method", which was published already by [Zack et al.](https://doi.org/10.1177/25.7.7045) in 1977.
+
+<img src="images/figures/triangle_method.png" alt="The triangle method." height=400px>
+
+In the figure above (from [Zack et al.](https://doi.org/10.1177/25.7.7045)), the method is 
+explained. A line is drawn in the histogram between $x_\text{mode}, y(x_\text{mode})$ and
+$x_\text{max}, 0$. Then, a second line is drawn, perpendicular to the first line,
+which maximizes the distance to the histogram line. The x-value where that second line
+touches the histogram, will be the threshold. (Originally, a margin of 0.2 was
+included, but modern implementations leave that out.)
+
+```{python}
+# Let's check some data that has a dominant background
+_ = plt.imshow(img_nuclei)
+plt.show()
+_ = plt.hist(img_nuclei.ravel(), bins=256)
+plt.show()
+```
+
+```{python}
+# and apply the triangle method
+thresh_triangle = sk.filters.threshold_triangle(img_nuclei)
+_ = plt.hist(img_nuclei.ravel(), bins=256)
+_ = plt.axvline(thresh_triangle, color='red')
+plt.show()
+_ = plt.imshow(img_nuclei>thresh_triangle)
+plt.show()
+```
 
 #### More thresholding-finding algorithms
 
-Other methods include:
+More global thresholding-finding algorithms exits. 
+Threshold methods included in `skimage.filters` are:
 
-- Threshold determined by estimate of background
-- Triangle method
-- Yen method
-- (..)
+```
+threshold_isodata()
+threshold_li()
+threshold_mean()
+threshold_minimum()
+threshold_multiotsu()
+threshold_niblack()
+threshold_otsu()
+threshold_sauvola()
+threshold_triangle()
+threshold_yen()
+```
 
-A few examples of cannonical thresholding algorithms and their output can be found at [scikit image's documentation](https://scikit-image.org/docs/0.23.x/auto_examples/segmentation/plot_thresholding.html).
+See the [documentation](https://scikit-image.org/docs/stable/api/skimage.filters.html) for a 
+more extensive description.
+
+#### Local thresholding
+
+
+threshold_local()
 
 ### Applying automatic thresholding
 
@@ -360,13 +426,25 @@ for x,y,lbl in [(p.centroid[1], p.centroid[0], p.label) for p in props]:
 - Write a function to segment a picture of nuclei, e.g. `seg_nuclei(input_img)`.
     - Test that it works.
     
+    
+```{python}
+
+
+
+```    
+    
 ## Additional exercises
 
-- Look up what a 'distance transform' is (`scipy.ndimage.distance_transform_edt`) and apply it to the nuclei image. 
-    - Create a mask based on thresholding the distance transform.
-        - To achieve this, use the function `sk.feature.peak_local_max()`.    
+- Create a local mean convolution kernel. 
+    - Apply it to the image `images/bioimagebook/spots.tif`.
+    - Can you device a segmentation algorithm for spots based on this new image?
+    - Make a plot with contours
+    - Count the spots
 
 - Load the image `chatGPT_shadybusiness_licensehigh-8bit.tif`. 
     - Try to segment the symbols on the license plate.
     - Use `regionprops` and `bbox` to plot each symbol separately.
 
+- Look up what a 'distance transform' is (`scipy.ndimage.distance_transform_edt`) and apply it to the nuclei image. 
+    - Create a mask based on thresholding the distance transform.
+        - To achieve this, use the function `sk.feature.peak_local_max()`.    

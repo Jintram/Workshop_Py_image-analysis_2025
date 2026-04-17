@@ -5,7 +5,9 @@ jupyter: python3
 
 *Martijn Wehrens, September 2025*
 
-
+<!-- 
+os.chdir("/Users/m.wehrens/Documents/git_repos/_UVA/_Teaching/2025_teaching_Py_image-analysis/Workshop_Py_image-analysis_2025/answers")
+-->
 
 ## Answers to exercises 03
 
@@ -19,6 +21,8 @@ import skimage as sk
 from scipy import stats
 from scipy import ndimage
 
+from skimage.measure import label, regionprops
+
 def my_plot_1(img1, mycmap='gray', myfigsize=(5/2.54,5/2.54)):
     fig, ax = plt.subplots(1,1, figsize=myfigsize)
     _=plt.imshow(img1, cmap=mycmap) 
@@ -30,6 +34,68 @@ def my_plot_12(img1, img2, mycmap='viridis', myfigsize=(10/2.54,5/2.54)):
     _ = axs[1].imshow(img2, cmap=mycmap)  
     plt.tight_layout()     
 ```
+
+## Counting spots
+
+```{python}
+
+# Read the image
+img_spots = tiff.imread("../images/bioimagebook/spots.tif")
+_ = plt.title("Original spots image")
+_ = plt.imshow(img_spots)
+plt.show()
+
+# Create a local mean convolution kernel
+a_disk     = sk.morphology.disk(5)
+the_kernel = a_disk/np.sum(a_disk)
+
+# Apply it to the image `images/bioimagebook/spots.tif`.
+img_spots_convolved = ndimage.convolve(img_spots, the_kernel)
+
+# Show the result
+_ = plt.title("Result of local averaging")
+_ = plt.imshow(img_spots_convolved)
+plt.show()
+_ = plt.title("Result after local averaging")
+_ = plt.hist(img_spots_convolved.ravel(), bins = np.arange(0, 255, 5))
+plt.show()
+
+# Segment based on new image
+threshold_triangle = sk.filters.threshold_triangle(img_spots_convolved)
+mask_spots = img_spots_convolved > threshold_triangle
+
+#  Make a plot with contours
+_ = plt.title("Identified spots (using triangle algorithm)")
+_ = plt.imshow(img_spots_convolved)
+_ = plt.contour(mask_spots, colors='w', linewidths=1, levels=[0.5])
+plt.show()
+
+# Count the spots
+regionprops_spots = regionprops(label(mask_spots))
+areas_spots = np.array([r.area for r in regionprops_spots])
+# Let's count a spot if area>3
+print("Total nr of spots:", np.sum(areas_spots>3))
+
+# In case we're perfectionists
+img_mode = np.bincount(img_spots_convolved.ravel()).argmax()
+img_max  = np.max(img_spots_convolved)
+threshold_margin = (img_max-img_mode)/5
+mask_spots2   = img_spots_convolved > (threshold_triangle+threshold_margin)
+rprops_spots2 = regionprops(label(mask_spots2))
+# And plot
+_ = plt.title('Identified spots (triangle, using "Zack" margin)')
+_ = plt.imshow(img_spots_convolved)
+_ = plt.contour(mask_spots2, colors='w', linewidths=1, levels=[0.5])
+# add labels
+for i, r in enumerate(rprops_spots2):
+    minr, minc, maxr, maxc = r.bbox
+    _ = plt.text(maxc+5, maxr, str(i+1), color='w')
+plt.show()
+
+```
+
+
+## License plate
 
 ```{python}
 img_shady = tiff.imread('../images/car/chatGPT_shadybusiness_licensehigh-8bit.tif')
@@ -67,6 +133,7 @@ for i, p in enumerate(props_shady):
     _ = axs[i].imshow(img_shady_inv[minr:maxr, minc:maxc], cmap='magma')
     axs[i].axis('off')
 ```
+
 
 ## Distance transform
 
@@ -112,4 +179,3 @@ x = local_max_nuclei[:, 1]
 y = local_max_nuclei[:, 0]
 _ = ax.plot(x, y, 'r+')
 ```
-
