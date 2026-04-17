@@ -1,0 +1,1560 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.33">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Workshop Python Image Analysis</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="Bioimage-analysis_06_MachineLearning-basics_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Bioimage-analysis_06_MachineLearning-basics_files/libs/quarto-html/quarto.js"></script>
+<script src="Bioimage-analysis_06_MachineLearning-basics_files/libs/quarto-html/popper.min.js"></script>
+<script src="Bioimage-analysis_06_MachineLearning-basics_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Bioimage-analysis_06_MachineLearning-basics_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Bioimage-analysis_06_MachineLearning-basics_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Bioimage-analysis_06_MachineLearning-basics_files/libs/quarto-html/quarto-syntax-highlighting-07ba0ad10f5680c660e360ac31d2f3b6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Bioimage-analysis_06_MachineLearning-basics_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Bioimage-analysis_06_MachineLearning-basics_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Bioimage-analysis_06_MachineLearning-basics_files/libs/bootstrap/bootstrap-fe6593aca1dacbc749dc3d2ba78c8639.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Workshop Python Image Analysis</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><em>Martijn Wehrens, September 2025</em></p>
+<p><strong>Estimated time:</strong> 20 mins presenting + 60 mins exercises + 20 mins discussion</p>
+<section id="chapter-6-a-very-basic-introduction-into-machine-learning" class="level2">
+<h2 class="anchored" data-anchor-id="chapter-6-a-very-basic-introduction-into-machine-learning">Chapter 6: A very basic introduction into machine learning</h2>
+<p><font face="Times New Roman" color="red">This notebook will probably need to be run on Google colab or the like, as laptops might not have the right architecture to run this.</font></p>
+<section id="outline-of-this-mini-workshop" class="level3">
+<h3 class="anchored" data-anchor-id="outline-of-this-mini-workshop">Outline of this mini-workshop</h3>
+<ul>
+<li>Mini lecture about Machine Learning
+<ul>
+<li>/Users/m.wehrens/Documents/PRESENTATIONS/TEACHING/ML_verybasic.pptx</li>
+</ul></li>
+<li>Go over the questions in this notebook
+<ul>
+<li>Don’t try to understand all code!</li>
+</ul></li>
+</ul>
+</section>
+<section id="exercise-draw-4-images" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-draw-4-images">Exercise: draw 4 images</h3>
+<p>Open FIJI and create a new 12x12 8bit image. Use the paintbrush tool and color picker to draw four images. Draw 2 images depicting one thing, and two images depicting another thing. E.g. draw 2 images of an apple and two images of a pear. Only spend a few minutes on this. (You can also draw something easier, like numbers, symbols, letters, etc.)</p>
+</section>
+<section id="run-some-code" class="level3">
+<h3 class="anchored" data-anchor-id="run-some-code">Run some code</h3>
+<p>The code below uses pytorch to set up a very simple neural network. “Real” neural networks have a much more complicated architecture. The purpose here is to be able to follow along what’s happening in a neural network.</p>
+<section id="understanding-but-not-the-technical-details" class="level5">
+<h5 class="anchored" data-anchor-id="understanding-but-not-the-technical-details">Understanding, but not the technical details</h5>
+<p>The code has some explanatory comments, but it takes too much time to explain fully how pytorch or similar neural network libraries (like tensorflow or keras) work. You’re welcome to try and understand the code, but don’t get lost in it, the main goal is to understand the concepts of machine learning.</p>
+<div id="7e28d12c" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch <span class="im">import</span> nn</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch.utils.data <span class="im">import</span> Dataset</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tifffile <span class="im">as</span> tiff</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="91951b28" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This code defines a VERY simple model for 12x12 pixels,</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># meant for illustratory purposes.</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> VerySimpleNN(nn.Module):</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Pytorch makes use of classes, which are a way to group</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># data and functions together. A class specifies what functions </span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># the class provides, and what data (like parameters) it stores.</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># An object can then be created to actually load data and </span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># call those functions.</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># As an analogy, class definitions are the "blueprint",</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># objects instantiated from the class are the "houses".</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">#</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Here, we define a class (blueprint) for our simple</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># neural network.</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="co">#</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># To learn more about classes, e.g. google for a tutorial on</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Python classes.</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>        <span class="co"># __init__ is a standard class method, which is </span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>        <span class="co"># automatically called when an object is created.</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>        <span class="co">#</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>        <span class="co"># In this case, it defines how (the layers </span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>        <span class="co"># of) the network should look.</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>        <span class="co"># technical; calls init of parent class</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>() </span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Define a flatten function, which in this case</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>        <span class="co"># can flatten the input (the image) to a 144 element vector</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.flatten <span class="op">=</span> nn.Flatten() </span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Define a linear layer, which will</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>        <span class="co"># calculate weights*pixels for 144 element input and 2 output elements</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.linear <span class="op">=</span> nn.Linear(<span class="dv">12</span><span class="op">*</span><span class="dv">12</span>, <span class="dv">2</span>) </span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x):</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>        <span class="co"># The forward function can be called later to actually</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>        <span class="co"># generate a prediction.</span></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>        <span class="co"># It will use the "components" we defined in __init__.</span></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>        <span class="co"># (This is useful when the network is more complicated,</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>        <span class="co"># and more complex structures or components are defined in __init__, and </span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>        <span class="co"># the forward function will be less complex.)        </span></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Now actually use the flatten function to convert</span></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>        <span class="co"># the 12x12 input to a 1d 144 long vector.</span></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> <span class="va">self</span>.flatten(x)        </span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>            <span class="co"># technical note:</span></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>            <span class="co"># typically, input will be supplied in batches,</span></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>            <span class="co"># so the input shape will be (batchsize, 12, 12)</span></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>            <span class="co"># and the output shape will be (batchsize, 144)</span></span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Now use the linear layer to calculate the 2 element output</span></span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>        logits <span class="op">=</span> <span class="va">self</span>.linear(x)</span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> logits</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a><span class="co">###</span></span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a><span class="co"># Now test the neural network</span></span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a><span class="co"># Instantiate the neural network (create an object from the class)</span></span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a><span class="co"># Technical note: ".to('mps')" tells the computer to run this network</span></span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a><span class="co"># on an Apple GPU.</span></span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>simpleNN <span class="op">=</span> VerySimpleNN().to(<span class="st">'mps'</span>)</span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate a random 12x12 image</span></span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>test_data <span class="op">=</span> torch.rand(<span class="dv">1</span>, <span class="dv">12</span>, <span class="dv">12</span>, device<span class="op">=</span><span class="st">'mps'</span>)  </span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'test_data='</span>,test_data)</span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate a prediction; calling the object will automatically </span></span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a><span class="co"># call the forward function (since this is a pytorch class)</span></span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a><span class="co"># Alternatively, you could also call simpleNN.forward(test_data) </span></span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>pred <span class="op">=</span> simpleNN(test_data)</span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>pred_numpy <span class="op">=</span> pred.cpu().detach().numpy()</span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the prediction</span></span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'pred = </span><span class="ch">\"</span><span class="st">'</span>,pred, <span class="st">'</span><span class="ch">\"</span><span class="st"> (pytorch tensor format)'</span>)</span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'pred_numpy = </span><span class="ch">\"</span><span class="st">'</span>,pred_numpy,<span class="st">'</span><span class="ch">\"</span><span class="st"> (numpy format)'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>test_data= tensor([[[0.5830, 0.1900, 0.9950, 0.5933, 0.9192, 0.1471, 0.4993, 0.3008,
+          0.6408, 0.3764, 0.4723, 0.8469],
+         [0.2945, 0.3850, 0.3844, 0.2662, 0.8562, 0.0240, 0.9013, 0.1307,
+          0.6719, 0.1942, 0.2235, 0.4436],
+         [0.5933, 0.8696, 0.2823, 0.2333, 0.6611, 0.2512, 0.7063, 0.5292,
+          0.3042, 0.3285, 0.8464, 0.6724],
+         [0.6830, 0.0254, 0.4320, 0.9685, 0.8570, 0.7167, 0.7807, 0.3431,
+          0.9451, 0.8458, 0.3238, 0.8043],
+         [0.0966, 0.8786, 0.4487, 0.4021, 0.0031, 0.0520, 0.0082, 0.7987,
+          0.6871, 0.7735, 0.1707, 0.5831],
+         [0.8362, 0.7617, 0.8844, 0.9482, 0.8092, 0.7880, 0.5686, 0.6113,
+          0.0366, 0.9559, 0.1001, 0.1466],
+         [0.1737, 0.9138, 0.6357, 0.5195, 0.1296, 0.6910, 0.9345, 0.9651,
+          0.7801, 0.1576, 0.2311, 0.7024],
+         [0.8848, 0.9341, 0.5678, 0.2056, 0.6922, 0.9754, 0.7172, 0.8832,
+          0.1305, 0.8364, 0.6614, 0.4408],
+         [0.2916, 0.9681, 0.6628, 0.5293, 0.7758, 0.6859, 0.1839, 0.5876,
+          0.7866, 0.0516, 0.5743, 0.9163],
+         [0.9250, 0.6999, 0.3665, 0.6831, 0.9054, 0.3024, 0.1302, 0.1661,
+          0.5071, 0.8843, 0.4323, 0.9762],
+         [0.7541, 0.8400, 0.5063, 0.6050, 0.3594, 0.9816, 0.1328, 0.9353,
+          0.2236, 0.5158, 0.1142, 0.5296],
+         [0.6814, 0.4408, 0.2993, 0.6402, 0.7404, 0.0308, 0.9209, 0.4261,
+          0.1806, 0.0804, 0.1950, 0.3846]]], device='mps:0')
+pred = " tensor([[-0.3187, -0.0391]], device='mps:0', grad_fn=&lt;LinearBackward0&gt;) " (pytorch tensor format)
+pred_numpy = " [[-0.31869474 -0.03905538]] " (numpy format)</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="remarks-tensors" class="level3">
+<h3 class="anchored" data-anchor-id="remarks-tensors">Remarks: Tensors</h3>
+<p>As you can see the output has the type <code>tensor</code>. This is an internal data structure of pytorch, which is similar to a numpy array. The reason we’re using these ‘special’ arrays is (1) that their technical setup allows for calculating the “gradient” (<span class="math inline">\(\delta\text{loss}/\delta w\)</span>) used to update the weights <span class="math inline">\(w\)</span> and (2) they can be put on GPUs, which can speed up calculations a lot.</p>
+</section>
+</section>
+<section id="questions" class="level2">
+<h2 class="anchored" data-anchor-id="questions">Questions</h2>
+<ul>
+<li>What role does <span class="math inline">\(\delta\text{loss}/\delta w\)</span> play in neural networks?</li>
+<li>This questions regards the code under the heading “# Now test the neural network” above. Can you describe in your own terms what
+<ul>
+<li>The input we give to the network looks like here?</li>
+<li>What the output of the neural network looks like?</li>
+</ul></li>
+<li>If we were to provide actual images to this network, do you think it would be able to generate meaningful predictions? Why would it (not)?</li>
+</ul>
+<div id="2932a09d" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Since this network is so simple, we can manually calculate it's outcome</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Now acquire the weights stored in the neural network</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># And convert them from tensors to numpy</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>weights <span class="op">=</span> simpleNN.linear.weight.detach().cpu().numpy()</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>bias    <span class="op">=</span> simpleNN.linear.bias.detach().cpu().numpy()</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># bias is a constant term that's added to the weighted sum</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Also convert the test data to numpy</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>test_data_np <span class="op">=</span> test_data.cpu().numpy().flatten()</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform the calculation</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>output_element1 <span class="op">=</span> np.<span class="bu">sum</span>(test_data_np <span class="op">*</span> weights[<span class="dv">0</span>]) <span class="op">+</span> bias[<span class="dv">0</span>]</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>output_element2 <span class="op">=</span> np.<span class="bu">sum</span>(test_data_np <span class="op">*</span> weights[<span class="dv">1</span>]) <span class="op">+</span> bias[<span class="dv">1</span>]</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(output_element1, <span class="st">', '</span>, output_element2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>-0.31869474 ,  -0.039055362</code></pre>
+</div>
+</div>
+<section id="question" class="level3">
+<h3 class="anchored" data-anchor-id="question">Question</h3>
+<ul>
+<li>What does the calculation look like that is done inside the neural network, to get from the input elements, to the output elements?</li>
+</ul>
+</section>
+<section id="exercise-load-your-images" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-load-your-images">Exercise: load your images</h3>
+<p>Adapt the code below to load the images you were asked to draw earlier.</p>
+<div id="fde2d9d0" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's load some potential input and training data</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Here, we'll load only the few images you just created. </span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># In reality, training sets are very large.</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># For example, the MNIST dataset has 60,000 training images.</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># (https://en.wikipedia.org/wiki/MNIST_database)</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Two image paths</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>img_happy_path <span class="op">=</span> <span class="st">'images/ML/smile.tif'</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>img_sad_path   <span class="op">=</span> <span class="st">'images/ML/sad.tif'</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>img_sad2_path   <span class="op">=</span> <span class="st">'images/ML/sad2.tif'</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Load images</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>img_happy <span class="op">=</span> tiff.imread(img_happy_path)</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>img_sad   <span class="op">=</span> tiff.imread(img_sad_path)</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>img_sad2  <span class="op">=</span> tiff.imread(img_sad2_path)</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Show one image</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">3</span><span class="op">/</span><span class="fl">2.54</span>, <span class="dv">3</span><span class="op">/</span><span class="fl">2.54</span>))</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>_<span class="op">=</span>ax.imshow(img_happy)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Bioimage-analysis_06_MachineLearning-basics_files/figure-html/cell-5-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="seaborn-plotting-can-be-skipped" class="level3">
+<h3 class="anchored" data-anchor-id="seaborn-plotting-can-be-skipped">Seaborn plotting (can be skipped)</h3>
+<div id="c796ac0a" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's use seaborn to create some more sophisticated plots</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> mw_showimg2(img, annotcolor<span class="op">=</span><span class="st">'white'</span>,SX<span class="op">=</span><span class="dv">8</span>,SY<span class="op">=</span><span class="dv">8</span>,SF<span class="op">=</span><span class="dv">7</span>,VMIN<span class="op">=</span><span class="dv">0</span>,VMAX<span class="op">=</span><span class="dv">255</span>, CMAP<span class="op">=</span><span class="st">'hot'</span>, FMT<span class="op">=</span><span class="st">"d"</span>):</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">1</span>, figsize<span class="op">=</span>(SX<span class="op">/</span><span class="fl">2.54</span>, SY<span class="op">/</span><span class="fl">2.54</span>))</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    _ <span class="op">=</span> sns.heatmap(img, annot<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>                fmt<span class="op">=</span>FMT, </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>                cmap<span class="op">=</span>CMAP, </span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>                annot_kws<span class="op">=</span>{<span class="st">"size"</span>: SF, <span class="st">"color"</span>: annotcolor},</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>                vmin<span class="op">=</span>VMIN, vmax<span class="op">=</span>VMAX,</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>                linewidths<span class="op">=</span><span class="fl">.5</span>, linecolor<span class="op">=</span>annotcolor,</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>                ax<span class="op">=</span>ax)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    ax.axis(<span class="st">'off'</span>)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    ax.collections[<span class="dv">0</span>].colorbar.remove()</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the images</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>mw_showimg2(img_happy, annotcolor<span class="op">=</span><span class="st">'blue'</span>)</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>mw_showimg2(img_sad2, annotcolor<span class="op">=</span><span class="st">'blue'</span>)</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot some made-up weights</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>img_randomweights <span class="op">=</span> np.random.uniform(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>, (<span class="dv">12</span>, <span class="dv">12</span>))</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>mw_showimg2(img_randomweights, annotcolor<span class="op">=</span><span class="st">'blue'</span>, SF<span class="op">=</span><span class="dv">6</span>,VMIN<span class="op">=-</span><span class="dv">1</span>,VMAX<span class="op">=</span><span class="fl">1.0</span>, FMT<span class="op">=</span><span class="st">".2f"</span>, CMAP<span class="op">=</span><span class="st">'gray'</span>)</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot some made-up output</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>mw_showimg2(np.array([[<span class="dv">13</span>,<span class="op">-</span><span class="dv">4</span>]]), annotcolor<span class="op">=</span><span class="st">'black'</span>, SY<span class="op">=</span><span class="dv">4</span>, SF<span class="op">=</span><span class="dv">32</span>,VMIN<span class="op">=-</span><span class="dv">14</span>,VMAX<span class="op">=</span><span class="dv">14</span>,CMAP<span class="op">=</span><span class="st">'hot'</span>)<span class="co"># gray</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Bioimage-analysis_06_MachineLearning-basics_files/figure-html/cell-6-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Bioimage-analysis_06_MachineLearning-basics_files/figure-html/cell-6-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Bioimage-analysis_06_MachineLearning-basics_files/figure-html/cell-6-output-3.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Bioimage-analysis_06_MachineLearning-basics_files/figure-html/cell-6-output-4.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="math-can-be-skipped" class="level3">
+<h3 class="anchored" data-anchor-id="math-can-be-skipped">Math (can be skipped)</h3>
+<p>For a prediction y_j, where j is referring to the categories that need predicting (e.g.&nbsp;<span class="math inline">\(y_1\)</span> high means a “happy” emoji, and a high <span class="math inline">\(y_2\)</span> value indicates the emoji is likely “sad”), <span class="math inline">\(y_j\)</span> values can be calculated from the <span class="math inline">\(i\text{th}\)</span> image pixel <span class="math inline">\(x_i\)</span> as follows (with <span class="math inline">\(w_{i,j}\)</span> being the weights):</p>
+<p><span class="math inline">\(\huge y_j = \sum_{i} w_{i,j} * x_i\)</span></p>
+</section>
+<section id="defining-a-data-loader" class="level3">
+<h3 class="anchored" data-anchor-id="defining-a-data-loader">Defining a data loader</h3>
+<p>To train a model, pytorch needs to be able to quickly look at a load of data efficiently. In the pytorch workflow, a data class is defined, such that training data can be stored in tensor format, and can be supplied easily to the training algorithm later.</p>
+<div id="42472739" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Data_HappySad(Dataset):</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Again, we use a class, see above for an explanation.</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># (Remember the blueprint/house analogy.)</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">#</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># This class is based on the pytorch "Dataset" class, defined</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># in the pytorch library. Data_HappySad is the name we </span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># give to this class. Hence the notation "Data_HappySad(Dataset)".</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, targetdevice<span class="op">=</span><span class="st">"mps"</span>):</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Technical: tell the class how to store the data (e.g. on CPU or GPU)</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.targetdevice <span class="op">=</span> targetdevice</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Data can be handled in many ways.</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Here, we'll store some data in the object directly.</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>        <span class="co"># This can be done by the "self." command, which refers </span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>        <span class="co"># to the to-be-created object itself.</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>        <span class="co">#</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>        <span class="co"># The data needs to be converted to tensor for later use</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>        <span class="co"># We'll use the images loaded earlier, and store 3 images here</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.data   <span class="op">=</span> torch.tensor([img_happy, img_sad, img_sad2], </span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>                                   dtype<span class="op">=</span>torch.float32)</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Now, we supply also the true labels that need to be learned</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.label  <span class="op">=</span> torch.tensor([<span class="dv">0</span>        , <span class="dv">1</span>,       <span class="dv">1</span>], </span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>                                   dtype<span class="op">=</span>torch.<span class="bu">long</span>)</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Technical: normalize the images</span></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.data <span class="op">=</span> <span class="va">self</span>.data <span class="op">/</span> <span class="fl">255.0</span></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__len__</span>(<span class="va">self</span>):</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Function required by pytorch; tells how many samples are in the dataset</span></span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="bu">len</span>(<span class="va">self</span>.data)</span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__getitem__</span>(<span class="va">self</span>, idx):</span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Function required by pytorch; tells how to get a specific item</span></span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.data[idx].to(<span class="va">self</span>.targetdevice), <span class="va">self</span>.label[idx].to(<span class="va">self</span>.targetdevice)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="d8ea07f4" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Show an image from the dataloader</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create an object from the class</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>data_happysad <span class="op">=</span> Data_HappySad() </span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co"># We can extract a sample and annotation from that class</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># (This will later be done automatically in the training loop)</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>img, label <span class="op">=</span> data_happysad[<span class="dv">0</span>]</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co"># For now, let's convert it to the numpy format for illustration</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co"># purposes</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>img_np <span class="op">=</span> img.cpu().numpy()</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot it</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>mw_showimg2(img_np, annotcolor<span class="op">=</span><span class="st">'blue'</span>, VMIN<span class="op">=</span><span class="dv">0</span>, VMAX<span class="op">=</span><span class="fl">1.0</span>, FMT<span class="op">=</span><span class="st">".2f"</span>, SX<span class="op">=</span><span class="dv">5</span>, SY<span class="op">=</span><span class="dv">5</span>, SF<span class="op">=</span><span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/var/folders/8w/2thz_cgn3xn13rhrxb2dvb5w0000gn/T/ipykernel_76951/2484028174.py:21: UserWarning:
+
+Creating a tensor from a list of numpy.ndarrays is extremely slow. Please consider converting the list to a single numpy.ndarray with numpy.array() before converting to a tensor. (Triggered internally at /Users/runner/miniforge3/conda-bld/libtorch_1741947704867/work/torch/csrc/utils/tensor_new.cpp:257.)
+</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Bioimage-analysis_06_MachineLearning-basics_files/figure-html/cell-8-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="exercise" class="level3">
+<h3 class="anchored" data-anchor-id="exercise">Exercise</h3>
+<ul>
+<li>Edit the code above, specifically the subfunction <code>__init__</code>, such that it will load the images you created earlier at the start of this notebook.</li>
+<li>Execute the code in the cell directly above, to check if you can make it show your own image.</li>
+<li>This code will show the first image in your dataset, can you also make it show the 2nd and 3rd image?</li>
+</ul>
+</section>
+<section id="dataloader" class="level3">
+<h3 class="anchored" data-anchor-id="dataloader">Dataloader</h3>
+<p>We’re now getting close to actually training this model. We’ll need to define a dataloader. In more advanced neural network setups, the DataLoader provides convenient functionalities like shuffling the data, or loading it in parallel from disk. Here, we’ll just use it to be able to loop over the data easily, and provide the data in batches of three images.</p>
+<p>We’ll also initialize the model itself (create an object from the class <code>VerySimpleNN</code> defined earlier).</p>
+<div id="83b8f7ad" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># initialize the dataset and dataloader objects</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>my_data_happysad <span class="op">=</span> Data_HappySad()</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>my_data_happysad_loader <span class="op">=</span> torch.utils.data.DataLoader(my_data_happysad, </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>                                                      batch_size<span class="op">=</span><span class="dv">3</span>, shuffle<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co"># initialize the model</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>my_simple_model  <span class="op">=</span> VerySimpleNN().to(<span class="st">'mps'</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="62bac6a0" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's check the data object works as expected</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>my_data_happysad.<span class="fu">__getitem__</span>(<span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<pre><code>(tensor([[0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
+         [0., 0., 0., 1., 1., 1., 1., 1., 1., 0., 0., 0.],
+         [0., 0., 1., 0., 0., 0., 0., 0., 0., 1., 0., 0.],
+         [0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0.],
+         [0., 1., 0., 0., 1., 0., 0., 1., 0., 0., 1., 0.],
+         [0., 1., 0., 0., 1., 0., 0., 1., 0., 0., 1., 0.],
+         [0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0.],
+         [0., 1., 0., 1., 0., 0., 0., 0., 1., 0., 1., 0.],
+         [0., 1., 0., 1., 0., 0., 0., 0., 1., 0., 1., 0.],
+         [0., 1., 0., 0., 1., 1., 1., 1., 0., 0., 1., 0.],
+         [0., 0., 1., 0., 0., 0., 0., 0., 0., 1., 0., 0.],
+         [0., 0., 0., 1., 1., 1., 1., 1., 1., 0., 0., 0.]], device='mps:0'),
+ tensor(0, device='mps:0'))</code></pre>
+</div>
+</div>
+</section>
+<section id="question-1" class="level3">
+<h3 class="anchored" data-anchor-id="question-1">Question</h3>
+<ul>
+<li>The amount of classes and library functions used at this point might be a bit overwhelming. Can you draw a cartoon that depicts the fundamental aspects of the workflow (or otherwise recreate an overview of it)?</li>
+</ul>
+</section>
+<section id="the-actual-training" class="level3">
+<h3 class="anchored" data-anchor-id="the-actual-training">The actual training</h3>
+<p>Now we need to train the model by presenting it a picture, calculating the prediction (which might be completely off initially), determine which weight adjustments would improve the prediction (using the loss function), and update the weights accordingly. And repeat that multiple times.</p>
+<p>Training a “real” neural network might take presenting the model with many images, for many iterations, and might take hours or days.</p>
+<p>Here, our extremely simple model will be trained swiftly.</p>
+<div id="cbdea231" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the training loop</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a loss function</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># This function is defined such that it will have a high value</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co"># if there is a large discrepancy between the predicted and true labels.</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Our aim is to minimize the observed loss during the training.</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>loss_fn <span class="op">=</span> torch.nn.CrossEntropyLoss()</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Later, we'll determine in which directions to adjust the weights</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co"># (called the gradient), that correspond to a reduction in the loss,</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co"># the optimizer will be used to update (optimize) the weights accordingly.</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> torch.optim.Adam(my_simple_model.parameters(), lr<span class="op">=</span><span class="fl">.01</span>)</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="co"># technical; set model to training mode</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>my_simple_model.train()</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="co"># For illustratory purposes, we'll track what happens with the</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="co"># gradients and weights during the training. In a more extensive</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a><span class="co"># model, this isn't possible, as this will be too much data.</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>gradient_list <span class="op">=</span> [] <span class="co"># only for illustratory purposes</span></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>weight_list   <span class="op">=</span> [] <span class="co"># only for illustratory purposes</span></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>loss_list     <span class="op">=</span> []</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Now train for 300 iterations (called epochs when 1 iteration covers all data)</span></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch_idx <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">300</span>):</span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># This loop is a bit redundant here, since we have only 3 images,</span></span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># in a usual scenario, e.g. with 60.000 images, you would loop</span></span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># over those images in multiple batches. Here, we'll only</span></span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># have 1 batch, containing three images, so this loop will</span></span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>    <span class="co"># just iterate once.</span></span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> b_idx, (X,y) <span class="kw">in</span> <span class="bu">enumerate</span>(my_data_happysad_loader): </span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>        <span class="co"># X will contain a batch of images</span></span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>        <span class="co"># y will contain the corresponding labels</span></span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>        <span class="co"># For illustrative purposes, we'll track the weights in the model</span></span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>        <span class="co"># This isn't part of a usual training loop.</span></span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>        weights <span class="op">=</span> my_simple_model.linear.weight.detach().cpu().numpy()</span>
+<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>        weight_list.append(weights)</span>
+<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Now determine the prediction for X based on current weights</span></span>
+<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a>        <span class="co"># (Note: the weights are stored inside the model object)</span></span>
+<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a>        <span class="co"># (Note: the model is programmed such that it will predict</span></span>
+<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a>        <span class="co"># for multiple images at once.)</span></span>
+<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a>        pred <span class="op">=</span> my_simple_model(X)</span>
+<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Now we'll calculate the loss, or the discrepancy between</span></span>
+<span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a>        <span class="co"># the predicted and true labels</span></span>
+<span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a>        loss <span class="op">=</span> loss_fn(pred, y)</span>
+<span id="cb14-49"><a href="#cb14-49" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb14-50"><a href="#cb14-50" aria-hidden="true" tabindex="-1"></a>        <span class="co"># And based on that calculation, we'll determine the gradients</span></span>
+<span id="cb14-51"><a href="#cb14-51" aria-hidden="true" tabindex="-1"></a>        <span class="co"># (ie directions in which to adjust the weights to reduce the loss)</span></span>
+<span id="cb14-52"><a href="#cb14-52" aria-hidden="true" tabindex="-1"></a>        loss.backward() </span>
+<span id="cb14-53"><a href="#cb14-53" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb14-54"><a href="#cb14-54" aria-hidden="true" tabindex="-1"></a>        <span class="co"># For illustrative purposes, we'll track the gradients</span></span>
+<span id="cb14-55"><a href="#cb14-55" aria-hidden="true" tabindex="-1"></a>        <span class="co"># This wouldn't be done in a usual training loop.        </span></span>
+<span id="cb14-56"><a href="#cb14-56" aria-hidden="true" tabindex="-1"></a>        gradients <span class="op">=</span> my_simple_model.linear.weight.grad.detach().cpu().numpy()</span>
+<span id="cb14-57"><a href="#cb14-57" aria-hidden="true" tabindex="-1"></a>        gradient_list.append(gradients)</span>
+<span id="cb14-58"><a href="#cb14-58" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Similarly, also save the loss, this is actually also sometimes</span></span>
+<span id="cb14-59"><a href="#cb14-59" aria-hidden="true" tabindex="-1"></a>        <span class="co"># monitored during "real" training scenarios.</span></span>
+<span id="cb14-60"><a href="#cb14-60" aria-hidden="true" tabindex="-1"></a>        loss_list.append(loss.item())</span>
+<span id="cb14-61"><a href="#cb14-61" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb14-62"><a href="#cb14-62" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Then we use the optimizer to apply the gradients</span></span>
+<span id="cb14-63"><a href="#cb14-63" aria-hidden="true" tabindex="-1"></a>        optimizer.step()         </span>
+<span id="cb14-64"><a href="#cb14-64" aria-hidden="true" tabindex="-1"></a>        <span class="co"># And we reset them before the next iteration</span></span>
+<span id="cb14-65"><a href="#cb14-65" aria-hidden="true" tabindex="-1"></a>        optimizer.zero_grad()</span>
+<span id="cb14-66"><a href="#cb14-66" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb14-67"><a href="#cb14-67" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Print some information to see what's going on</span></span>
+<span id="cb14-68"><a href="#cb14-68" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">'epoch ='</span>, epoch_idx, <span class="st">'batch ='</span>,b_idx,<span class="st">', loss = '</span>, loss.item())<span class="co">#, 'X.shape=', X.shape)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>epoch = 0 batch = 0 , loss =  0.638950526714325
+epoch = 1 batch = 0 , loss =  0.5674177408218384
+epoch = 2 batch = 0 , loss =  0.5398913621902466
+epoch = 3 batch = 0 , loss =  0.491190642118454
+epoch = 4 batch = 0 , loss =  0.4439147412776947
+epoch = 5 batch = 0 , loss =  0.41297438740730286
+epoch = 6 batch = 0 , loss =  0.38909757137298584
+epoch = 7 batch = 0 , loss =  0.36027398705482483
+epoch = 8 batch = 0 , loss =  0.3290550708770752
+epoch = 9 batch = 0 , loss =  0.302172988653183
+epoch = 10 batch = 0 , loss =  0.28163817524909973
+epoch = 11 batch = 0 , loss =  0.2645113170146942
+epoch = 12 batch = 0 , loss =  0.2473682165145874
+epoch = 13 batch = 0 , loss =  0.22956334054470062
+epoch = 14 batch = 0 , loss =  0.21265946328639984
+epoch = 15 batch = 0 , loss =  0.19820432364940643
+epoch = 16 batch = 0 , loss =  0.18632538616657257
+epoch = 17 batch = 0 , loss =  0.17592667043209076
+epoch = 18 batch = 0 , loss =  0.16583950817584991
+epoch = 19 batch = 0 , loss =  0.15568707883358002
+epoch = 20 batch = 0 , loss =  0.14585727453231812
+epoch = 21 batch = 0 , loss =  0.13693386316299438
+epoch = 22 batch = 0 , loss =  0.12919287383556366
+epoch = 23 batch = 0 , loss =  0.12247216701507568
+epoch = 24 batch = 0 , loss =  0.1163691058754921
+epoch = 25 batch = 0 , loss =  0.11053416877985
+epoch = 26 batch = 0 , loss =  0.10484462976455688
+epoch = 27 batch = 0 , loss =  0.09938838332891464
+epoch = 28 batch = 0 , loss =  0.09432939440011978
+epoch = 29 batch = 0 , loss =  0.08977264165878296
+epoch = 30 batch = 0 , loss =  0.08570531010627747
+epoch = 31 batch = 0 , loss =  0.08202090114355087
+epoch = 32 batch = 0 , loss =  0.07858819514513016
+epoch = 33 batch = 0 , loss =  0.07531353831291199
+epoch = 34 batch = 0 , loss =  0.07216747850179672
+epoch = 35 batch = 0 , loss =  0.06917201727628708
+epoch = 36 batch = 0 , loss =  0.06636787205934525
+epoch = 37 batch = 0 , loss =  0.06378232687711716
+epoch = 38 batch = 0 , loss =  0.06141375005245209
+epoch = 39 batch = 0 , loss =  0.059233713895082474
+epoch = 40 batch = 0 , loss =  0.05720142647624016
+epoch = 41 batch = 0 , loss =  0.05527966096997261
+epoch = 42 batch = 0 , loss =  0.053445134311914444
+epoch = 43 batch = 0 , loss =  0.051691364496946335
+epoch = 44 batch = 0 , loss =  0.050022710114717484
+epoch = 45 batch = 0 , loss =  0.04844753071665764
+epoch = 46 batch = 0 , loss =  0.04697037860751152
+epoch = 47 batch = 0 , loss =  0.04558885097503662
+epoch = 48 batch = 0 , loss =  0.04429401829838753
+epoch = 49 batch = 0 , loss =  0.04307316243648529
+epoch = 50 batch = 0 , loss =  0.041913729161024094
+epoch = 51 batch = 0 , loss =  0.04080589488148689
+epoch = 52 batch = 0 , loss =  0.03974438086152077
+epoch = 53 batch = 0 , loss =  0.03872739151120186
+epoch = 54 batch = 0 , loss =  0.03775535523891449
+epoch = 55 batch = 0 , loss =  0.03682918846607208
+epoch = 56 batch = 0 , loss =  0.035948511213064194
+epoch = 57 batch = 0 , loss =  0.03511149808764458
+epoch = 58 batch = 0 , loss =  0.03431466221809387
+epoch = 59 batch = 0 , loss =  0.03355385735630989
+epoch = 60 batch = 0 , loss =  0.032824885100126266
+epoch = 61 batch = 0 , loss =  0.03212423995137215
+epoch = 62 batch = 0 , loss =  0.0314495749771595
+epoch = 63 batch = 0 , loss =  0.030799413099884987
+epoch = 64 batch = 0 , loss =  0.030173122882843018
+epoch = 65 batch = 0 , loss =  0.0295703187584877
+epoch = 66 batch = 0 , loss =  0.02899055927991867
+epoch = 67 batch = 0 , loss =  0.028433039784431458
+epoch = 68 batch = 0 , loss =  0.02789667248725891
+epoch = 69 batch = 0 , loss =  0.02738005481660366
+epoch = 70 batch = 0 , loss =  0.026881545782089233
+epoch = 71 batch = 0 , loss =  0.02639986015856266
+epoch = 72 batch = 0 , loss =  0.025933757424354553
+epoch = 73 batch = 0 , loss =  0.02548219822347164
+epoch = 74 batch = 0 , loss =  0.02504449337720871
+epoch = 75 batch = 0 , loss =  0.02462022192776203
+epoch = 76 batch = 0 , loss =  0.024208953604102135
+epoch = 77 batch = 0 , loss =  0.02381029725074768
+epoch = 78 batch = 0 , loss =  0.023423826321959496
+epoch = 79 batch = 0 , loss =  0.023049065843224525
+epoch = 80 batch = 0 , loss =  0.022685280069708824
+epoch = 81 batch = 0 , loss =  0.022332116961479187
+epoch = 82 batch = 0 , loss =  0.021988824009895325
+epoch = 83 batch = 0 , loss =  0.021654879674315453
+epoch = 84 batch = 0 , loss =  0.021329915151000023
+epoch = 85 batch = 0 , loss =  0.02101343683898449
+epoch = 86 batch = 0 , loss =  0.020705213770270348
+epoch = 87 batch = 0 , loss =  0.02040482498705387
+epoch = 88 batch = 0 , loss =  0.020112240687012672
+epoch = 89 batch = 0 , loss =  0.019826993346214294
+epoch = 90 batch = 0 , loss =  0.019548894837498665
+epoch = 91 batch = 0 , loss =  0.019277719780802727
+epoch = 92 batch = 0 , loss =  0.019013235345482826
+epoch = 93 batch = 0 , loss =  0.018755026161670685
+epoch = 94 batch = 0 , loss =  0.018503019586205482
+epoch = 95 batch = 0 , loss =  0.01825679838657379
+epoch = 96 batch = 0 , loss =  0.018016252666711807
+epoch = 97 batch = 0 , loss =  0.01778111793100834
+epoch = 98 batch = 0 , loss =  0.017551247030496597
+epoch = 99 batch = 0 , loss =  0.017326490953564644
+epoch = 100 batch = 0 , loss =  0.017106663435697556
+epoch = 101 batch = 0 , loss =  0.01689157634973526
+epoch = 102 batch = 0 , loss =  0.016681158915162086
+epoch = 103 batch = 0 , loss =  0.016475221142172813
+epoch = 104 batch = 0 , loss =  0.016273653134703636
+epoch = 105 batch = 0 , loss =  0.016076264902949333
+epoch = 106 batch = 0 , loss =  0.01588302105665207
+epoch = 107 batch = 0 , loss =  0.015693655237555504
+epoch = 108 batch = 0 , loss =  0.015508132986724377
+epoch = 109 batch = 0 , loss =  0.015326297841966152
+epoch = 110 batch = 0 , loss =  0.015148078091442585
+epoch = 111 batch = 0 , loss =  0.014973354525864124
+epoch = 112 batch = 0 , loss =  0.014802019111812115
+epoch = 113 batch = 0 , loss =  0.014633949846029282
+epoch = 114 batch = 0 , loss =  0.014469112269580364
+epoch = 115 batch = 0 , loss =  0.014307431876659393
+epoch = 116 batch = 0 , loss =  0.014148752205073833
+epoch = 117 batch = 0 , loss =  0.013992995023727417
+epoch = 118 batch = 0 , loss =  0.0138402059674263
+epoch = 119 batch = 0 , loss =  0.01369014848023653
+epoch = 120 batch = 0 , loss =  0.013542826287448406
+epoch = 121 batch = 0 , loss =  0.013398162089288235
+epoch = 122 batch = 0 , loss =  0.013256040401756763
+epoch = 123 batch = 0 , loss =  0.013116504065692425
+epoch = 124 batch = 0 , loss =  0.0129793556407094
+epoch = 125 batch = 0 , loss =  0.012844562530517578
+epoch = 126 batch = 0 , loss =  0.012712162919342518
+epoch = 127 batch = 0 , loss =  0.012582081370055676
+epoch = 128 batch = 0 , loss =  0.012454082258045673
+epoch = 129 batch = 0 , loss =  0.01232832670211792
+epoch = 130 batch = 0 , loss =  0.012204696424305439
+epoch = 131 batch = 0 , loss =  0.012083078734576702
+epoch = 132 batch = 0 , loss =  0.011963509023189545
+epoch = 133 batch = 0 , loss =  0.01184595376253128
+epoch = 134 batch = 0 , loss =  0.011730175465345383
+epoch = 135 batch = 0 , loss =  0.011616374365985394
+epoch = 136 batch = 0 , loss =  0.011504354886710644
+epoch = 137 batch = 0 , loss =  0.011394194327294827
+epoch = 138 batch = 0 , loss =  0.01128577720373869
+epoch = 139 batch = 0 , loss =  0.01117898803204298
+epoch = 140 batch = 0 , loss =  0.011073902249336243
+epoch = 141 batch = 0 , loss =  0.010970485396683216
+epoch = 142 batch = 0 , loss =  0.010868619196116924
+epoch = 143 batch = 0 , loss =  0.010768302716314793
+epoch = 144 batch = 0 , loss =  0.01066953968256712
+epoch = 145 batch = 0 , loss =  0.010572288185358047
+epoch = 146 batch = 0 , loss =  0.010476511903107166
+epoch = 147 batch = 0 , loss =  0.010382132604718208
+epoch = 148 batch = 0 , loss =  0.010289189405739307
+epoch = 149 batch = 0 , loss =  0.01019760500639677
+epoch = 150 batch = 0 , loss =  0.010107380338013172
+epoch = 151 batch = 0 , loss =  0.010018437169492245
+epoch = 152 batch = 0 , loss =  0.009930775500833988
+epoch = 153 batch = 0 , loss =  0.009844436310231686
+epoch = 154 batch = 0 , loss =  0.009759299457073212
+epoch = 155 batch = 0 , loss =  0.009675408713519573
+epoch = 156 batch = 0 , loss =  0.009592684917151928
+epoch = 157 batch = 0 , loss =  0.009511086158454418
+epoch = 158 batch = 0 , loss =  0.009430695325136185
+epoch = 159 batch = 0 , loss =  0.009351394139230251
+epoch = 160 batch = 0 , loss =  0.00927314069122076
+epoch = 161 batch = 0 , loss =  0.009196018800139427
+epoch = 162 batch = 0 , loss =  0.009119986556470394
+epoch = 163 batch = 0 , loss =  0.00904492661356926
+epoch = 164 batch = 0 , loss =  0.008970879018306732
+epoch = 165 batch = 0 , loss =  0.008897844702005386
+epoch = 166 batch = 0 , loss =  0.008825784549117088
+epoch = 167 batch = 0 , loss =  0.008754697628319263
+epoch = 168 batch = 0 , loss =  0.008684586733579636
+epoch = 169 batch = 0 , loss =  0.008615330792963505
+epoch = 170 batch = 0 , loss =  0.008547011762857437
+epoch = 171 batch = 0 , loss =  0.00847958866506815
+epoch = 172 batch = 0 , loss =  0.008413024246692657
+epoch = 173 batch = 0 , loss =  0.008347316645085812
+epoch = 174 batch = 0 , loss =  0.008282466791570187
+epoch = 175 batch = 0 , loss =  0.008218437433242798
+epoch = 176 batch = 0 , loss =  0.008155186660587788
+epoch = 177 batch = 0 , loss =  0.008092794567346573
+epoch = 178 batch = 0 , loss =  0.008031144738197327
+epoch = 179 batch = 0 , loss =  0.007970274426043034
+epoch = 180 batch = 0 , loss =  0.007910185493528843
+epoch = 181 batch = 0 , loss =  0.007850877940654755
+epoch = 182 batch = 0 , loss =  0.007792233023792505
+epoch = 183 batch = 0 , loss =  0.007734330836683512
+epoch = 184 batch = 0 , loss =  0.007677131798118353
+epoch = 185 batch = 0 , loss =  0.007620555814355612
+epoch = 186 batch = 0 , loss =  0.007564762607216835
+epoch = 187 batch = 0 , loss =  0.007509594317525625
+epoch = 188 batch = 0 , loss =  0.0074550495482981205
+epoch = 189 batch = 0 , loss =  0.007401249837130308
+epoch = 190 batch = 0 , loss =  0.007347995415329933
+epoch = 191 batch = 0 , loss =  0.007295405957847834
+epoch = 192 batch = 0 , loss =  0.00724344328045845
+epoch = 193 batch = 0 , loss =  0.0071920654736459255
+epoch = 194 batch = 0 , loss =  0.007141313049942255
+epoch = 195 batch = 0 , loss =  0.007091108709573746
+epoch = 196 batch = 0 , loss =  0.007041530683636665
+epoch = 197 batch = 0 , loss =  0.0069924998097121716
+epoch = 198 batch = 0 , loss =  0.006943937391042709
+epoch = 199 batch = 0 , loss =  0.0068960413336753845
+epoch = 200 batch = 0 , loss =  0.006848654244095087
+epoch = 201 batch = 0 , loss =  0.006801813840866089
+epoch = 202 batch = 0 , loss =  0.00675548380240798
+epoch = 203 batch = 0 , loss =  0.006709699984639883
+epoch = 204 batch = 0 , loss =  0.006664346903562546
+epoch = 205 batch = 0 , loss =  0.0066195824183523655
+epoch = 206 batch = 0 , loss =  0.006575247272849083
+epoch = 207 batch = 0 , loss =  0.006531421095132828
+epoch = 208 batch = 0 , loss =  0.006488064769655466
+epoch = 209 batch = 0 , loss =  0.006445219274610281
+epoch = 210 batch = 0 , loss =  0.006402764469385147
+epoch = 211 batch = 0 , loss =  0.006360857281833887
+epoch = 212 batch = 0 , loss =  0.006319303065538406
+epoch = 213 batch = 0 , loss =  0.006278259214013815
+epoch = 214 batch = 0 , loss =  0.0062375664710998535
+epoch = 215 batch = 0 , loss =  0.006197422742843628
+epoch = 216 batch = 0 , loss =  0.006157671567052603
+epoch = 217 batch = 0 , loss =  0.0061182728968560696
+epoch = 218 batch = 0 , loss =  0.006079344544559717
+epoch = 219 batch = 0 , loss =  0.0060407682321965694
+epoch = 220 batch = 0 , loss =  0.006002623587846756
+epoch = 221 batch = 0 , loss =  0.005964871030300856
+epoch = 222 batch = 0 , loss =  0.005927510559558868
+epoch = 223 batch = 0 , loss =  0.0058905030600726604
+epoch = 224 batch = 0 , loss =  0.005853926297277212
+epoch = 225 batch = 0 , loss =  0.005817664321511984
+epoch = 226 batch = 0 , loss =  0.005781833548098803
+epoch = 227 batch = 0 , loss =  0.005746316164731979
+epoch = 228 batch = 0 , loss =  0.0057111517526209354
+epoch = 229 batch = 0 , loss =  0.005676379892975092
+epoch = 230 batch = 0 , loss =  0.005641883239150047
+epoch = 231 batch = 0 , loss =  0.005607739090919495
+epoch = 232 batch = 0 , loss =  0.00557398796081543
+epoch = 233 batch = 0 , loss =  0.0055405497550964355
+epoch = 234 batch = 0 , loss =  0.005507465451955795
+epoch = 235 batch = 0 , loss =  0.005474655423313379
+epoch = 236 batch = 0 , loss =  0.005442159716039896
+epoch = 237 batch = 0 , loss =  0.005410017911344767
+epoch = 238 batch = 0 , loss =  0.005378149915486574
+epoch = 239 batch = 0 , loss =  0.005346635822206736
+epoch = 240 batch = 0 , loss =  0.005315357353538275
+epoch = 241 batch = 0 , loss =  0.005284391809254885
+epoch = 242 batch = 0 , loss =  0.005253781098872423
+epoch = 243 batch = 0 , loss =  0.005223406013101339
+epoch = 244 batch = 0 , loss =  0.0051933047361671925
+epoch = 245 batch = 0 , loss =  0.005163518711924553
+epoch = 246 batch = 0 , loss =  0.005133967846632004
+epoch = 247 batch = 0 , loss =  0.005104731302708387
+epoch = 248 batch = 0 , loss =  0.005075809545814991
+epoch = 249 batch = 0 , loss =  0.0050470842979848385
+epoch = 250 batch = 0 , loss =  0.00501863332465291
+epoch = 251 batch = 0 , loss =  0.004990458022803068
+epoch = 252 batch = 0 , loss =  0.004962557461112738
+epoch = 253 batch = 0 , loss =  0.0049348920583724976
+epoch = 254 batch = 0 , loss =  0.00490746321156621
+epoch = 255 batch = 0 , loss =  0.0048802699893713
+epoch = 256 batch = 0 , loss =  0.00485339155420661
+epoch = 257 batch = 0 , loss =  0.004826669115573168
+epoch = 258 batch = 0 , loss =  0.004800223279744387
+epoch = 259 batch = 0 , loss =  0.004774052184075117
+epoch = 260 batch = 0 , loss =  0.004748077597469091
+epoch = 261 batch = 0 , loss =  0.0047223386354744434
+epoch = 262 batch = 0 , loss =  0.004696836229413748
+epoch = 263 batch = 0 , loss =  0.004671529866755009
+epoch = 264 batch = 0 , loss =  0.004646459594368935
+epoch = 265 batch = 0 , loss =  0.004621585831046104
+epoch = 266 batch = 0 , loss =  0.004596948157995939
+epoch = 267 batch = 0 , loss =  0.004572546575218439
+epoch = 268 batch = 0 , loss =  0.004548341501504183
+epoch = 269 batch = 0 , loss =  0.00452433293685317
+epoch = 270 batch = 0 , loss =  0.004500521346926689
+epoch = 271 batch = 0 , loss =  0.004476945847272873
+epoch = 272 batch = 0 , loss =  0.004453527275472879
+epoch = 273 batch = 0 , loss =  0.004430344793945551
+epoch = 274 batch = 0 , loss =  0.004407359752804041
+epoch = 275 batch = 0 , loss =  0.004384531173855066
+epoch = 276 batch = 0 , loss =  0.0043619791977107525
+epoch = 277 batch = 0 , loss =  0.004339504521340132
+epoch = 278 batch = 0 , loss =  0.004317306447774172
+epoch = 279 batch = 0 , loss =  0.0042952257208526134
+epoch = 280 batch = 0 , loss =  0.004273381549865007
+epoch = 281 batch = 0 , loss =  0.00425165519118309
+epoch = 282 batch = 0 , loss =  0.004230125341564417
+epoch = 283 batch = 0 , loss =  0.004208832513540983
+epoch = 284 batch = 0 , loss =  0.004187656566500664
+epoch = 285 batch = 0 , loss =  0.00416667852550745
+epoch = 286 batch = 0 , loss =  0.004145857412368059
+epoch = 287 batch = 0 , loss =  0.004125233739614487
+epoch = 288 batch = 0 , loss =  0.004104727413505316
+epoch = 289 batch = 0 , loss =  0.004084418062120676
+epoch = 290 batch = 0 , loss =  0.004064267035573721
+epoch = 291 batch = 0 , loss =  0.00404431251809001
+epoch = 292 batch = 0 , loss =  0.004024475812911987
+epoch = 293 batch = 0 , loss =  0.004004836082458496
+epoch = 294 batch = 0 , loss =  0.00398527504876256
+epoch = 295 batch = 0 , loss =  0.003965910989791155
+epoch = 296 batch = 0 , loss =  0.00394670432433486
+epoch = 297 batch = 0 , loss =  0.0039276559837162495
+epoch = 298 batch = 0 , loss =  0.003908724989742041
+epoch = 299 batch = 0 , loss =  0.003889990970492363</code></pre>
+</div>
+</div>
+</section>
+<section id="questions-1" class="level3">
+<h3 class="anchored" data-anchor-id="questions-1">Questions</h3>
+<ul>
+<li>Above you see a training loop, in the printed output below:
+<ul>
+<li>Why is the loss decreasing?</li>
+<li>Optional: google what “learning rate” means. This is set by the <code>lr</code> parameter. If you like, you can re-initialize the model, adjust <code>lr</code> in the cell above, and see what the effect is.</li>
+<li>What would happen to the loss if you’d train for more iterations?</li>
+<li>Would you reckon the training has worked? Will the model now recognize something?</li>
+</ul></li>
+</ul>
+</section>
+<section id="loss-value-over-time" class="level3">
+<h3 class="anchored" data-anchor-id="loss-value-over-time">Loss value over time</h3>
+<div id="b68b6a05" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's plot the loss value over time</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.plot(np.array(loss_list).squeeze())</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Iteration (or epoch)'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'Loss value'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<pre><code>Text(0, 0.5, 'Loss value')</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Bioimage-analysis_06_MachineLearning-basics_files/figure-html/cell-12-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="visualization-of-what-happened" class="level3">
+<h3 class="anchored" data-anchor-id="visualization-of-what-happened">Visualization of what happened</h3>
+<p>The code below visualizes what happened during model training with the weights. Since this model is so simple, we can interpret the weights.</p>
+<div id="eb69b8c7" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># visualize the weights</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>TO_SHOW_NR <span class="op">=</span> <span class="dv">35</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(TO_SHOW_NR<span class="op">//</span><span class="dv">7</span>, <span class="dv">7</span>, figsize<span class="op">=</span>(<span class="dv">15</span><span class="op">/</span><span class="fl">2.54</span>, <span class="dv">15</span><span class="op">/</span><span class="fl">2.54</span><span class="op">*</span>(TO_SHOW_NR<span class="op">//</span><span class="dv">7</span>)<span class="op">/</span><span class="dv">7</span>))</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co"># show the weights of weight_list[X][0] in a 5 x 7 grid</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> weight_iteration <span class="kw">in</span> <span class="bu">range</span>(TO_SHOW_NR):</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    pos_X <span class="op">=</span> weight_iteration<span class="op">//</span><span class="dv">7</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    pos_Y <span class="op">=</span> weight_iteration<span class="op">%</span><span class="dv">7</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    _ <span class="op">=</span> axs[pos_X,pos_Y].imshow(weight_list[weight_iteration][<span class="dv">0</span>].reshape(<span class="dv">12</span>,<span class="dv">12</span>), cmap<span class="op">=</span><span class="st">'gray'</span>)</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    _ <span class="op">=</span> axs[pos_X,pos_Y].axis(<span class="st">'off'</span>)</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>plt.suptitle(<span class="st">'Weight evolution for "happy" class'</span>)</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="co"># now the same for the "sad" class</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(TO_SHOW_NR<span class="op">//</span><span class="dv">7</span>, <span class="dv">7</span>, figsize<span class="op">=</span>(<span class="dv">15</span><span class="op">/</span><span class="fl">2.54</span>, <span class="dv">15</span><span class="op">/</span><span class="fl">2.54</span><span class="op">*</span>(TO_SHOW_NR<span class="op">//</span><span class="dv">7</span>)<span class="op">/</span><span class="dv">7</span>))</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="co"># show the weights of weight_list[X][1] in a 5 x 7 grid</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> weight_iteration <span class="kw">in</span> <span class="bu">range</span>(TO_SHOW_NR):</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>    pos_X <span class="op">=</span> weight_iteration<span class="op">//</span><span class="dv">7</span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>    pos_Y <span class="op">=</span> weight_iteration<span class="op">%</span><span class="dv">7</span></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>    _ <span class="op">=</span> axs[pos_X,pos_Y].imshow(weight_list[weight_iteration][<span class="dv">1</span>].reshape(<span class="dv">12</span>,<span class="dv">12</span>), cmap<span class="op">=</span><span class="st">'gray'</span>)</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>    _ <span class="op">=</span> axs[pos_X,pos_Y].axis(<span class="st">'off'</span>)</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>plt.suptitle(<span class="st">'Weight evolution for "sad" class'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
+<pre><code>Text(0.5, 0.98, 'Weight evolution for "sad" class')</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Bioimage-analysis_06_MachineLearning-basics_files/figure-html/cell-13-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Bioimage-analysis_06_MachineLearning-basics_files/figure-html/cell-13-output-3.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="questions-2" class="level3">
+<h3 class="anchored" data-anchor-id="questions-2">Questions</h3>
+<ul>
+<li>Update the code <code>plt.suptitle</code>s above to reflect the categories that match the labels for the images you created yourself.</li>
+<li>Right to left, top to bottom, we see how the weights are updated over multiple iterations. Why do you think the weights change the way they do?
+<ul>
+<li>Do you recognize any features in it from your input images?</li>
+</ul></li>
+</ul>
+<div id="0b9c87da" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># show the final weights as images</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">8</span><span class="op">/</span><span class="fl">2.54</span>, <span class="dv">4</span><span class="op">/</span><span class="fl">2.54</span>))</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>_<span class="op">=</span>axs[<span class="dv">0</span>].imshow(weight_list[<span class="op">-</span><span class="dv">1</span>][<span class="dv">0</span>].reshape(<span class="dv">12</span>,<span class="dv">12</span>),cmap<span class="op">=</span><span class="st">'gray'</span>)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>_<span class="op">=</span>axs[<span class="dv">1</span>].imshow(weight_list[<span class="op">-</span><span class="dv">1</span>][<span class="dv">1</span>].reshape(<span class="dv">12</span>,<span class="dv">12</span>),cmap<span class="op">=</span><span class="st">'gray'</span>)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>_<span class="op">=</span>axs[<span class="dv">0</span>].set_title(<span class="st">'happy'</span>)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>_<span class="op">=</span>axs[<span class="dv">1</span>].set_title(<span class="st">'sad'</span>)</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>_<span class="op">=</span>axs[<span class="dv">0</span>].axis(<span class="st">'off'</span>)</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>_<span class="op">=</span>axs[<span class="dv">1</span>].axis(<span class="st">'off'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Bioimage-analysis_06_MachineLearning-basics_files/figure-html/cell-14-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="questions-3" class="level3">
+<h3 class="anchored" data-anchor-id="questions-3">Questions</h3>
+<ul>
+<li>Update the labels above according with your own data.</li>
+<li>How do you think this model would perform on a validation data set (as opposed to a training set)?</li>
+<li>Do you think overfitting is a problem for this model?</li>
+<li>In a more complex network architecture, do you think it will be possible to interpret weights in the same way as we did here?</li>
+</ul>
+</section>
+</section>
+<section id="proof-of-the-pudding-did-it-work" class="level2">
+<h2 class="anchored" data-anchor-id="proof-of-the-pudding-did-it-work">Proof of the pudding: did it work?</h2>
+<p>Let’s feed the original input images to the model again, and look at the predictions. (In a real scenario, you’d hope the model will also be able to classify unseen data, with our limited training data and limited model, that’s not something we can expect.)</p>
+<div id="2839f2d0" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># apply the model to image 1</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>X1 <span class="op">=</span> my_data_happysad.<span class="fu">__getitem__</span>(<span class="dv">0</span>)[<span class="dv">0</span>].unsqueeze(<span class="dv">0</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>pred <span class="op">=</span> my_simple_model(X1)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'X1='</span>, pred)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="co"># and to image 2</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>X2 <span class="op">=</span> my_data_happysad.<span class="fu">__getitem__</span>(<span class="dv">1</span>)[<span class="dv">0</span>].unsqueeze(<span class="dv">0</span>)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>pred <span class="op">=</span> my_simple_model(X2)</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'X2='</span>, pred)</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="co"># and to image 3</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>X3 <span class="op">=</span> my_data_happysad.<span class="fu">__getitem__</span>(<span class="dv">2</span>)[<span class="dv">0</span>].unsqueeze(<span class="dv">0</span>)</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>pred <span class="op">=</span> my_simple_model(X3)</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'X3='</span>, pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>X1= tensor([[ 2.7323, -2.4240]], device='mps:0', grad_fn=&lt;LinearBackward0&gt;)
+X2= tensor([[-2.4628,  2.7629]], device='mps:0', grad_fn=&lt;LinearBackward0&gt;)
+X3= tensor([[-3.6662,  3.9231]], device='mps:0', grad_fn=&lt;LinearBackward0&gt;)</code></pre>
+</div>
+</div>
+<section id="questions-4" class="level3">
+<h3 class="anchored" data-anchor-id="questions-4">Questions</h3>
+<ul>
+<li>Are the predictions correct?</li>
+<li>Try drawing a new image in one of your classes, and let the model predict the class. What do you see?</li>
+</ul>
+<p><strong>Biological images</strong> - Say you have biological data from multiple conditions and multiple biological replicates. How would you divide this data among the training and validation sets? - Let’s say you use an existing machine learning model (e.g.&nbsp;micro-sam) to segment your data. Do you think you can manually check the segmentation went OK by investigating the original input images and segmentation result? - Now, let’s say you use a machine learning model to quantify a specific phenotype (say ‘leaf health’ trained on human scoring of leafs) that you expect to change for your conditions. - Is it now equally easy as the previous question to check whether the score correctly reflects leaf health? - If you use a more complex machine learning model, is it possible to understand how the scoring was determined, or which features the model used to make its decision? What challenges might arise in interpreting the results? - Is the interpretability equally important for segmentation and for phenotyping? - What are your thoughts on applying ML in this way? - Say the images used to train the leaf damage also included several groups of insects that contribute to the damage in various degree respectively. Do you see any issue with this training data set? - How could overfitting impact the performance of your model when applied to new biological images? - How might differences in image acquisition (e.g.&nbsp;microscope settings, lighting) influence the results of your analysis? - How can you assess whether your model is generalizing well to unseen data, rather than just memorizing the training set?</p>
+<p><strong>Further reading.</strong> Generally, ML can show learning of unwanted features, see for example this article: <a href="https://www.reuters.com/article/world/insight-amazon-scraps-secret-ai-recruiting-tool-that-showed-bias-against-women-idUSKCN1MK0AG/">“Amazon scraps secret AI recruiting tool that showed bias against women”</a>.</p>
+</section>
+</section>
+<section id="congratulations" class="level1">
+<h1>Congratulations!</h1>
+<p>You have reached the end of the machine learning part of this workshop! Let us know if you have any questions, comments or discussion points.</p>
+<div id="14758dd1" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>img_party<span class="op">=</span>tiff.imread(<span class="st">'images/emoji/party.tif'</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">4</span>, figsize<span class="op">=</span>(<span class="dv">12</span><span class="op">/</span><span class="fl">2.54</span>, <span class="dv">3</span><span class="op">/</span><span class="fl">2.54</span>))</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ch <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">3</span>):</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    _<span class="op">=</span>axs.flatten()[ch].imshow(img_party[:,:,ch])</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>_<span class="op">=</span>axs.flatten()[<span class="dv">3</span>].imshow(img_party)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Bioimage-analysis_06_MachineLearning-basics_files/figure-html/cell-16-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="more-code-for-other-purposes-can-be-skipped" class="level3">
+<h3 class="anchored" data-anchor-id="more-code-for-other-purposes-can-be-skipped">More code for other purposes (can be skipped)</h3>
+<div id="a6cfd077" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Final weights in different style</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(np.<span class="bu">min</span>(weight_list[<span class="op">-</span><span class="dv">1</span>][<span class="dv">0</span>]), np.<span class="bu">max</span>(weight_list[<span class="op">-</span><span class="dv">1</span>][<span class="dv">0</span>]))</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>mw_showimg2(weight_list[<span class="op">-</span><span class="dv">1</span>][<span class="dv">0</span>].reshape((<span class="dv">12</span>,<span class="dv">12</span>)), </span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>            annotcolor<span class="op">=</span><span class="st">'blue'</span>, VMIN<span class="op">=-</span><span class="dv">1</span>, VMAX<span class="op">=</span><span class="fl">1.0</span>, FMT<span class="op">=</span><span class="st">".2f"</span>, CMAP<span class="op">=</span><span class="st">'gray'</span>, SF<span class="op">=</span><span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>-0.7406729 0.684697</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Bioimage-analysis_06_MachineLearning-basics_files/figure-html/cell-17-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="3d0ba90b" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># show the first and second gradients</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">2</span>,<span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">12</span><span class="op">/</span><span class="fl">2.54</span>, <span class="dv">6</span><span class="op">/</span><span class="fl">2.54</span>))</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>_<span class="op">=</span>axs[<span class="dv">0</span>,<span class="dv">0</span>].imshow(gradient_list[<span class="dv">0</span>][<span class="dv">0</span>].reshape(<span class="dv">12</span>,<span class="dv">12</span>))</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>_<span class="op">=</span>axs[<span class="dv">0</span>,<span class="dv">1</span>].imshow(gradient_list[<span class="dv">1</span>][<span class="dv">0</span>].reshape(<span class="dv">12</span>,<span class="dv">12</span>))</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>_<span class="op">=</span>axs[<span class="dv">0</span>,<span class="dv">2</span>].imshow(gradient_list[<span class="dv">2</span>][<span class="dv">0</span>].reshape(<span class="dv">12</span>,<span class="dv">12</span>))</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>_<span class="op">=</span>axs[<span class="dv">1</span>,<span class="dv">0</span>].imshow(gradient_list[<span class="dv">3</span>][<span class="dv">0</span>].reshape(<span class="dv">12</span>,<span class="dv">12</span>))</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>_<span class="op">=</span>axs[<span class="dv">1</span>,<span class="dv">1</span>].imshow(gradient_list[<span class="dv">4</span>][<span class="dv">0</span>].reshape(<span class="dv">12</span>,<span class="dv">12</span>))</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>_<span class="op">=</span>axs[<span class="dv">1</span>,<span class="dv">2</span>].imshow(gradient_list[<span class="dv">5</span>][<span class="dv">0</span>].reshape(<span class="dv">12</span>,<span class="dv">12</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Bioimage-analysis_06_MachineLearning-basics_files/figure-html/cell-18-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="de7972e1" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(gradient_list))</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>gradient_list[<span class="dv">0</span>].shape</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>gradient_list[<span class="dv">4</span>][<span class="dv">0</span>].reshape((<span class="dv">12</span>,<span class="dv">12</span>)).shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>300</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="18">
+<pre><code>(12, 12)</code></pre>
+</div>
+</div>
+<div id="9692041d" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Doesn't seem to work ??</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co"># from torchsummary import summary</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(my_simple_model, input_size=(12,12))</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="0b73d5d7" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># There should be 12x12 + 1 + 12x12 + 1 = 290 model parameters</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="bu">sum</span>(p.numel() <span class="cf">for</span> p <span class="kw">in</span> my_simple_model.parameters() <span class="cf">if</span> p.requires_grad)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="20">
+<pre><code>290</code></pre>
+</div>
+</div>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
