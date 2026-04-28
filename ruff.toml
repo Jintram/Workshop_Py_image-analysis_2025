@@ -1,0 +1,11 @@
+
+line-length = 88
+target-version = "py311"
+exclude = ["docs/"]
+
+[lint]
+select = ["E", "F", "W", "I"]  # E/W are pycodestyle (PEP8-style), F is pyflakes, I is import sorting
+ignore = ["E501"]              # example: let formatter handle long lines
+
+[lint.per-file-ignores]
+"*.ipynb" = ["E402"]

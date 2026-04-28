@@ -17,15 +17,15 @@ To assess the activity of kinases in single live cells, which can e.g. activate 
 
 The paper [Chavez-Abiega et al.](http://doi.org/10.1242/jcs.259685) presents an image analysis pipeline to analyze KTR signals from single cells (and uses it to study kinase behavior). We'll use their data, and try to reproduce part of that analysis.
 
-<img src=images/figures/kudo_fig1b.png height=200>
+<img src=images/figures/kudo_fig1b_extendedmw.png height=350>
 
-*Fig 1b of Kudo et al., When kinase activity is high, KTRs predominantly localize to the cytoplasm due to reduced nuclear localization signal and increased nuclear export signal, and vice versa.*
+*Diagram (left) and Fig 1b of Kudo et al. (right). When kinase activity is high, KTRs predominantly localize to the cytoplasm due to reduced nuclear localization signal and increased nuclear export signal, and vice versa.*
 
 #### Quantifying bacterial size
 
 In the paper by [Wehrens et al.](http://doi.org/10.1016/j.cub.2018.02.006) the authors quantify how stressed *E. coli* become oddly long shaped, and moreover how, after stress receeded, they recover their familiar rod-shaped sizes.
 
-<img src=images/figures/wehrens_GA.jpg height=100>
+<img src=images/figures/wehrens_GA.jpg width=85%>
 
 We'll also try to reproduce (a very small part) of their analysis.
 
@@ -236,57 +236,84 @@ plt.show()
 
 ```
 
---------------------------------------------------
 
-<font color=red size=40>I was editing here!</font>
+### Applying automatic thresholding 
 
---------------------------------------------------
-
-### Applying automatic thresholding (EDIT THIS FOR BACTERIA ONLY)
+The classic approaches above work well for the nuclei. 
+For the bacteria it works less well.
+Let's try it.
 
 ```{python}
-def my_plot_12(img1, img2, mycmap='viridis'):
-    # plot two images side by side
+# Little plotting function
+def plot_sidebyside(img1, img2, mycmap1 = 'gray', mycmap2 = 'viridis'):
+    
     fig, axs = plt.subplots(1,2, figsize=FIGSIZE21)
-    _ = axs[0].imshow(img1, cmap=mycmap)
-    _ = axs[1].imshow(img2, cmap=mycmap)  
-    plt.tight_layout()  
+    _ = axs[0].imshow(img1, cmap=mycmap1)
+    _ = axs[1].imshow(img2, cmap=mycmap2)
+    plt.tight_layout()
+    
+    return fig
 ```
 
 ```{python}
 # Let's try some of these thresholding approaches
 
 # The Otsu method
-mask_nuclei_otsu = img_nuclei > sk.filters.threshold_otsu(img_nuclei)
 mask_ecoli_otsu = img_ecoli_inv > sk.filters.threshold_otsu(img_ecoli_inv)
-my_plot_12(mask_nuclei_otsu, mask_ecoli_otsu)
+fig = plot_sidebyside(img_ecoli_inv, mask_ecoli_otsu)
+    # (Technical note: in jupyter, any open figure, ie without plt.close() 
+    # before end cell, will be shown)
 ```
+
 
 ```{python}
 
 # The Triangle method
-mask_nuclei_triangle = img_nuclei > sk.filters.threshold_triangle(img_nuclei)
 mask_ecoli_triangle = img_ecoli_inv > sk.filters.threshold_triangle(img_ecoli_inv)
-my_plot_12(mask_nuclei_triangle, mask_ecoli_triangle)
+fig = plot_sidebyside(img_ecoli_inv, mask_ecoli_triangle)
+
+# Challenges:
+    # non-uniform foreground/background intensity
+    # low contrast boundaries 
 ```
+
+The result is not horrible.
+However, due to the intensity of 'bacteria pixels' not being uniform, 
+the mask shows different results depending on the image location.
+In addition, due to some boundaries having low or different contrasts, 
+some bacteria are not separated well.
+
+```{python}
+# Applying local thresholding
+mask_ecoli_local = img_ecoli_inv > sk.filters.threshold_local(img_ecoli_inv, block_size=35, offset=-10)
+fig = plot_sidebyside(img_ecoli_inv, mask_ecoli_local)
+
+# Looks good
+    # But improvement needed
+    # Look at additional options
+```
+
+This is actually a pretty good starting point.
+Let's look into additional functions that could improve this.
 
 ## Morphological operations
 
 ### Neighborhoods and convolutions
 
-Segmenting the bacteria are 
-- too big of a **challenge** to tackle with global thresholding. 
-- That's because there are **local differences** within the image.
+We saw that we need to process each pixel with respect to its
+'local neighborhood'.
+Let's look at a **general way of local image processing**, which ar fundamental in image processing, 
+and applied from (under the hood of) `sk.filters.threshold_local()` 
+to machine learning approaches.
 
-We need to process the image locally.
 
 #### Convolution
 
-We'll briefly dive into convolutions, which will hopefully help you understand neighborhood operations, which are fundamental in image processing.
+Let's dive into convolutions.
 
-<img src=images/figures/pytorch_convolution.jpeg width=40%>
+<img src=images/figures/pytorch_convolution_upscaled.png width=85%>
 
-*Image via [discuss.pytorch.org](https://discuss.pytorch.org/t/deformable-convolution-layer-with-variable-filter/58799). In convolution, a new image is created by for each pixel summing its neighborhood pixels multiplied with neighborhood location specific weights.*
+*Image via [discuss.pytorch.org](https://discuss.pytorch.org/t/deformable-convolution-layer-with-variable-filter/58799). In convolution, a new image is created by for each pixel summing its neighborhood pixels multiplied with neighborhood location specific weights, as specified by the convolution kernel.*
 
 ```{python}
 # Let's illustrate this concept with some examples
@@ -296,43 +323,133 @@ img_pika = tiff.imread('images/misc/pikachu.tif')
 _= plt.imshow(img_pika)
 ```
 
+
 ```{python}
 
 # Define a horizontal line "kernel"
 kernel_h = np.zeros((25,25))
-kernel_h[2,:] = 12
+kernel_h[12,:] = 1
 kernel_h=kernel_h/np.sum(kernel_h)
+plt.imshow(kernel_h)
+```
+
+```{python}
 
 # Define a vertical line "kernel"
 kernel_v = np.zeros((25,25))
-kernel_v[:,2] = 12
+kernel_v[:,12] = 1
 kernel_v=kernel_v/np.sum(kernel_v)
+plt.imshow(kernel_v)
+```
 
+```{python}
 # Apply them both to the image
 img_pika_h = ndimage.convolve(img_pika, kernel_h)
 img_pika_v = ndimage.convolve(img_pika, kernel_v)
 
 # Now show both pictures
-my_plot_12(img_pika_h, img_pika_v, mycmap='magma')
+plot_sidebyside(img_pika_h, img_pika_v, mycmap1='magma', mycmap2='magma')
+
+# Can you see what happened?
+    # shapes
+    # intensities
+```
+
+Do you understand why the results looks like it does? Both how the shapes
+have changed, and also how the intensities have changed?
+
+#### Two more kernels, blur and edge
+
+```{python}
+# An additional convenience
+def plot_sidebyside_samecmap(img1, img2, mycmap='viridis'):
+    return plot_sidebyside(img1, img2, mycmap1=mycmap, mycmap2=mycmap)
+    
 ```
 
 ```{python}
 
-
 # Define a disk kernel
 kernel_disk = sk.morphology.disk(15) 
 kernel_disk = kernel_disk/np.sum(kernel_disk)
+_ = plt.imshow(kernel_disk)
+```
 
+```{python}
 # Define an edge kernel
-kernel_laplacian = np.array([[0, -1,  0],
-                      [-1,  4, -1],
-                      [0, -1,  0]])
+kernel_laplacian = np.array(
+    [[0, -1,  0],
+     [-1,  4, -1],
+     [0, -1,  0]])
 
 # Now apply and plot
-img_pika_disk = ndimage.convolve(img_pika, kernel_disk)
-img_pika_edge = ndimage.convolve(img_pika, kernel_laplacian)
-my_plot_12(img_pika_disk, img_pika_edge, mycmap='gray')
+img_pika_disk = ndimage.convolve(img_pika.astype(np.float32), kernel_disk.astype(np.float32))
+img_pika_edge = ndimage.convolve(img_pika.astype(np.float32), kernel_laplacian.astype(np.float32))
+minmaxval1 = np.max(np.abs(img_pika_disk))
+_ = plt.imshow(img_pika_disk, cmap='seismic', vmin=-minmaxval1, vmax=minmaxval1)
 ```
+
+```{python}
+minmaxval2 = np.max(np.abs(img_pika_edge))
+_ = plt.imshow(img_pika_edge, cmap='seismic', vmin=-minmaxval2, vmax=minmaxval2)
+
+# What happened here? Explain?
+    # Blur, why? (smoothing = averaging over neighborhood)
+    # Edge, why? (edge = derivative, see image below)
+```
+
+Can you explain what happened here? 
+
+Answer: The first kernel, averages over a local neighborhood, which results in blurring.
+The second kernel, if you would work it out, takes the second derivative.
+This is illustrated by the graph below:
+
+```{python}
+#| code-fold: true
+
+kernel_1d_deriv  = np.array([1, -1])
+kernel_1d_laplac = np.array([1, -2, 1])
+
+# from scipy.signal import convolve
+# convolve(kernel_1d_deriv, kernel_1d_deriv) 
+# # returns:
+# # array([ 1, -2,  1])
+# # Technical note: ndimage.convolve doesn't handle boundaries etc in the right 
+# # way such that ndimage.convolve(kernel_1d_deriv, kernel_1d_deriv) returns 
+# # another result.
+
+example_ramp = np.concatenate( (np.zeros(10), 
+                                np.array([1, 1, 2, 5, 15, 25, 35, 45, 48, 49, 49]), 
+                                np.ones(10)*50))
+example_ramp_deriv      = ndimage.convolve(example_ramp, kernel_1d_deriv)
+example_ramp_derivderiv = ndimage.convolve(example_ramp, kernel_1d_laplac)
+ 
+ 
+fig, axs = plt.subplots(1, 3, figsize=(15/2.54, 5/2.54)) 
+_ = axs[0].plot(np.arange(len(example_ramp)), example_ramp)
+_ = axs[0].set_xlabel('x'); _ = axs[0].set_ylabel(f'y(x)')
+_ = axs[1].plot(np.arange(len(example_ramp)), example_ramp_deriv)
+_ = axs[1].set_xlabel('x'); _ = axs[1].set_ylabel(f'y\'(x)')
+_ = axs[2].plot(np.arange(len(example_ramp)), example_ramp_derivderiv)
+_ = axs[2].set_xlabel('x'); _ = axs[2].set_ylabel(f'y\'\'(x)')
+plt.tight_layout()
+ 
+```
+
+The second kernel is a bit tougher to understand, but it amounts to taking
+the second derivative. 
+In this case, similar to taking the derivative twice for a line $y(x)$ as in the
+picture above, pixels with a value close to zero constitute edges.
+
+***Technical note.*** Both the derivative and laplacian kernel can be used to find edges.
+The advantage of the Laplacian is that it better identifies the exact location
+of the edge, as the zero-crossing (pixels with values close to zero) are 
+precisely where the edge is. 
+First-order derivatives can also be used, but they are dimension-specific (either
+the derivative in the row-direction, or the derivative in the column-direction),
+so the output of two convolutions needs to be combined.
+Additionally, both can be sensitive to noise, why they are often combined
+with a de-noising convolution (e.g. blur), as we will see below.
 
 ## Dilution and erosion
 
@@ -340,12 +457,26 @@ my_plot_12(img_pika_disk, img_pika_edge, mycmap='gray')
     - **Dilation and erosion** are very useful operations
 
 ```{python}
-# Perform dilation and erosion on pika image
+# Dilution and erosion
+
+# Let's try
 img_pika_eroded  = sk.morphology.erosion(img_pika, footprint=np.ones((7,7)))
 img_pika_dilated = sk.morphology.dilation(img_pika, footprint=np.ones((7,7)))
-# Show 'm
-my_plot_12(img_pika_eroded, img_pika_dilated, mycmap='viridis')
+
+# Show
+plot_sidebyside_samecmap(img_pika_eroded, img_pika_dilated)
+
+# Dilution = convolution, max val taken (or: any one  --> one)
+# Erosion  = convolution, min val taken (or: any zero --> zero)
 ```
+
+During erosion, similar to convolution, a disk or square shaped mask slides
+over the image, and for each pixel, the minimum value in the neighborhood is taken.
+
+During dilation, similar to convolution, a disk or square shaped mask slides
+over the image, and for each pixel, the maximum value in the neighborhood is taken.
+
+These operations are also commonly applied to binary images.
 
 ```{python}
 # They can also be combined
@@ -355,7 +486,7 @@ img_pika_closed = sk.morphology.closing(img_pika, footprint=sk.morphology.disk(7
 img_pika_opened = sk.morphology.opening(img_pika, footprint=sk.morphology.disk(7))
 
 # Show the result
-my_plot_12(img_pika_closed, img_pika_opened, mycmap='viridis')
+_ = plot_sidebyside_samecmap(img_pika_closed, img_pika_opened)
 ```
 
 ```{python}
@@ -364,55 +495,90 @@ img_pika_gauss07 = sk.filters.gaussian(img_pika, sigma=7)
 img_pika_gauss20 = sk.filters.gaussian(img_pika, sigma=20)
 
 # Now show both
-my_plot_12(img_pika_gauss07, img_pika_gauss20, mycmap='gray')
+_ = plot_sidebyside_samecmap(img_pika_gauss07, img_pika_gauss20)
 ```
 
+#### Built-in edge detection methods
+
+As mentioned previously, built-in edge detection methods exist, 
+common ones include: `sk.filters.sobel()`, `sk.filters.prewitt()`, `sk.filters.laplace()`, `sk.feature.canny()`. See also the [documentation](https://scikit-image.org/docs/stable/api/skimage.filters.html).
+
+```{python}
+
+# Let's try sobel
+img_edges = sk.filters.sobel(img_ecoli_inv)
+_ = plt.imshow(img_edges)
+
+```
+
+Many of these functions will, under the hood, apply some combination of 
+derivative and smoothing operations.
+
 ## Combining everything
+
+#### Laplacian + Gauss
 
 ```{python}
 # Now these can also be combined
 # E.g. bacterial segmentation
     # we're interested in local edge detection
 
-# Show the results of LoG on the bacteria
+# Apply of LoG on the bacteria
 img_ecoli_gauss = sk.filters.gaussian(img_ecoli_inv, sigma=3)
 edges_log = sk.filters.laplace(img_ecoli_gauss)
+
 # show both
-my_plot_12(img_ecoli_gauss, edges_log, mycmap='viridis')
+_ = plt.imshow(img_ecoli_gauss)
 ```
 
 ```{python}
-
-def my_plot_1(img1, mycmap='gray', myfigsize=(5/2.54,5/2.54)):
-    fig, ax = plt.subplots(1,1, figsize=myfigsize)
-    _=plt.imshow(img1, cmap=mycmap)    
-
-# Threshold edges_log by triangle method
-mask_ecoli_log = edges_log > sk.filters.threshold_triangle(edges_log)
-my_plot_1(mask_ecoli_log)
+minmaxval = np.max(np.abs(edges_log))
+_ = plt.imshow(edges_log, cmap='seismic', vmin=-minmaxval, vmax=minmaxval)
 ```
 
 ```{python}
-# Let's erode this by 5 px
-mask_ecoli_log_eroded = sk.morphology.erosion(mask_ecoli_log, footprint=sk.morphology.disk(5))
+# Threshold edges_log simply using >0
+# this is a bit ad-hoc, but uses fact >0 ~= bacteria
+mask_ecoli_log = edges_log > 0
+_ = plt.imshow(mask_ecoli_log, cmap='gray')
+```
+
+```{python}
+# Let's erode this by 3 px
+# (Aim: get indivdual bacterial locations)
+mask_ecoli_log_eroded = sk.morphology.erosion(mask_ecoli_log, footprint=sk.morphology.disk(3))
 
 # Show
-my_plot_1(mask_ecoli_log_eroded)
+_ = plt.imshow(mask_ecoli_log_eroded, cmap='gray')
+```
+
+```{python}
+# Remove background
+
+# Use polished triangle mask for that
+# Remove small objects
+mask_ecoli_triangle_filtered = sk.morphology.remove_small_objects(mask_ecoli_triangle, min_size=50)
+# Dilate
+mask_ecoli_triangle_filtered = sk.morphology.dilation(mask_ecoli_triangle_filtered, 
+                                                      footprint=sk.morphology.disk(5))
+
+_ = plot_sidebyside_samecmap(mask_ecoli_triangle_filtered, mask_ecoli_log_eroded, mycmap='gray')
 
 ```
 
 ```{python}
-# Let's combine with our original triangle mask
+# Visualize the overlap 
+# (Sometimes convenient)
+_ = plt.imshow(mask_ecoli_triangle_filtered*1 + mask_ecoli_log_eroded*1)
+```
 
-# first remove small objects
-mask_ecoli_triangle_filtered   = sk.morphology.remove_small_objects(mask_ecoli_triangle, min_size=50)
-mask_ecoli_log_eroded_filtered = sk.morphology.remove_small_objects(mask_ecoli_log_eroded, min_size=50)
+```{python}
 
 # Combine
 mask_bacteria_slim = np.logical_and(mask_ecoli_triangle_filtered, mask_ecoli_log_eroded)
 # And label
 mask_bacteria_slim_labeled = sk.measure.label(mask_bacteria_slim)
-my_plot_1(mask_bacteria_slim_labeled, mycmap='viridis')
+_ = plt.imshow(mask_bacteria_slim_labeled, cmap='viridis')
 ```
 
 ## Watershed
@@ -428,7 +594,7 @@ my_plot_1(mask_bacteria_slim_labeled, mycmap='viridis')
 mask_bacteria_combined = sk.segmentation.watershed(-edges_log, markers=mask_bacteria_slim_labeled, mask=mask_ecoli_log)
 
 # Show the result
-my_plot_1(mask_bacteria_combined, mycmap='viridis')
+plt.imshow(mask_bacteria_combined, cmap='viridis')
 ```
 
 ```{python}
@@ -441,7 +607,7 @@ props = sk.measure.regionprops(mask_bacteria_combined)
 fig, ax = plt.subplots(1,1, figsize=(9/2.54,9/2.54))
 _ = ax.imshow(img_ecoli, cmap='gray')
 # slightly shaded region
-plt.imshow(mask_bacteria_combined, cmap='jet', alpha= .3*(mask_bacteria_combined>0))
+# plt.imshow(mask_bacteria_combined, cmap='jet', alpha= .3*(mask_bacteria_combined>0))
 # project numbered labels on top
 for x,y,lbl in [(p.centroid[1], p.centroid[0], p.label) for p in props]:
     # centered text
@@ -474,3 +640,4 @@ for x,y,lbl in [(p.centroid[1], p.centroid[0], p.label) for p in props]:
 - Look up what a 'distance transform' is (`scipy.ndimage.distance_transform_edt`) and apply it to the nuclei image. 
     - Create a mask based on thresholding the distance transform.
         - To achieve this, use the function `sk.feature.peak_local_max()`.    
+    - An issue is that some nuclei are close, and won't be separated by the segmentation mask. Could the distance transform information help? Are there other approaches?

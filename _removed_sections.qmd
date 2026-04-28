@@ -25,3 +25,42 @@ USE https://bioimagebook.github.io/chapters/2-processing/1-processing_and_analys
 #### Otsu's method
 
 _"Otsu’s method, introduced in 1979, has become an extremely popular approach to determining a threshold. It’s commonly described, somewhat intimidatingly, as ‘minimizing the intra-class intensity variance’. In essence, calculating a threshold using Otsu’s method involves adding the variance of the background pixels to the variance of the foreground pixels, for all possible thresholds. The threshold that is selected is the one for which the sum of the variances is smallest."_
+
+
+
+#### Image processing code (3B)
+
+```{python}
+def my_plot_12(img1, img2, mycmap='viridis'):
+    # plot two images side by side
+    fig, axs = plt.subplots(1,2, figsize=FIGSIZE21)
+    _ = axs[0].imshow(img1, cmap=mycmap)
+    _ = axs[1].imshow(img2, cmap=mycmap)  
+    plt.tight_layout()  
+```
+
+
+```{python}
+# Let's try some of these thresholding approaches
+
+# The Otsu method
+mask_nuclei_otsu = img_nuclei > sk.filters.threshold_otsu(img_nuclei)
+mask_ecoli_otsu = img_ecoli_inv > sk.filters.threshold_otsu(img_ecoli_inv)
+my_plot_12(mask_nuclei_otsu, mask_ecoli_otsu)
+```
+
+```{python}
+
+# The Triangle method
+mask_nuclei_triangle = img_nuclei > sk.filters.threshold_triangle(img_nuclei)
+mask_ecoli_triangle = img_ecoli_inv > sk.filters.threshold_triangle(img_ecoli_inv)
+my_plot_12(mask_nuclei_triangle, mask_ecoli_triangle)
+```
+
+
+
+```{python}
+# first remove small objects
+mask_ecoli_triangle_filtered   = sk.morphology.remove_small_objects(mask_ecoli_triangle, min_size=50)
+mask_ecoli_log_eroded_filtered = sk.morphology.remove_small_objects(mask_ecoli_log_eroded, min_size=50)
+```
