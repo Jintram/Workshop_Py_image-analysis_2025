@@ -528,90 +528,99 @@ img_ecoli_gauss = sk.filters.gaussian(img_ecoli_inv, sigma=3)
 edges_log = sk.filters.laplace(img_ecoli_gauss)
 
 # show both
+_ = plt.title("After Gauss")
 _ = plt.imshow(img_ecoli_gauss)
 ```
 
 ```{python}
+
 minmaxval = np.max(np.abs(edges_log))
+_ = plt.title("After Gauss & Laplacian")
 _ = plt.imshow(edges_log, cmap='seismic', vmin=-minmaxval, vmax=minmaxval)
 ```
 
-
---------------------------------------------------------------------------------
-
-I WAS EDITING HERE -- IMPLEMENT THE BELOW CODE IN THE CURRENT WORKFLOW..
+As we saw above, edges correspond to values going from positive, through zero,
+to negative. So we can look for places where negative and positive values are close.
 
 ```{python}
-# Simple edge crossing algorithm
 
-# in local neighborhood, what's high, what's low?
+# Now identify edge pixels
+    # where value goes positive->negative (or vice versa)
+    # ie positive and negative value close
+
+# per pixel, what's lowest and highest neighbor
 edges_min = ndimage.minimum_filter(edges_log, footprint=sk.morphology.disk(1))
 edges_pos = ndimage.maximum_filter(edges_log, footprint=sk.morphology.disk(1))
-
+# do we find both positive & negative close?
 img_edges = np.logical_and(edges_min < 0, edges_pos >0)
 
-# Global foreground mask (This is done again below)
+plt.imshow(img_edges)
+
+```
+
+Let's remove lines due to background noise by using our previous masks to select the colony.
+
+```{python}
+
+# Remove artifacts
+# Use previous thresholded image 
+    # Make whole-colony mask
+    
+_ = plt.title("Previous triangle mask")    
+_ = plt.imshow(mask_ecoli_triangle)
+
+```
+
+```{python}
+
+# Modify this mask
+
+# Remove small parts
 mask_ecoli_triangle_filtered = sk.morphology.remove_small_objects(mask_ecoli_triangle, min_size=50)
-mask_ecoli_triangle_filtered = sk.morphology.dilation(mask_ecoli_triangle_filtered, footprint=sk.morphology.disk(5))
+# Enlarge it
+mask_ecoli_triangle_filtered = sk.morphology.dilation(mask_ecoli_triangle_filtered, footprint=sk.morphology.disk(8))
 
+_ = plt.title("Whole-colony mask (based triangle)")
+_ = plt.imshow(mask_ecoli_triangle_filtered)
+```
+
+
+```{python}
+
+# Combine both
 img_edges_foreground = np.logical_and(img_edges, mask_ecoli_triangle_filtered)
+_ = plt.title("Edges (colony selected)")
+_ = plt.imshow(img_edges_foreground)
+```
 
-plt.imshow(img_edges_foreground)
+```{python}
 
+# And fill outlines
 img_edges_filled = ndimage.binary_fill_holes(img_edges_foreground)
+_ = plt.title("Segmented bacteria (v1)")
+_ = plt.imshow(img_edges_filled)
 
-plt.imshow(img_edges_filled)
-
-plt.imshow(sk.morphology.erosion(img_edges_filled, footprint=sk.morphology.disk(4)))
 ```
 
---------------------------------------------------------------------------------
+This looks pretty great, except that some bacteria are still "stuck together".
 
-
-
-```{python}
-# Threshold edges_log simply using >0
-# this is a bit ad-hoc, but uses fact >0 ~= bacteria
-mask_ecoli_log = edges_log > 0
-_ = plt.imshow(mask_ecoli_log, cmap='gray')
-```
+Let's at least identify separate bacteria.
 
 ```{python}
-# Let's erode this by 3 px
+# Let's erode this by 4 px
 # (Aim: get indivdual bacterial locations)
-mask_ecoli_log_eroded = sk.morphology.erosion(mask_ecoli_log, footprint=sk.morphology.disk(3))
+mask_ecoli_log_eroded = sk.morphology.erosion(img_edges_filled, footprint=sk.morphology.disk(4))
 
 # Show
 _ = plt.imshow(mask_ecoli_log_eroded, cmap='gray')
 ```
 
-```{python}
-# Remove background
-
-# Use polished triangle mask for that
-# Remove small objects
-mask_ecoli_triangle_filtered = sk.morphology.remove_small_objects(mask_ecoli_triangle, min_size=50)
-# Dilate
-mask_ecoli_triangle_filtered = sk.morphology.dilation(mask_ecoli_triangle_filtered, 
-                                                      footprint=sk.morphology.disk(5))
-
-_ = plot_sidebyside_samecmap(mask_ecoli_triangle_filtered, mask_ecoli_log_eroded, mycmap='gray')
-
-```
-
-```{python}
-# Visualize the overlap 
-# (Sometimes convenient)
-_ = plt.imshow(mask_ecoli_triangle_filtered*1 + mask_ecoli_log_eroded*1)
-```
 
 ```{python}
 
-# Combine
-mask_bacteria_slim = np.logical_and(mask_ecoli_triangle_filtered, mask_ecoli_log_eroded)
 # And label
-mask_bacteria_slim_labeled = sk.measure.label(mask_bacteria_slim)
-_ = plt.imshow(mask_bacteria_slim_labeled, cmap='viridis')
+mask_bacteria_slim_labeled = sk.measure.label(mask_ecoli_log_eroded)
+_ = plt.imshow(mask_bacteria_slim_labeled, cmap='tab20')
 ```
 
 ## Watershed
@@ -622,12 +631,13 @@ _ = plt.imshow(mask_bacteria_slim_labeled, cmap='viridis')
 *(Pictures via user24124133 and [researchgate](http://dx.doi.org/10.3390/rs6010776).)  Watershed is a common algorithm to segment touching objects. It is inspired by how water would fill up a landscape. From specific seeds, the water level rises, and once separate regions touch, boundaries are established.*
 
 ```{python}
-# This is a great tool to separate one of earlier bacterial images.
-# Apply watershed to mask_ecoli_log, using mask_bacteria_slim_labeled as seeds
-mask_bacteria_combined = sk.segmentation.watershed(-edges_log, markers=mask_bacteria_slim_labeled, mask=mask_ecoli_log)
+# Apply to separate bacteria
+    # Using mask_ecoli_log
+    # mask_bacteria_slim_labeled as seeds
+mask_bacteria_combined = sk.segmentation.watershed(-1*img_edges_filled, markers=mask_bacteria_slim_labeled, mask=img_edges_filled)
 
 # Show the result
-plt.imshow(mask_bacteria_combined, cmap='viridis')
+_ = plt.imshow(mask_bacteria_combined, cmap='viridis')
 ```
 
 ```{python}
