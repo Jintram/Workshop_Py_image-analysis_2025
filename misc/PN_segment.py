@@ -15,7 +15,6 @@ import numpy as np
 from scipy import ndimage as ndi
 from skimage import (
     exposure,
-    feature,
     filters,
     io,
     measure,
@@ -37,6 +36,7 @@ def PN_segphase(imageToSegment, p = None, **kwargs):
         "useFullImage": 0,
         # STEP B
         "LoG_Smoothing": 2,
+        "LoG_Threshold": 0,
         "minCellArea": 250,
         # STEP C
         "GaussianFilter": 5,
@@ -70,6 +70,7 @@ def PN_segphase(imageToSegment, p = None, **kwargs):
     # ### (MW:) Find colony region
     
     # STEP A : find a global mask and crop the image
+    # (MW:) based on regions of contrast
     A_maskImage = _rangefilt(O_PhImageFilt, int(q["rangeFiltSize"]))
     # plt.imshow(A_maskImage)
     thresh = filters.threshold_otsu(A_maskImage)
@@ -133,14 +134,28 @@ def PN_segphase(imageToSegment, p = None, **kwargs):
     # --------- (MW:) Now segment the colony
     
     # STEP B : find edges
+    # (MW:) First polish
     B_negPh = util.invert(_as_float01(A_cropPhImage))
     se = morphology.disk(1)
     B_negPhErode = morphology.erosion(B_negPh, se)
     B_negPh = morphology.reconstruction(B_negPhErode, B_negPh)
     B_negPh = morphology.dilation(B_negPh, se)
+    # plt.imshow(B_negPh)
 
     # MATLAB uses edge(..., 'log', 0, sigma). Canny gives a robust executable analogue.
-    B_edgeImage1 = feature.canny(B_negPh, sigma=float(q["LoG_Smoothing"]))
+    
+    # (MW:) Ran into issues here, original line was;
+    # (MATLAB:)
+    # B_edgeImage1 = edge(B_negPh,'log',0,q.Results.LoG_Smoothing); 
+    # ie using LoG; but it's not easy to replicate Matlab's behavior
+    
+    # Use LoG zero-crossings with threshold gating, similar to MATLAB edge(..., 'log', thresh, sigma).
+    B_edgeImage1 = _edge_log_like_matlab(
+        B_negPh,
+        sigma=float(q["LoG_Smoothing"]),
+        thresh=q.get("LoG_Threshold", 0),
+    )
+        # plt.imshow(B_edgeImage1)
 
     # suppress noisy surroundings
     if A_cropMaskImage.shape != B_edgeImage1.shape:
@@ -288,7 +303,7 @@ def PN_segphase(imageToSegment, p = None, **kwargs):
     return A_cropPhImage, Z_segmentedImage, ROI_segmentation
 
 ################################################################################
-## %% 
+# %% 
 
 def savePNGofImage(image, name, saveDirectory):
     filename = os.path.join(saveDirectory, f"{name}.png")
@@ -384,6 +399,46 @@ def _rangefilt(image, size):
     return maxf - minf
 
 
+def _edge_log_like_matlab(image, sigma=2.0, thresh=0, size=3):
+    # LoG response followed by zero-crossing detection and contrast thresholding.
+    img = _as_float01(image).astype(np.float32, copy=False)
+    log_response = ndi.gaussian_laplace(img, sigma=float(sigma))
+
+    # Running in fine-tune issues, mostly negative values    
+    # maxmin=np.percentile(np.abs(log_response), 90)
+    # plt.imshow(log_response, cmap="seismic", vmin=(-1*maxmin), vmax=maxmin)
+    
+    # plt.hist(np.ravel(log_response))
+    
+    zero_crossings, local_contrast = _log_zero_crossings_and_contrast(log_response, size=size)
+        # plt.imshow(zero_crossings)
+    edge_threshold = _resolve_log_threshold(local_contrast, zero_crossings, thresh)
+    return zero_crossings & (local_contrast >= edge_threshold)
+
+
+def _log_zero_crossings_and_contrast(log_response, size=3):
+    # A zero crossing exists if 3x3 neighborhood spans both negative and positive values.
+    max_nb = ndi.maximum_filter(log_response, size=size, mode="nearest")
+    min_nb = ndi.minimum_filter(log_response, size=size, mode="nearest")
+    zero_crossings = (max_nb > 0) & (min_nb < 0)
+    local_contrast = max_nb - min_nb
+
+    # Suppress border artifacts caused by incomplete neighborhoods.
+    zero_crossings[[0, -1], :] = False
+    zero_crossings[:, [0, -1]] = False
+    return zero_crossings, local_contrast
+
+
+def _resolve_log_threshold(local_contrast, zero_crossings, thresh):
+    if thresh is None or float(thresh) == 0.0:
+        vals = local_contrast[zero_crossings]
+        if vals.size == 0:
+            return np.inf
+        # Heuristic auto-threshold when user requests MATLAB-like automatic mode.
+        return float(np.percentile(vals, 80))
+    return float(thresh)
+
+
 def _as_float01(image):
     arr = np.asarray(image)
     if np.issubdtype(arr.dtype, np.floating):
@@ -397,3 +452,5 @@ def _has_field(p, key):
     if isinstance(p, dict):
         return key in p
     return hasattr(p, key)
+
+# %%

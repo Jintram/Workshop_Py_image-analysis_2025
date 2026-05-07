@@ -536,6 +536,25 @@ minmaxval = np.max(np.abs(edges_log))
 _ = plt.imshow(edges_log, cmap='seismic', vmin=-minmaxval, vmax=minmaxval)
 ```
 
+
+--------------------------------------------------------------------------------
+
+```{python}
+# Simple edge crossing algorithm
+
+edges_pos = edges_log>0
+edges_neg = edges_log<0
+
+plt.imshow(edges_pos)
+
+
+
+```
+
+--------------------------------------------------------------------------------
+
+
+
 ```{python}
 # Threshold edges_log simply using >0
 # this is a bit ad-hoc, but uses fact >0 ~= bacteria
