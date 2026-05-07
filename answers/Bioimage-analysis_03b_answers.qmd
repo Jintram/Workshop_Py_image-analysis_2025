@@ -41,35 +41,41 @@ def my_plot_12(img1, img2, mycmap='viridis', myfigsize=(10/2.54,5/2.54)):
 
 def seg_bacterium(input_img):
     """
-    Segment bacteria in an image using LoG edge detection and watershed.
+    Segment bacteria in an image using LoG zero crossings and watershed.
     """
-    
-    # Gaussian blur
+    # input_img = np.max(img_ecoli)-img_ecoli
+
+    # Smooth image before Laplacian filtering
     img_gauss = sk.filters.gaussian(input_img, sigma=3)
-    
-    # Laplacian of Gaussian for edge detection
     edges_log = sk.filters.laplace(img_gauss)
-    
-    # Threshold edges using triangle method
-    mask_edges = edges_log > sk.filters.threshold_triangle(edges_log)
-    
-    # Erode to separate touching bacteria
-    mask_eroded = sk.morphology.erosion(mask_edges, footprint=sk.morphology.disk(5))
-    
-    # Remove small objects
-    mask_eroded_filtered = sk.morphology.remove_small_objects(mask_eroded, min_size=50)
-    
-    # Triangle threshold on original
+        # minmaxval = np.max(np.abs(edges_log)); plt.imshow(edges_log, cmap='bwr', vmin=-minmaxval, vmax=minmaxval) 
+
+    # Identify LoG zero crossings as bacterial outlines
+    edges_min = ndimage.minimum_filter(edges_log, footprint=sk.morphology.disk(1))
+    edges_max = ndimage.maximum_filter(edges_log, footprint=sk.morphology.disk(1))
+    mask_edges = np.logical_and(edges_min < 0, edges_max > 0)
+        # plt.imshow(mask_edges)
+
+    # Build a whole-colony mask from triangle thresholding
     mask_triangle = input_img > sk.filters.threshold_triangle(input_img)
-    mask_triangle_filtered = sk.morphology.remove_small_objects(mask_triangle, min_size=50)
-    
-    # Combine masks
-    mask_combined = np.logical_and(mask_triangle_filtered, mask_eroded_filtered)
-    mask_labeled = sk.measure.label(mask_combined)
-    
-    # Watershed to separate touching bacteria
-    result = sk.segmentation.watershed(-edges_log, markers=mask_labeled, mask=mask_edges)
-    
+    mask_triangle = sk.morphology.remove_small_objects(mask_triangle, min_size=50)
+    mask_triangle = sk.morphology.dilation(mask_triangle, footprint=sk.morphology.disk(8))
+        # plt.imshow(mask_triangle)
+
+    # Restrict edges to the colony and fill enclosed bacteria
+    mask_edges = np.logical_and(mask_edges, mask_triangle)
+    mask_filled = ndimage.binary_fill_holes(mask_edges)
+        # plt.imshow(mask_filled)
+
+    # Erode to create separated seed regions for watershed
+    mask_seeds = sk.morphology.erosion(mask_filled, footprint=sk.morphology.disk(4))
+    mask_seeds = sk.measure.label(mask_seeds)
+        # plt.imshow(mask_seeds)
+
+    # Expand seeds back into the filled bacterial mask
+    result = sk.segmentation.watershed(-1 * mask_filled, markers=mask_seeds, mask=mask_filled)
+        # plt.imshow(result)
+
     return result
 
 

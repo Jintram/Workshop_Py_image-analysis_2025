@@ -11,6 +11,8 @@ jupyter: python3
 
 *An intermezzo.*
 
+*Start with the exercise below (under the code block).*
+
 
 ### Style
 
