@@ -131,7 +131,7 @@ def PN_segphase(imageToSegment, p = None, **kwargs):
         plt.imshow(A_cropPhImage, cmap="gray")
         plt.axis("off")
     
-    # --------- (MW:) Now segment the colony
+    # --------- (MW:) Segmentation Colony; find edges
     
     # STEP B : find edges
     # (MW:) First polish
@@ -150,11 +150,11 @@ def PN_segphase(imageToSegment, p = None, **kwargs):
     # ie using LoG; but it's not easy to replicate Matlab's behavior
     
     # Use LoG zero-crossings with threshold gating, similar to MATLAB edge(..., 'log', thresh, sigma).
-    B_edgeImage1 = _edge_log_like_matlab(
-        B_negPh,
-        sigma=float(q["LoG_Smoothing"]),
-        thresh=q.get("LoG_Threshold", 0),
-    )
+    edges_log = sk.filters.gaussian(B_negPh, sigma=3)
+    edges_log = sk.filters.laplace(edges_log)
+    edges_min = ndimage.minimum_filter(edges_log, footprint=sk.morphology.disk(1))
+    edges_pos = ndimage.maximum_filter(edges_log, footprint=sk.morphology.disk(1))
+    B_edgeImage1 = np.logical_and(edges_min < 0, edges_pos >0)
         # plt.imshow(B_edgeImage1)
 
     # suppress noisy surroundings
@@ -168,6 +168,7 @@ def PN_segphase(imageToSegment, p = None, **kwargs):
     )
     B_edgeImage2 = B_edgeImage1 & B_fillEdgeImage2
     B_edgeImage2 = morphology.remove_small_objects(B_edgeImage2.astype(bool), min_size=30)
+        # plt.imshow(B_edgeImage2)
 
     DE_boolean = 0
     if DE_boolean:
@@ -199,13 +200,19 @@ def PN_segphase(imageToSegment, p = None, **kwargs):
         plt.imshow(B_edgeImage2, cmap="gray")
         plt.axis("off")
 
+    # --------- (MW:) Segment; watershedding
+
     # STEP C : prepare seeds for watershedding
     C_smoothPh = ndi.gaussian_filter(_as_float01(A_cropPhImage), sigma=float(q["GaussianFilter"]))
     C_localMinPh = morphology.h_minima(C_smoothPh, h=float(q["minDepth"])) & B_fillEdgeImage2
+        # plt.imshow(A_cropPhImage)
+        # plt.imshow(C_localMinPh)
+        # plt.imshow(B_fillEdgeImage2)
 
     # MATLAB: imfill(B_edgeImage2, find(C_localMinPh))
     C_cellMask = _fill_holes_with_seed_points(B_edgeImage2, C_localMinPh)
     C_cellMask = morphology.binary_opening(C_cellMask)
+        # plt.imshow(C_cellMask)
 
     # shrinking steps to cut some cells
     C_seeds1 = C_cellMask & (~B_edgeImage2)

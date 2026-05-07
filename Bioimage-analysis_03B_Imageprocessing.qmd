@@ -539,16 +539,30 @@ _ = plt.imshow(edges_log, cmap='seismic', vmin=-minmaxval, vmax=minmaxval)
 
 --------------------------------------------------------------------------------
 
+I WAS EDITING HERE -- IMPLEMENT THE BELOW CODE IN THE CURRENT WORKFLOW..
+
 ```{python}
 # Simple edge crossing algorithm
 
-edges_pos = edges_log>0
-edges_neg = edges_log<0
+# in local neighborhood, what's high, what's low?
+edges_min = ndimage.minimum_filter(edges_log, footprint=sk.morphology.disk(1))
+edges_pos = ndimage.maximum_filter(edges_log, footprint=sk.morphology.disk(1))
 
-plt.imshow(edges_pos)
+img_edges = np.logical_and(edges_min < 0, edges_pos >0)
 
+# Global foreground mask (This is done again below)
+mask_ecoli_triangle_filtered = sk.morphology.remove_small_objects(mask_ecoli_triangle, min_size=50)
+mask_ecoli_triangle_filtered = sk.morphology.dilation(mask_ecoli_triangle_filtered, footprint=sk.morphology.disk(5))
 
+img_edges_foreground = np.logical_and(img_edges, mask_ecoli_triangle_filtered)
 
+plt.imshow(img_edges_foreground)
+
+img_edges_filled = ndimage.binary_fill_holes(img_edges_foreground)
+
+plt.imshow(img_edges_filled)
+
+plt.imshow(sk.morphology.erosion(img_edges_filled, footprint=sk.morphology.disk(4)))
 ```
 
 --------------------------------------------------------------------------------
