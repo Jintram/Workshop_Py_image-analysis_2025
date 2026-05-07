@@ -6,3 +6,123 @@ jupyter: python3
 *Martijn Wehrens, September 2025*
 
 
+```{python}
+import matplotlib.pyplot as plt
+import seaborn as sns
+import tifffile as tiff
+import numpy as np
+
+import skimage as sk
+from skimage.util import invert
+
+from scipy import stats
+from scipy import ndimage
+
+from skimage.measure import label, regionprops
+```
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+
+THINGS TO DO
+
+IMPROVE CODE BELOW TO HANDLE MULTIPLE CASES PROPERLY
+    (PREVIOUS VERSION DID -- BUT USED SLIGHTLY DIFFERENT SEG)
+
+    MAKE SURE TO TAKE PARTICIPANT ALONG (DON'T JUST WRITE NEW FUNCTION)
+        PERHAPS FIRST FIX BELOW
+        THEN STEP-BY-STEP DESCRIBE DIFF W/ PREVIOUS VERSION
+            MAKE MODULAR AS WELL!
+
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+
+```{python}
+
+def seg_bacterium(input_img, disksize=1, sigma=3):
+    """
+    Segment bacteria in an image using LoG zero crossings and watershed.
+    """
+    # input_img = invert(imgs_ecoli[1000,:,:])
+        # plt.imshow(input_img)
+
+    # Smooth image before Laplacian filtering
+    img_gauss = sk.filters.gaussian(input_img, sigma=sigma)
+    edges_log = sk.filters.laplace(img_gauss)
+        # minmaxval = np.min([-np.min(edges_log), np.max(edges_log)]); plt.imshow(edges_log, cmap='bwr', vmin=-minmaxval, vmax=minmaxval) 
+        # plt.hist(edges_log.ravel(), bins=100)
+
+    # Identify LoG zero crossings as bacterial outlines
+    edges_min = ndimage.minimum_filter(edges_log, footprint=sk.morphology.disk(disksize))
+    edges_max = ndimage.maximum_filter(edges_log, footprint=sk.morphology.disk(disksize))
+    mask_edges = np.logical_and(edges_min < 0, edges_max > 0)
+    
+    if False:
+        minmaxval = np.min([-np.min(edges_log), np.max(edges_log)]); plt.imshow(edges_log, cmap='bwr', vmin=-minmaxval, vmax=minmaxval)
+        plt.imshow((1-1*mask_edges), cmap='gray', alpha=1.0*mask_edges)
+    
+    # Revised whole-colony detection -------------------------------------------
+    
+    ### Build a whole-colony mask from otsu on edge image
+    # Raw whole colony mask
+    edge_abs = np.abs(edges_log)
+        # plt.imshow(edge_abs)
+    # Gaussian filter
+    edge_abs_med = sk.filters.median(edge_abs, footprint=sk.morphology.disk(4))
+        # plt.imshow(edge_abs_med)
+    mask_wholecolony = edge_abs > sk.filters.threshold_otsu(edge_abs)
+        # plt.imshow(mask_wholecolony)
+    # Polish
+    mask_wholecolony_polished = sk.morphology.remove_small_objects(mask_wholecolony, min_size=50)
+    mask_wholecolony_polished = sk.morphology.dilation(mask_wholecolony_polished, footprint=sk.morphology.disk(8))
+        # plt.imshow(mask_wholecolony_polished)
+    # Select largest region
+    labeled_wholecolony = sk.measure.label(mask_wholecolony_polished)
+    largest_region = np.argmax([r.area for r in sk.measure.regionprops(labeled_wholecolony)]) + 1
+    mask_wholecolony_final = labeled_wholecolony == largest_region
+        # plt.imshow(mask_wholecolony_final)
+    # --------------------------------------------------------------------------
+
+    # Restrict edges to the colony and fill enclosed bacteria
+    mask_edges = np.logical_and(mask_edges, mask_wholecolony_final)
+    mask_filled = ndimage.binary_fill_holes(mask_edges)
+        # plt.imshow(mask_filled)
+
+    # Erode to create separated seed regions for watershed
+    mask_seeds = sk.morphology.erosion(mask_filled, footprint=sk.morphology.disk(4))
+    mask_seeds = sk.measure.label(mask_seeds)
+        # plt.imshow(mask_seeds)
+
+    # Expand seeds back into the filled bacterial mask
+    result = sk.segmentation.watershed(-1 * mask_filled, markers=mask_seeds, mask=mask_filled)
+        # plt.imshow(result)
+
+    return result
+    
+```
+
+```{python}
+
+path_ecoli_data = "/Users/m.wehrens/Data_notbacked/2025_Py-Image-workshop_Filamentation-example-data/pos3crop_timelapse_switch890.98.tif"
+
+# load data
+imgs_ecoli = tiff.imread(path_ecoli_data)
+
+```
+
+```{python}
+plt.imshow(invert(imgs_ecoli[300,:,:]))
+```
+
+```{python}
+
+# segment some data
+seg_frame0 = seg_bacterium(invert(imgs_ecoli[1000,:,:]))
+_ = plt.imshow(seg_frame0)
+
+```
+
+```{python}
+_=plt.imshow(seg_bacterium(invert(imgs_ecoli[1000,:,:]), sigma=2))
+```
