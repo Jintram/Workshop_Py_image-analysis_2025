@@ -98,7 +98,7 @@ def _global_mask(input_img, disksize_range=20):
     
     return mask_global_final
     
-def _get_edges(input_img, showplot=False):
+def _get_edges(input_img, sigma=2, disksize_crossing=1, showplot=False):
     """ Find edges in an image using Laplacian of Gaussian appraoch. """
 
     # Smooth image before Laplacian filtering
@@ -112,8 +112,8 @@ def _get_edges(input_img, showplot=False):
         # plt.hist(img_laplacian.ravel(), bins=100)
 
     # Identify LoG zero crossings as bacterial outlines
-    edges_min = ndimage.minimum_filter(img_laplacian, footprint=sk.morphology.disk(disksize))
-    edges_max = ndimage.maximum_filter(img_laplacian, footprint=sk.morphology.disk(disksize))
+    edges_min = ndimage.minimum_filter(img_laplacian, footprint=sk.morphology.disk(disksize_crossing))
+    edges_max = ndimage.maximum_filter(img_laplacian, footprint=sk.morphology.disk(disksize_crossing))
     mask_edges = np.logical_and(edges_min < 0, edges_max > 0)
     
     if showplot:
@@ -173,6 +173,7 @@ def _unique_seeds_erosion(mask_bacteria, disksize_bacshrink=5):
     return sk.measure.label(mask_bacteria_shrunk)
     
 def _unique_seeds_distance(mask_bacteria, sigma_seed=2, distance_threshold=5):
+    # sigma_seed=2; distance_threshold=5
     
     # create distance map    
     distance_map = ndimage.distance_transform_edt(mask_bacteria)
@@ -188,17 +189,20 @@ def _unique_seeds_distance(mask_bacteria, sigma_seed=2, distance_threshold=5):
 ```
 ```{python}
     
-def seg_bacterium2(input_img, disksize_range=20, min_distance=5)
+def seg_bacterium(input_img, sigma_smooth = 3, 
+                    disksize_crossing=1, disksize_range=20, min_distance=5,
+                    sigma_seed=2, distance_threshold=5):
     """
     Segment bacteria in an image using LoG zero crossings and watershed.
     """
     # input_img = invert(imgs_ecoli[10,:,:])
     # input_img = invert(imgs_ecoli[1000,:,:])
         # plt.imshow(input_img)
+    # sigma_smooth = 3; disksize_crossing=1; disksize_range=20; min_distance=5
     
     mask_global = _global_mask(input_img, disksize_range=disksize_range)    
-    mask_edges  = _get_edges(input_img)
-        # plt.imshow(np.logical_and(mask_edges, mask_global))
+    mask_edges  = _get_edges(input_img, sigma = sigma_smooth, disksize_crossing=disksize_crossing)
+        # plt.imshow(mask_edges)
     
     seed_locations = _bacterial_seeds(input_img, min_distance=min_distance)
     mask_filled = _flood_fill_multiple(mask_edges, seed_locations)
@@ -207,7 +211,10 @@ def seg_bacterium2(input_img, disksize_range=20, min_distance=5)
     mask_bacteria = np.logical_and(mask_filled, mask_global)
         # plt.imshow(mask_bacteria)
     
-    mask_unique_seeds = _unique_seeds_distance(mask_bacteria)
+    mask_unique_seeds = \
+        _unique_seeds_distance(mask_bacteria, 
+                               sigma_seed=sigma_seed, 
+                               distance_threshold=distance_threshold)
         # plt.imshow(mask_unique_seeds)
     
     # now apply watershed
@@ -238,10 +245,10 @@ plt.imshow(invert(imgs_ecoli[300,:,:]))
 
 # segment some data
 seg_frame0 = seg_bacterium(invert(imgs_ecoli[1000,:,:]))
-_ = plt.imshow(seg_frame0)
+_ = plt.imshow(seg_frame0, cmap=cmap_random(300))
 
 ```
 
 ```{python}
-_=plt.imshow(seg_bacterium(invert(imgs_ecoli[1000,:,:]), sigma=2))
+_=plt.imshow(seg_bacterium(invert(imgs_ecoli[10,:,:])))
 ```
