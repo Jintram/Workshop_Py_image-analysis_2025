@@ -1,5 +1,5 @@
 ---
-title: Workshop Python Image Analysis
+title: Discarded code
 jupyter: python3
 ---
 
@@ -20,92 +20,17 @@ from scipy import ndimage
 
 from skimage.measure import label, regionprops
 ```
-
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-
-
-THINGS TO DO
-
-IMPROVE CODE BELOW TO HANDLE MULTIPLE CASES PROPERLY
-    (PREVIOUS VERSION DID -- BUT USED SLIGHTLY DIFFERENT SEG)
-
-    MAKE SURE TO TAKE PARTICIPANT ALONG (DON'T JUST WRITE NEW FUNCTION)
-        PERHAPS FIRST FIX BELOW
-        THEN STEP-BY-STEP DESCRIBE DIFF W/ PREVIOUS VERSION
-            MAKE MODULAR AS WELL!
-
-
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-
-
 ```{python}
-
-# Needs to be done in steps
-
-# 1. determine edge mask
-# 2. determine global mask (do this first?)
-# 3. 
-
-
-def _global_mask(input_img, disksize_range=20):
-    """ Determine a global mask based on local intensity differences."""
-    # input_img = invert(imgs_ecoli[10,:,:])
-   
-    # determine local difference ranges
-    # - "img_delta" will contain the difference between the local maxima and local
-    #   minima around each respective pixel.
-    img_min = ndimage.minimum_filter(input_img, footprint=sk.morphology.disk(disksize_range))
-    img_max = ndimage.maximum_filter(input_img, footprint=sk.morphology.disk(disksize_range))
-    img_delta = img_max - img_min    
-        # plt.imshow(img_delta)
-        
-    # Use an otsu threshold to select regions with high local differences (i.e. bacteria)
-    thresh = sk.filters.threshold_otsu(img_delta)
-    mask_global = img_delta > thresh
-    plt.imshow(mask_global)
-    
-    # Fill holes
-    # - Above works, but resulting mask has holes. Fill those.
-    mask_global_fill = ndimage.binary_fill_holes(mask_global)
-    
-    # Select largest region (removes artifacts)
-    labeled_global = sk.measure.label(mask_global_fill)
-    largest_region = np.argmax([r.area for r in sk.measure.regionprops(labeled_global)]) + 1
-    mask_global_filled = labeled_global == largest_region
-        # plt.imshow(mask_global_filled)
-       
-    # Now use erosion, as the mask is oversize due to neighborhood size     
-    border_margin=5 # keep a certain margin still, though
-    disksize_shrink = np.max([0, disksize_range-border_margin])
-    mask_global_final = \
-        sk.morphology.erosion(
-            mask_global_filled, 
-            footprint=sk.morphology.disk(disksize_shrink)
-            )
-        # plt.imshow(mask_global_final)    
-        
-    # Plot the result (debugging only)
-    # plt.imshow(input_img); plt.contour(mask_global_final, levels=[0.5], colors='r')
-    
-    return mask_global_final
-
-    
 
 def seg_bacterium(input_img, disksize=1, sigma=3, disksize_whole=6):
     """
     Segment bacteria in an image using LoG zero crossings and watershed.
     """
-    # input_img = invert(imgs_ecoli[10,:,:])
     # input_img = invert(imgs_ecoli[1000,:,:])
         # plt.imshow(input_img)
         
-    # improve input image
-    # first erode
-    input_img_polish = sk.morphology.erosion(input_img, footprint=sk.morphology.disk(2))
-        # plt.imshow(input_img_polish)
-        
     # Smooth image before Laplacian filtering
-    img_gauss = sk.filters.gaussian(input_img_polish, sigma=sigma)
+    img_gauss = sk.filters.gaussian(input_img, sigma=sigma)
     edges_log = sk.filters.laplace(img_gauss)
         # minmaxval = np.min([-np.min(edges_log), np.max(edges_log)]); plt.imshow(edges_log, cmap='bwr', vmin=-minmaxval, vmax=minmaxval) 
         # plt.hist(edges_log.ravel(), bins=100)
@@ -156,7 +81,6 @@ def seg_bacterium(input_img, disksize=1, sigma=3, disksize_whole=6):
     mask_wholecolony_final_shrunk = \
         sk.morphology.erosion(mask_wholecolony_final, footprint=sk.morphology.disk(disksize_whole+1))
     mask_local = np.logical_and(mask_local, mask_wholecolony_final_shrunk)
-        # plt.imshow(mask_local)
     mask_local_shrunk = sk.morphology.erosion(mask_local, footprint=sk.morphology.disk(3))
         # plt.imshow(mask_local_shrunk)
     
@@ -165,18 +89,6 @@ def seg_bacterium(input_img, disksize=1, sigma=3, disksize_whole=6):
     # now fill using reconstruction
     mask_filled = sk.morphology.flood_fill(mask_local_shrunk, mask_edges, method='dilation')
         # plt.imshow(mask_filled)
-    
-    # blur the local mask
-    mask_local_blur = sk.filters.gaussian(mask_local.astype(float), sigma=1)
-        # plt.imshow(mask_local_blur)
-        plt.imshow(mask_local_blur-.5, cmap="bwr", vmin=-.5, vmax=.5)
-    
-    #### Tryng to combine local mask and edges_log
-    edges_log_scale = edges_log
-    minmaxval = np.min([-np.min(edges_log), np.max(edges_log)]); 
-    fig, axs = plt.subplots(1,2)
-    axs[0].imshow(edges_log, cmap='bwr', vmin=-minmaxval, vmax=minmaxval) 
-    axs[1].imshow(mask_local_blur-.5, cmap="bwr", vmin=-.5, vmax=.5)
     
     if False:
         minmaxval = np.min([-np.min(edges_log), np.max(edges_log)])
@@ -204,29 +116,4 @@ def seg_bacterium(input_img, disksize=1, sigma=3, disksize_whole=6):
 
     return result
     
-```
-
-```{python}
-
-path_ecoli_data = "/Users/m.wehrens/Data_notbacked/2025_Py-Image-workshop_Filamentation-example-data/pos3crop_timelapse_switch890.98.tif"
-
-# load data
-imgs_ecoli = tiff.imread(path_ecoli_data)
-
-```
-
-```{python}
-plt.imshow(invert(imgs_ecoli[300,:,:]))
-```
-
-```{python}
-
-# segment some data
-seg_frame0 = seg_bacterium(invert(imgs_ecoli[1000,:,:]))
-_ = plt.imshow(seg_frame0)
-
-```
-
-```{python}
-_=plt.imshow(seg_bacterium(invert(imgs_ecoli[1000,:,:]), sigma=2))
 ```

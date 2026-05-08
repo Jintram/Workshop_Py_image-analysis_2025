@@ -27,6 +27,7 @@ from skimage import (
 # %% 
 
 def PN_segphase(imageToSegment, p = None, **kwargs):
+    # imageToSegment = invert(imgs_ecoli[1000,:,:])
     
     #%% ---------------------- PARAMETERS INITIALIZATION ----------------------
     q = {
@@ -204,9 +205,9 @@ def PN_segphase(imageToSegment, p = None, **kwargs):
 
     # STEP C : prepare seeds for watershedding
     C_smoothPh = ndi.gaussian_filter(_as_float01(A_cropPhImage), sigma=float(q["GaussianFilter"]))
-    C_localMinPh = morphology.h_minima(C_smoothPh, h=float(q["minDepth"])) & B_fillEdgeImage2
+    C_localMinPh = np.logical_and(morphology.h_minima(C_smoothPh, h=float(q["minDepth"])), B_fillEdgeImage2)
         # plt.imshow(A_cropPhImage)
-        # plt.imshow(C_localMinPh)
+        # plt.imshow(morphology.dilation(C_localMinPh, morphology.disk(3)), cmap='gray')
         # plt.imshow(B_fillEdgeImage2)
 
     # MATLAB: imfill(B_edgeImage2, find(C_localMinPh))
