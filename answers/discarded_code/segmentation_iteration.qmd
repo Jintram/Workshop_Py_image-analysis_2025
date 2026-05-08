@@ -117,3 +117,122 @@ def seg_bacterium(input_img, disksize=1, sigma=3, disksize_whole=6):
     return result
     
 ```
+
+
+
+```{python}    
+
+def seg_bacterium(input_img, disksize=1, sigma=3, disksize_whole=6):
+    """
+    Segment bacteria in an image using LoG zero crossings and watershed.
+    """
+    # input_img = invert(imgs_ecoli[10,:,:])
+    # input_img = invert(imgs_ecoli[1000,:,:])
+        # plt.imshow(input_img)
+        
+    # improve input image
+    # first erode
+    input_img_polish = sk.morphology.erosion(input_img, footprint=sk.morphology.disk(2))
+        # plt.imshow(input_img_polish)
+        
+    # Smooth image before Laplacian filtering
+    img_gauss = sk.filters.gaussian(input_img_polish, sigma=sigma)
+    edges_log = sk.filters.laplace(img_gauss)
+        # minmaxval = np.min([-np.min(edges_log), np.max(edges_log)]); plt.imshow(edges_log, cmap='bwr', vmin=-minmaxval, vmax=minmaxval) 
+        # plt.hist(edges_log.ravel(), bins=100)
+
+    # Identify LoG zero crossings as bacterial outlines
+    edges_min = ndimage.minimum_filter(edges_log, footprint=sk.morphology.disk(disksize))
+    edges_max = ndimage.maximum_filter(edges_log, footprint=sk.morphology.disk(disksize))
+    mask_edges = np.logical_and(edges_min < 0, edges_max > 0)
+    
+    if False:
+        minmaxval = np.min([-np.min(edges_log), np.max(edges_log)])
+        fig, axs = plt.subplots(1,2)
+        
+        axs[0].imshow(edges_log, cmap='bwr', vmin=-minmaxval, vmax=minmaxval)
+        axs[1].imshow(edges_log, cmap='bwr', vmin=-minmaxval, vmax=minmaxval)
+        axs[1].imshow((1-1*mask_edges), cmap='gray', alpha=1.0*mask_edges)
+    
+    # Revised whole-colony detection -------------------------------------------
+    
+    ### Build a whole-colony mask from otsu on edge image
+    # Raw whole colony mask
+    edge_abs = np.abs(edges_log)
+        # plt.imshow(edge_abs)
+    # Gaussian filter
+    edge_abs_med = sk.filters.median(edge_abs, footprint=sk.morphology.disk(4))
+        # plt.imshow(edge_abs_med)
+    mask_wholecolony = edge_abs > sk.filters.threshold_otsu(edge_abs)
+        # plt.imshow(mask_wholecolony)
+    # Polish
+    mask_wholecolony_polished = sk.morphology.remove_small_objects(mask_wholecolony, min_size=50)
+    mask_wholecolony_polished = \
+        sk.morphology.dilation(mask_wholecolony_polished, footprint=sk.morphology.disk(disksize_whole))
+    # fill holes
+    mask_wholecolony_polished = ndimage.binary_fill_holes(mask_wholecolony_polished)
+        # plt.imshow(mask_wholecolony_polished)
+    # Select largest region
+    labeled_wholecolony = sk.measure.label(mask_wholecolony_polished)
+    largest_region = np.argmax([r.area for r in sk.measure.regionprops(labeled_wholecolony)]) + 1
+    mask_wholecolony_final = labeled_wholecolony == largest_region
+        # plt.imshow(mask_wholecolony_final)
+    # --------------------------------------------------------------------------
+
+    # --------------------------------------------------------------------------
+    # Addition, simple mask to create seeds
+    
+    # simple local mask
+    mask_local = input_img > sk.filters.threshold_local(input_img, block_size=35, offset=-10)
+    mask_wholecolony_final_shrunk = \
+        sk.morphology.erosion(mask_wholecolony_final, footprint=sk.morphology.disk(disksize_whole+1))
+    mask_local = np.logical_and(mask_local, mask_wholecolony_final_shrunk)
+        # plt.imshow(mask_local)
+    mask_local_shrunk = sk.morphology.erosion(mask_local, footprint=sk.morphology.disk(3))
+        # plt.imshow(mask_local_shrunk)
+    
+    # And fill mask edges using this
+    mask_edges = np.logical_and(mask_edges, mask_wholecolony_final)
+    # now fill using reconstruction
+    mask_filled = sk.morphology.flood_fill(mask_local_shrunk, mask_edges, method='dilation')
+        # plt.imshow(mask_filled)
+    
+    # blur the local mask
+    mask_local_blur = sk.filters.gaussian(mask_local.astype(float), sigma=1)
+        # plt.imshow(mask_local_blur)
+        plt.imshow(mask_local_blur-.5, cmap="bwr", vmin=-.5, vmax=.5)
+    
+    #### Tryng to combine local mask and edges_log
+    edges_log_scale = edges_log
+    minmaxval = np.min([-np.min(edges_log), np.max(edges_log)]); 
+    fig, axs = plt.subplots(1,2)
+    axs[0].imshow(edges_log, cmap='bwr', vmin=-minmaxval, vmax=minmaxval) 
+    axs[1].imshow(mask_local_blur-.5, cmap="bwr", vmin=-.5, vmax=.5)
+    
+    if False:
+        minmaxval = np.min([-np.min(edges_log), np.max(edges_log)])
+        
+        plt.imshow(mask_filled, cmap='bwr', vmin=-minmaxval, vmax=minmaxval)
+        plt.imshow((1-1*mask_edges), cmap='gray', alpha=1.0*mask_edges)
+        plt.imshow((mask_local_shrunk), cmap='Blues', alpha=1.0*mask_local_shrunk)
+    
+    # --------------------------------------------------------------------------
+    
+    # Restrict edges to the colony and fill enclosed bacteria
+    mask_edges = np.logical_and(mask_edges, mask_wholecolony_final)
+        # plt.imshow(mask_edges)
+    mask_filled = ndimage.binary_fill_holes(mask_edges)
+        # plt.imshow(mask_filled)
+
+    # Erode to create separated seed regions for watershed
+    mask_seeds = sk.morphology.erosion(mask_filled, footprint=sk.morphology.disk(4))
+    mask_seeds = sk.measure.label(mask_seeds)
+        # plt.imshow(mask_seeds)
+
+    # Expand seeds back into the filled bacterial mask
+    result = sk.segmentation.watershed(-1 * mask_filled, markers=mask_seeds, mask=mask_filled)
+        # plt.imshow(result)
+
+    return result
+    
+```
