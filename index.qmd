@@ -2,11 +2,42 @@
 title: "Workshop Python Image Analysis"
 ---
 
-## Contents
+### Goals and philosophy
+
+<font color=red>
+
+The goals of this python-based workshop are to teach you:
+
+- How to think about images on the computer
+- Learn about tools to modify images 
+- Which tools are available in Python
+- How to practically build an image analysis-pipeline
+- Some fundamentals of ML
+
+The idea is *not* to train you in every single method that exists in image analysis.
+We go over main ideas of image analysis, and the basics of how to manipulate images.
+
+Once you know what types of possibilities and tools to look for, you can 
+further explore them on your own using this thing called *the internet*.
+
+Moreover, LLMs are currently omnipresent. They can be a very useful tool
+in building your image analysis pipeline. However, they tend to HALLUCINATE
+AND YOU DON'T KNOW WHAT TO ASK
+SO NOW USE THEM TO ASK, BUT NOT TO CODE
+
+WELCOME TO TALK TO US
+
+- sth about Le Chat
+
+</font>
+
+--------------------------------------------------------------------------------
+
+### Materials
 
 ![](images/misc/forest2.jpg){height=100px}
 
-### Tutorials
+#### Afternoon I
 
 1. [Preface & Introduction](Bioimage-analysis_01_Introduction.qmd)
 2. Working with images
@@ -19,6 +50,12 @@ title: "Workshop Python Image Analysis"
             - Relating pixels to real-world units
 3. Image Processing
     a. [Image Processing (part 1)](Bioimage-analysis_03A_Imageprocessing.qmd)
+
+--------------------------------------------------------------------------------
+
+#### Afternoon II
+
+3. Image processing (continued)
     b. [Image Processing (part 2)](Bioimage-analysis_03B_Imageprocessing.qmd)    
         - **Topics**
             - Applying math to images
@@ -26,15 +63,41 @@ title: "Workshop Python Image Analysis"
                 - Masks, labels and regions
             - Convolutions
             - Morphology operations     
+            
+--------------------------------------------------------------------------------
+
+#### Afternoon III
+         
 4. [Good coding practices](Bioimage-analysis_04_Intermezzo-goodcodingpractices.qmd)
+    - **Topics**
+        - Importance of readable code
+        - Style guides
+        - Modularity
+        - Refactoring
+        - Not included <font color=red>(????)</font>: 
+            - using version trackers 
+            - online repositories (github)
+            - environment managers
 5. [Combining building blocks into a pipeline](Bioimage-analysis_05_Pipelines.qmd)
-6. [A very basic introduction into machine learning](Bioimage-analysis_06_MachineLearning-basics.qmd)
+    - [Link to v.2.](answers/Bioimage-analysis_05_REVISED.qmd)
+6. [Machine learning fundamentals (basics)](Bioimage-analysis_06_MachineLearning-basics.qmd)
+ - **Topics**
+    - <font color=red>How to use LLMs during script development
+    - XXXX</font>
 7. [Plotting](Bioimage-analysis_07_Plotting.qmd)
+
+--------------------------------------------------------------------------------
+
+<font color=red>
 
 #### Topics to still include
 
 - Background corrections
 - Thresholding, specificially global vs. local
+
+</font>
+
+--------------------------------------------------------------------------------
 
 ![](images/misc/thunder.jpg){height=100px}
 
