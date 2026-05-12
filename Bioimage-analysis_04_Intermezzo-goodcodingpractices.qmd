@@ -178,6 +178,24 @@ In larger collections of scripts, this practice becomes even more important. In 
 
 Rewriting code to make it more readable and/or efficient, whilst maintaining the same functionality, is called "refactoring". Although it is (very very) tempting to just write code that works, it is often worth spending some time to refactor your code. This will save you time in the long run, because you (or others) will be able to understand and re-use your code more easily.
 
+## Pointers
+
+To write code that can be read by others and future you:
+
+- Use descriptive names
+- Add explanatory comments (re. purpose and strategy)
+- Use consistent style (styleguides)
+- Write modular code
+- Refactor regularly
+- Make code easy to run, with reproducable outcome
+    - (Randomness, software versions, parameter settings, metadata)
+- Use version tracking (use git and [github](https://github.com/))
+
+More advanced:
+
+- [Test](https://en.wikipedia.org/wiki/Unit_testing) function behavior
+- Validate (function) input (avoid unexpected outcomes)
+
 Please try this at home!
 
 

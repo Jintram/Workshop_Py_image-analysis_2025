@@ -100,16 +100,32 @@ ul.task-list li input[type="checkbox"] {
 
 
 <p><em>Martijn Wehrens, 2026-04</em></p>
-<section id="chapter-i-preface-introduction" class="level2">
-<h2 class="anchored" data-anchor-id="chapter-i-preface-introduction">Chapter I: Preface &amp; Introduction</h2>
-</section>
-<section id="preface" class="level2">
-<h2 class="anchored" data-anchor-id="preface">Preface</h2>
+<section id="chapter-i-about-goals-setting-up-introduction" class="level2">
+<h2 class="anchored" data-anchor-id="chapter-i-about-goals-setting-up-introduction">Chapter I: About, goals, setting up &amp; introduction</h2>
 <section id="about" class="level3">
 <h3 class="anchored" data-anchor-id="about">About</h3>
 <p>There exist many good image analysis tutorials. I wrote this one because it’s easier to teach my own texts, and it aims to follow the <em>Carpentries</em> style code-along.</p>
 <p>In this workshop, there are chunks of code that are intended to be typed by the instructor, to be projected on a large screen. Workshop participants should type along, in order to get “hands on” experience.</p>
 <p>In addition, there are exercise parts, which participants can do on their own, supervised by the instructor and helpers. Some parts are notebooks on which you can work completely on your own.</p>
+</section>
+<section id="goals-and-philosophy" class="level3">
+<h3 class="anchored" data-anchor-id="goals-and-philosophy">Goals and philosophy</h3>
+<p>The goals of this python-based workshop are to teach you:</p>
+<ul>
+<li>How to think about images on the computer</li>
+<li>Learn about tools to modify images</li>
+<li>Which tools are available in Python</li>
+<li>Python syntax/concepts required to apply these tools</li>
+<li>How to practically build an image analysis-pipeline</li>
+<li>Some fundamentals of ML</li>
+</ul>
+<p>The idea is <em>not</em> to train you in every single method that exists in image analysis. We go over main ideas of image analysis, and the basics of how to manipulate images.</p>
+<p>Once you know what types of possibilities and tools to look for, you can further explore them on your own using internet resources. Querying Google, or asking “Claude”, “Chat” or “Gem” (ie Large Language Models, or LLMs) for advice is very useful when programming. This course is designed with the idea in mind that many further resources are available to help you build the specific pipeline you need. This workshop intends to give you an overview of what’s out there and a solid foundation to build on.</p>
+</section>
+<section id="the-biodsc" class="level3">
+<h3 class="anchored" data-anchor-id="the-biodsc">The bioDSC</h3>
+<p>When you have your own particular challenges and want more specific advice, don’t hesitate to contact me or my colleaguges at the biological Data Science Center for advice at any time.</p>
+<p>See <a href="https://www.biodsc.nl/">https://www.biodsc.nl/</a>.</p>
 </section>
 <section id="requirements" class="level3">
 <h3 class="anchored" data-anchor-id="requirements">Requirements</h3>
@@ -175,58 +191,16 @@ conda install pytorch -c pytorch</code></pre>
 </ul></li>
 </ul>
 </section>
+</section>
+<section id="regarding-the-use-of-llms" class="level3">
+<h3 class="anchored" data-anchor-id="regarding-the-use-of-llms">Regarding the use of LLMs</h3>
+<p><em>Given the omnipresence of LLMs/AIs, a word of advice related to using them.</em></p>
+<p>Large Language Models (LLMs) can be a very useful tool in building your image analysis pipeline. I think they are most useful when you already have a good level of knowledge of a specific topic (bio-image analysis and python scripting in this case). In that case, you know which questions to ask, and can assess the answers you get for correctness. When you ask them to generate code, you can assess whether the code makes sense, or is bloated with unnecessary parts, or is just plain wrong – the latter two are a common occurence!.</p>
+<p>If you want to become (intermediately) proficient in (bio-image analysis) coding, I strongly advice you to <em>not</em> use AI to write all your code. To gain skill, at least spend 50% of your time spend on scripts writing your own code (you can ask AI questions ofcourse).</p>
+<p><strong><em>During this course, it’s strongly advised to <u>not</u> let AI generate code for you.</em></strong></p>
 <section id="contact-us" class="level4">
 <h4 class="anchored" data-anchor-id="contact-us">Contact us</h4>
 <p>In case of any problems, please do contact us (info@biodsc.nl)!</p>
-</section>
-</section>
-<section id="course-outline" class="level3">
-<h3 class="anchored" data-anchor-id="course-outline">Course outline</h3>
-<p><font color="red"></font></p><font color="red">
-<section id="day-1-1300---1700" class="level4">
-<h4 class="anchored" data-anchor-id="day-1-1300---1700">Day 1 (13:00 - 17:00)</h4>
-<ul>
-<li>Chapter 1: Introduction (<strong>10 mins</strong>)</li>
-<li>Chapter 2 (<strong>60 mins</strong>):
-<ul>
-<li>What is an image</li>
-<li>Reading &amp; writing images</li>
-<li>Displaying images</li>
-<li>Basic modifications to images</li>
-</ul></li>
-<li><em>(20 minute break)</em></li>
-<li>Chapter 3 (<strong>120 mins</strong>): detecting image features
-<ul>
-<li>(..)</li>
-<li>Napari</li>
-</ul></li>
-</ul>
-</section>
-<section id="day-2" class="level4">
-<h4 class="anchored" data-anchor-id="day-2">Day 2</h4>
-<ul>
-<li>Data processing pipelines</li>
-<li>Machine learning</li>
-<li>Good coding practices
-<ul>
-<li>Documentation</li>
-<li>Version control</li>
-<li>Modularity</li>
-<li>Reproduction packages</li>
-</ul></li>
-</ul>
-</section>
-</font><section id="day-3" class="level4"><font color="red">
-<h4 class="anchored" data-anchor-id="day-3">Day 3</h4>
-<ul>
-<li>From raw data to plot
-<ul>
-<li>Dataframes</li>
-<li>Matplotlib</li>
-<li>Seaborn</li>
-</ul></li>
-</ul>
-</font><p><font color="red"></font></p>
 </section>
 </section>
 <section id="acknowledgements" class="level3">

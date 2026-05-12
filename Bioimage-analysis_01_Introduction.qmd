@@ -5,11 +5,7 @@ jupyter: python3
 
 *Martijn Wehrens, 2026-04*
 
-## Chapter I: Preface & Introduction
-
-
-## Preface
-
+## Chapter I: About, goals, setting up & introduction
 
 ### About
 There exist many good image analysis tutorials. I wrote this one because it's easier to teach my own texts, and it aims to follow the *Carpentries* style code-along.
@@ -17,6 +13,37 @@ There exist many good image analysis tutorials. I wrote this one because it's ea
 In this workshop, there are chunks of code that are intended to be typed by the instructor, to be projected on a large screen. Workshop participants should type along, in order to get "hands on" experience.
 
 In addition, there are exercise parts, which participants can do on their own, supervised by the instructor and helpers. Some parts are notebooks on which you can work completely on your own.
+
+### Goals and philosophy
+
+The goals of this python-based workshop are to teach you:
+
+- How to think about images on the computer
+- Learn about tools to modify images 
+- Which tools are available in Python
+- Python syntax/concepts required to apply these tools
+- How to practically build an image analysis-pipeline
+- Some fundamentals of ML
+
+The idea is *not* to train you in every single method that exists in image analysis.
+We go over main ideas of image analysis, and the basics of how to manipulate images.
+
+Once you know what types of possibilities and tools to look for, you can 
+further explore them on your own using internet resources.
+Querying Google, or asking "Claude", "Chat" or "Gem" (ie Large Language Models, or LLMs) 
+for advice is very useful when programming. 
+This course is designed with the idea in mind that many further resources
+are available to help you build the specific pipeline you need.
+This workshop intends to give you an overview of what's out there and a solid
+foundation to build on.
+
+### The bioDSC 
+
+When you have your own particular challenges and want more specific advice, 
+don't hesitate to contact me or my colleaguges at the biological Data Science Center
+for advice at any time. 
+
+See [https://www.biodsc.nl/](https://www.biodsc.nl/).
 
 ### Requirements
 
@@ -92,43 +119,32 @@ You can set up a new colab document using the following code:
     - [https://surfdrive.surf.nl/s/FHaHjGWRNTxxzLT](https://surfdrive.surf.nl/s/FHaHjGWRNTxxzLT)
     <!-- Links to folder /Users/m.wehrens/Data_UVA/teaching/2026-04-Py_Img_Workshop -->
 
+
+### Regarding the use of LLMs
+
+*Given the omnipresence of LLMs/AIs, a word of advice related to using them.*
+
+Large Language Models (LLMs) can be a very useful tool
+in building your image analysis pipeline. 
+I think they are most useful when you already have a good level of knowledge
+of a specific topic (bio-image analysis and python scripting in this case).
+In that case, you know which questions to ask, and can assess the 
+answers you get for correctness. 
+When you ask them to generate code, you can assess whether the code makes sense,
+or is bloated with unnecessary parts, or is just plain wrong -- the latter two 
+are a common occurence!.
+
+If you want to become (intermediately) proficient in (bio-image analysis) coding,
+I strongly advice you to *not* use AI to write all your code.
+To gain skill, at least spend 50% of your time spend on scripts writing 
+your own code (you can ask AI questions ofcourse).
+
+***During this course, it's strongly advised to <u>not</u> let AI generate code for
+you.***
+
 #### Contact us
 
 In case of any problems, please do contact us (info@biodsc.nl)!
-
-### Course outline
-
-<font color=red>
-
-#### Day 1 (13:00 - 17:00)
-- Chapter 1: Introduction (**10 mins**)
-- Chapter 2 (**60 mins**): 
-    - What is an image
-    - Reading & writing images
-    - Displaying images
-    - Basic modifications to images
-- *(20 minute break)*
-- Chapter 3 (**120 mins**): detecting image features
-    - (..)
-    - Napari
-    
-#### Day 2
-- Data processing pipelines
-- Machine learning
-- Good coding practices
-    - Documentation
-    - Version control
-    - Modularity
-    - Reproduction packages
-
-#### Day 3
-- From raw data to plot
-    - Dataframes 
-    - Matplotlib
-    - Seaborn
-    
-</font>
-
 
 ### Acknowledgements
 
@@ -138,7 +154,6 @@ We'll be using two example image sets for this tutorial, plus some additional si
 
 - Sergei Chavez-Abiega et al. (2022), "Single-cell imaging of ERK and Akt activation dynamics and heterogeneity induced by G-protein-coupled receptors", Journal of Cell Science, https://doi.org/10.1242/jcs.259685
 - Martijn Wehrens et al. (2018), "Size Laws and Division Ring Dynamics in Filamentous Escherichia Coli Cells", Current Biology, https://doi.org/10.1016/j.cub.2018.02.006.
-
 
 
 ## Let's start: Introduction

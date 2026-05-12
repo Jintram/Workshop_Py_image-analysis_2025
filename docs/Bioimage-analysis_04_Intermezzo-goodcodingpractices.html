@@ -141,7 +141,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><em>Start with the exercise below (under the code block).</em></p>
 <section id="style" class="level3">
 <h3 class="anchored" data-anchor-id="style">Style</h3>
-<div id="f30110bf" class="cell" data-execution_count="1">
+<div id="28978c4f" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Some code</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tifffile <span class="im">import</span> imread <span class="im">as</span> r</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skimage.morphology <span class="im">import</span> remove_small_objects <span class="im">as</span> sa</span>
@@ -204,7 +204,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>In case you failed in part A of this exercise, can you now finish the exercises in part A, but using the code below?</li>
 </ul>
 <p><em>Although the “bad” code above might seem like an extreme example, in my experience, it’s surprisingly easy to end up with code on your computer that looks like this.</em></p>
-<div id="3e9551c5" class="cell" data-execution_count="2">
+<div id="977b7f16" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The code snippet below will segment bright cars in a car park image</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># The general strategy is to use a threshold to create a binary image, </span></span>
@@ -272,7 +272,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="modularity" class="level3">
 <h3 class="anchored" data-anchor-id="modularity">Modularity</h3>
 <p>The following piece of code shows one strategy of determining both the GC content and reverse complement of multiple DNA strands.</p>
-<div id="b5e8c796" class="cell" data-execution_count="3">
+<div id="1943aa64" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># (This example was partially created with ChatGPT; </span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># https://chatgpt.com/share/68cab34e-0238-800e-a699-953cbae23960)</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -324,6 +324,27 @@ rev_comp_list = ['TAGCCTAGCTAGCTATACGCAT', 'AATCGCGATTCGCGCGCGCGCG', 'CTGATGCTGA
 <section id="refactoring" class="level2">
 <h2 class="anchored" data-anchor-id="refactoring">Refactoring</h2>
 <p>Rewriting code to make it more readable and/or efficient, whilst maintaining the same functionality, is called “refactoring”. Although it is (very very) tempting to just write code that works, it is often worth spending some time to refactor your code. This will save you time in the long run, because you (or others) will be able to understand and re-use your code more easily.</p>
+</section>
+<section id="pointers" class="level2">
+<h2 class="anchored" data-anchor-id="pointers">Pointers</h2>
+<p>To write code that can be read by others and future you:</p>
+<ul>
+<li>Use descriptive names</li>
+<li>Add explanatory comments (re. purpose and strategy)</li>
+<li>Use consistent style (styleguides)</li>
+<li>Write modular code</li>
+<li>Refactor regularly</li>
+<li>Make code easy to run, with reproducable outcome
+<ul>
+<li>(Randomness, software versions, parameter settings, metadata)</li>
+</ul></li>
+<li>Use version tracking (use git and <a href="https://github.com/">github</a>)</li>
+</ul>
+<p>More advanced:</p>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Unit_testing">Test</a> function behavior</li>
+<li>Validate (function) input (avoid unexpected outcomes)</li>
+</ul>
 <p>Please try this at home!</p>
 
 
