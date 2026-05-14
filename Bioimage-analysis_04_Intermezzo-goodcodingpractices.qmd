@@ -180,19 +180,21 @@ Rewriting code to make it more readable and/or efficient, whilst maintaining the
 
 ## Pointers
 
-To write code that can be read by others and future you:
+To write code that can be read by others and future you [[1](https://github.com/Droogans/unmaintainable-code)]:
 
-- Use descriptive names
+- Use descriptive names (for functions, parameters, etc)
 - Add explanatory comments (re. purpose and strategy)
-- Use consistent style (styleguides)
+- Use consistent style (styleguides, see [[2](https://peps.python.org/pep-0008/)] and [[3](https://google.github.io/styleguide/pyguide.html)] )
 - Write modular code
 - Refactor regularly
 - Make code easy to run, with reproducable outcome
-    - (Randomness, software versions, parameter settings, metadata)
-- Use version tracking (use git and [github](https://github.com/))
+    - (Reproducible randomness with seeds, track software versions, parameter settings and metadata)
+- Use version tracking (git and [github](https://github.com/))
 
 More advanced:
 
+- Consider reproduction packages for publication
+    - (Shareable bundle of your workflow including scripts, raw data and instructions, to go from raw data to final figures.)
 - [Test](https://en.wikipedia.org/wiki/Unit_testing) function behavior
 - Validate (function) input (avoid unexpected outcomes)
 

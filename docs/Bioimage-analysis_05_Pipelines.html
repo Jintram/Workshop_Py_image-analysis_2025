@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -166,7 +200,7 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="guided-exercises">Guided exercises</h2>
 <section id="bacterial-data" class="level3">
 <h3 class="anchored" data-anchor-id="bacterial-data">Bacterial data</h3>
-<p>Similarly, design a pipeline such that:</p>
+<p>Using <a href="./Bioimage-analysis_05a_Pipelines_buildingblocks.html">these building blocks</a>, design a pipeline such that:</p>
 <ul>
 <li>For all bacterial data, the images get segmented.
 <ul>
@@ -205,8 +239,170 @@ ul.task-list li input[type="checkbox"] {
 <li><p>Plot the nuclear:cytoplasmic ratio over time.</p></li>
 <li><p>Can you guess what was done in this experiment?</p></li>
 </ul>
+</section>
+<section id="background-correction" class="level3">
+<h3 class="anchored" data-anchor-id="background-correction">Background correction</h3>
+<p>An important consideration when quantifying intensity data, is correcting for the background level.</p>
+<p>For example, consider the following example, where intensity values corresponding to measurements on fluorescent signal are shown:</p>
+<p><img src="images/figures/background_corr_example.png" width="25%"></p>
+<p>The following table calculates the ratio between the nuclear and cytoplasmic signal, both based on the raw signal, and on the background subtracted signal. This is done both for the inactive and active kinase.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>Inactive kinase</th>
+<th></th>
+<th>Active kinase</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td>Raw signal</td>
+<td>Background subtracted</td>
+<td>Raw signal</td>
+<td>Background subtracted</td>
+</tr>
+<tr class="even">
+<td>Nuclear signal</td>
+<td>145</td>
+<td>123</td>
+<td>30</td>
+<td>8</td>
+</tr>
+<tr class="odd">
+<td>Cytoplasmic signal</td>
+<td>40</td>
+<td>18</td>
+<td>97</td>
+<td>75</td>
+</tr>
+<tr class="even">
+<td>Ratio</td>
+<td>3.6</td>
+<td>6.8</td>
+<td>0.3</td>
+<td>0.1</td>
+</tr>
+<tr class="odd">
+<td>Fold-change</td>
+<td></td>
+<td></td>
+<td>12</td>
+<td>68</td>
+</tr>
+</tbody>
+</table>
+<p>You can see that subtracting the background leads to rather different picture. When you look at the fold-change in ratio, there’s even more than a factor 5 difference with or without background correction!</p>
+<section id="ways-to-estimate-the-background" class="level4">
+<h4 class="anchored" data-anchor-id="ways-to-estimate-the-background">Ways to estimate the background</h4>
+<p>A common way to correct for the background level is to subtract a single value that represents the average intensity that you attribute to background signal.</p>
+<p><strong>Subtracting the mode.</strong> In many cases, the mode (most frequently observed value) offers a good estimate for that level. This is applicable when most pixels in your picture are background pixels, and they appear as a large peak in the histogram.</p>
+<p><strong>Subtracting mean from known background location.</strong> When you know certain parts of your image will never produce any signal (e.g.&nbsp;because there are no cells in a cell culture picture), you can estimate the background by averaging across that region.</p>
+<p>There exist multiple more complex algorithms to perform background correction.</p>
+<p>For example, the <strong>Rolling ball</strong> algorithm. When you have foreground features of a certain typical size in your image and you have a varying background, you can apply the <a href="https://scikit-image.org/docs/stable/auto_examples/segmentation/plot_rolling_ball.html">rolling ball</a> algorithm. In Python, you can for example use <code>skimage.restoration.rolling_ball</code>. <a href="https://www.researchgate.net/figure/Schematic-of-the-rolling-ball-algorithm_fig1_322905815">This schematic</a> explains the idea nicely (the algorithm was described first by <a href="http://doi.org/10.1109/MC.1983.1654163">Sternberg in 1983</a>).</p>
+</section>
+<section id="flat-field-correction" class="level4">
+<h4 class="anchored" data-anchor-id="flat-field-correction">Flat-field correction</h4>
+<p>Another type of artifact can occur in quantitative intensity measurements on a microscope when the sample is illuminated unevenly. This can be corrected for by taking a reference image based on a uniform sample, for example a glass slide evenly covered by a dye. (Or better yet, the per-pixel mean over many pictures of that slide.)</p>
+</section>
+<section id="exercise" class="level4">
+<h4 class="anchored" data-anchor-id="exercise">Exercise</h4>
+<p>Can you apply a background correction to the nuclear data, and re-calculate the ratios?</p>
+</section>
+</section>
+<section id="napari" class="level3">
+<h3 class="anchored" data-anchor-id="napari">Napari</h3>
+<p>We’ve seen that sometimes computer annotations require human correction.</p>
+<p>A very convenient tool in image analysis is <code>Napari</code>. This allows a user to interactively view and edit images and segmentation masks. It also allows you to write custom functions that can be executed on click, or with widgets.</p>
+<p>Let’s load some example data:</p>
+<div id="856cf012" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tifffile <span class="im">as</span> tiff</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>array_npz <span class="op">=</span> np.load(<span class="st">'images/biological/ecoli_segmentation_result_250.npz'</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>img_ecoli <span class="op">=</span> array_npz[<span class="st">"img_crop"</span>]</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>img_ecoli_mask <span class="op">=</span> array_npz[<span class="st">"segmask"</span>]</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>].imshow(img_ecoli, cmap<span class="op">=</span><span class="st">'grey'</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>].imshow(img_ecoli_mask, cmap <span class="op">=</span> <span class="st">'nipy_spectral'</span>, alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Bioimage-analysis_05_Pipelines_files/figure-html/cell-2-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Now, it would be nice to be able to correct the mask in the picture above. Napari offers a way to do this:</p>
+<div id="00ec290f" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># now show this data in napari</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> napari</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skimage.measure <span class="im">import</span> label</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> magicgui <span class="im">import</span> magicgui</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------------------------</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># basic napari initialization</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># initialize a napari instance</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>viewer <span class="op">=</span> napari.Viewer()</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># add the image</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>viewer.add_image(img_ecoli, name<span class="op">=</span><span class="st">'bacteria'</span>)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># add the mask as a "label" layer (has specific functionalities)</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>viewer.add_labels(img_ecoli_mask, name<span class="op">=</span><span class="st">'segmentation'</span>)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------------------------</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Adding a functionality</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co"># define a small function that re-labels the mask,</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="co"># and add it as a button in the napari side panel</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="at">@magicgui</span>(call_button<span class="op">=</span><span class="st">"Re-label segmentation"</span>)</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> relabel_mask():</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># get the current mask from the napari layer</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    current_mask <span class="op">=</span> viewer.layers[<span class="st">'segmentation'</span>].data</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># re-label it using skimage.measure.label</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    new_mask <span class="op">=</span> label(current_mask)</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># update the napari layer with the new mask</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    viewer.layers[<span class="st">'segmentation'</span>].data <span class="op">=</span> new_mask</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="co"># add the button+function as a "widget" to napari</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>viewer.window.add_dock_widget(relabel_mask, area<span class="op">=</span><span class="st">'right'</span>)</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------------------------</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="co"># run napari</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>napari.run()</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------------------------</span></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Accessing data after closing napari window</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a><span class="co"># after closing napari, access the (possibly re-labeled) mask</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>corrected_mask <span class="op">=</span> viewer.layers[<span class="st">'segmentation'</span>].data</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------------------------</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a><span class="co"># Further code</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a><span class="co"># which can e.g. be saved or displayed</span></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.imshow(corrected_mask, cmap <span class="op">=</span> <span class="st">'nipy_spectral'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>In the above example we have added a small functionality, that introduces a button on top of the default napari window. (The section <code>Adding a functionality</code> can be left out and the code will still work.)</p>
+<p>Technical note: the <code>@</code> sign in the <code>@magicgui(call_button="Re-label segmentation")</code> syntax, is called a “decorator”. It allows you to add extra functionality to a function in a convenient way. In this case, it adds the functionality of creating a button in the napari side panel that calls the function when clicked. This python syntax is not covered here, see e.g.&nbsp;<a href="https://www.geeksforgeeks.org/python/decorators-in-python/">here</a> for more information.</p>
+<p>Napari is highly customizable, and you can add many custom functions to it. Developers of image analysis packages often use Napari to make it easy for users to interact with pictures and their functionalities.</p>
+<p>It’s beyond the scope of this workshop to show all Napari features, but I wanted to make you aware a tool like this exists.</p>
+<section id="exercise-1" class="level4">
+<h4 class="anchored" data-anchor-id="exercise-1">Exercise</h4>
+<p>Play around with the above code to try out napari.</p>
 
 
+</section>
 </section>
 </section>
 

@@ -65,7 +65,7 @@ the workshop**!
 
 #### Libraries to install
 
-You can create and activate an envirnoment, plus install the required libraries, with the commands below.
+You can create and activate an environment, plus install the required libraries, with the commands below.
 
 ```{bash}
 # Create and activate conda environment
@@ -74,7 +74,7 @@ conda activate 2025_py_image_workshop
 # Add "conda-forge" to default channels
 conda config --add channels conda-forge
 # Libraries to install
-conda install matplotlib seaborn tifffile numpy scikit-image scipy imageio ipykernel
+conda install matplotlib seaborn tifffile numpy scikit-image scipy imageio ipykernel napari
 
 # You can choose to also install pytorch (doesn't work on all computers)
 # or use google colab for that chapter.

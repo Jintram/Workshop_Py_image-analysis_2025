@@ -140,7 +140,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Image processing entails modifying images, using mathematical operations, in order to enhance them, or to later being able to better extract information from them.</p>
 <section id="math-can-be-applied-to-images" class="level3">
 <h3 class="anchored" data-anchor-id="math-can-be-applied-to-images">Math can be applied to images</h3>
-<div id="c78df174" class="cell" data-execution_count="1">
+<div id="eee584d9" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># libraries</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
@@ -152,7 +152,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy <span class="im">import</span> stats</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy <span class="im">import</span> ndimage</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="f9297e47" class="cell" data-execution_count="2">
+<div id="906a0ff7" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load a picture of fluorescently labeled HeLa cells</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>img_path <span class="op">=</span> <span class="st">'images/biological/exampleHeLa.tif'</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>img_HeLa <span class="op">=</span> tiff.imread(img_path)</span>
@@ -177,7 +177,7 @@ Mode:  403
 95th percentile:  441.0</code></pre>
 </div>
 </div>
-<div id="7c9a1d2e" class="cell" data-execution_count="3">
+<div id="1587b2c1" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Adjust contrast </span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>new_min <span class="op">=</span> np.percentile(img_HeLa, <span class="dv">3</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>new_max <span class="op">=</span> np.percentile(img_HeLa, <span class="dv">95</span>)</span>
@@ -226,7 +226,7 @@ Mode:  403
 </div>
 </div>
 </div>
-<div id="dfd9ec71" class="cell" data-execution_count="4">
+<div id="20c30759" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.hist(img_HeLa_norm.ravel(), bins<span class="op">=</span><span class="dv">256</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -241,12 +241,12 @@ Mode:  403
 <h3 class="anchored" data-anchor-id="further-adjusting-contrast">Further adjusting contrast</h3>
 <p>When looking at an image you might see striking features, and think that’s all your looking at.</p>
 <p>However, both for humans looking at pictures, and for computers analyzing pictures, features can remain unseen depending on display or processing.</p>
-<div id="47cd6bb8" class="cell" data-execution_count="5">
+<div id="198b7853" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># something convenient for later</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>FIGSIZE21 <span class="op">=</span> (<span class="dv">10</span><span class="op">/</span><span class="fl">2.54</span>,<span class="dv">5</span><span class="op">/</span><span class="fl">2.54</span>) </span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>FIGSIZE22 <span class="op">=</span> (<span class="dv">10</span><span class="op">/</span><span class="fl">2.54</span>,<span class="dv">10</span><span class="op">/</span><span class="fl">2.54</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="1f5bbd90" class="cell" data-execution_count="6">
+<div id="530d614f" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># More advanced contrast adjustment</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's say we're investigating marine microogranism E. moji, </span></span>
@@ -265,7 +265,7 @@ Mode:  403
 </div>
 </div>
 </div>
-<div id="5d498f37" class="cell" data-execution_count="7">
+<div id="2ac86c13" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Great! Three specimen are swimming around happily!</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># But wait..</span></span>
@@ -278,7 +278,7 @@ Mode:  403
 </div>
 </div>
 </div>
-<div id="5c47950b" class="cell" data-execution_count="8">
+<div id="adc23013" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The viridis colormap shows us there might be some more signal. </span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># (You can also try to open this image in FIJI, and play around with contrast.)</span></span>
@@ -325,7 +325,7 @@ Mode:  403
 </div>
 </div>
 </div>
-<div id="dfdfebb8" class="cell" data-execution_count="9">
+<div id="60766a35" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Show the gamma input/output relation</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="dv">0</span>,<span class="dv">255</span>,<span class="dv">100</span>)</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>x_transformed <span class="op">=</span> sk.exposure.adjust_gamma(x, gamma<span class="op">=</span><span class="fl">0.5</span>)</span>
@@ -352,7 +352,7 @@ Mode:  403
 <p>Say you want to - quantify bacterial growth, - take measurements on individual cultured cells, - or quantify leaf damage,</p>
 <p>the computer will have to understand <strong>which pixel relates to which object</strong> (e.g.&nbsp;a cell) to quantify anything.</p>
 <p>In later sections, we’ll look at <strong>how to process these annotated regions</strong>.</p>
-<div id="ab1ecdb8" class="cell" data-execution_count="10">
+<div id="79b8fe4a" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's load some nuclei example data again</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>img_path_KTR <span class="op">=</span> <span class="st">'/Users/m.wehrens/Data_notbacked/2025_Py-Image-workshop_KTR-example-data/raw/Composite_KTR.tif'</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>img_nuclei <span class="op">=</span> tiff.imread(img_path_KTR)[<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>:<span class="dv">200</span>, <span class="dv">0</span>:<span class="dv">200</span>]</span>
@@ -369,7 +369,7 @@ Mode:  403
 </div>
 </div>
 </div>
-<div id="10bb6f75" class="cell" data-execution_count="11">
+<div id="319badde" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Could we determine a manual threshold? </span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># .. (audience)</span></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># yes!</span></span>
@@ -388,7 +388,7 @@ Mode:  403
 <h3 class="anchored" data-anchor-id="extracting-information">Extracting information</h3>
 <p>We’ll progress to somewhat more realistic examples later, but let’s say we want to <strong>quantify the size of the nuclei</strong>.</p>
 <p>This requires some more tools.</p>
-<div id="b624f975" class="cell" data-execution_count="12">
+<div id="9e4a3278" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># label the nuclei</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>labeled_nuclei <span class="op">=</span> sk.measure.label(mask_nuclei)</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.imshow(labeled_nuclei)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -400,7 +400,7 @@ Mode:  403
 </div>
 </div>
 </div>
-<div id="cfc33d3e" class="cell" data-execution_count="13">
+<div id="9520f252" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The labeled map </span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Great tool to get</span></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   - object properties</span></span>
@@ -421,7 +421,7 @@ Mode:  403
 </div>
 </div>
 </div>
-<div id="ea7b5940" class="cell" data-execution_count="14">
+<div id="b368b6f8" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Count all sizes</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>nuclei_sizes <span class="op">=</span> np.array([np.<span class="bu">sum</span>(labeled_nuclei<span class="op">==</span>label) </span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>                         <span class="cf">for</span> label <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>,np.<span class="bu">max</span>(labeled_nuclei))])</span>
@@ -440,13 +440,13 @@ Mode:  403
 </div>
 </div>
 </div>
-<div id="af12167c" class="cell" data-execution_count="15">
+<div id="bbcaa858" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># There are functions that make such tasks much easier</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's get regionprops</span></span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>regions <span class="op">=</span> sk.measure.regionprops(labeled_nuclei, intensity_image<span class="op">=</span>img_nuclei)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="13dfcf79" class="cell" data-execution_count="16">
+<div id="1e3bd00b" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's inspect a region object</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>region_1 <span class="op">=</span> regions[<span class="dv">0</span>]</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>

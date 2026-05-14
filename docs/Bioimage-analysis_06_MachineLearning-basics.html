@@ -190,7 +190,7 @@ window.Quarto = {
 <section id="understanding-but-not-the-technical-details" class="level5">
 <h5 class="anchored" data-anchor-id="understanding-but-not-the-technical-details">Understanding, but not the technical details</h5>
 <p>The code has some explanatory comments, but it takes too much time to explain fully how pytorch or similar neural network libraries (like tensorflow or keras) work. You’re welcome to try and understand the code, but don’t get lost in it, the main goal is to understand the concepts of machine learning.</p>
-<div id="7e28d12c" class="cell" data-execution_count="1">
+<div id="d17acacd" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch <span class="im">import</span> nn</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -201,7 +201,7 @@ window.Quarto = {
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tifffile <span class="im">as</span> tiff</span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="91951b28" class="cell" data-execution_count="2">
+<div id="d6a45a88" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This code defines a VERY simple model for 12x12 pixels,</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># meant for illustratory purposes.</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -280,32 +280,44 @@ window.Quarto = {
 <span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'pred = </span><span class="ch">\"</span><span class="st">'</span>,pred, <span class="st">'</span><span class="ch">\"</span><span class="st"> (pytorch tensor format)'</span>)</span>
 <span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'pred_numpy = </span><span class="ch">\"</span><span class="st">'</span>,pred_numpy,<span class="st">'</span><span class="ch">\"</span><span class="st"> (numpy format)'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>test_data= tensor([[[0.5830, 0.1900, 0.9950, 0.5933, 0.9192, 0.1471, 0.4993, 0.3008,
-          0.6408, 0.3764, 0.4723, 0.8469],
-         [0.2945, 0.3850, 0.3844, 0.2662, 0.8562, 0.0240, 0.9013, 0.1307,
-          0.6719, 0.1942, 0.2235, 0.4436],
-         [0.5933, 0.8696, 0.2823, 0.2333, 0.6611, 0.2512, 0.7063, 0.5292,
-          0.3042, 0.3285, 0.8464, 0.6724],
-         [0.6830, 0.0254, 0.4320, 0.9685, 0.8570, 0.7167, 0.7807, 0.3431,
-          0.9451, 0.8458, 0.3238, 0.8043],
-         [0.0966, 0.8786, 0.4487, 0.4021, 0.0031, 0.0520, 0.0082, 0.7987,
-          0.6871, 0.7735, 0.1707, 0.5831],
-         [0.8362, 0.7617, 0.8844, 0.9482, 0.8092, 0.7880, 0.5686, 0.6113,
-          0.0366, 0.9559, 0.1001, 0.1466],
-         [0.1737, 0.9138, 0.6357, 0.5195, 0.1296, 0.6910, 0.9345, 0.9651,
-          0.7801, 0.1576, 0.2311, 0.7024],
-         [0.8848, 0.9341, 0.5678, 0.2056, 0.6922, 0.9754, 0.7172, 0.8832,
-          0.1305, 0.8364, 0.6614, 0.4408],
-         [0.2916, 0.9681, 0.6628, 0.5293, 0.7758, 0.6859, 0.1839, 0.5876,
-          0.7866, 0.0516, 0.5743, 0.9163],
-         [0.9250, 0.6999, 0.3665, 0.6831, 0.9054, 0.3024, 0.1302, 0.1661,
-          0.5071, 0.8843, 0.4323, 0.9762],
-         [0.7541, 0.8400, 0.5063, 0.6050, 0.3594, 0.9816, 0.1328, 0.9353,
-          0.2236, 0.5158, 0.1142, 0.5296],
-         [0.6814, 0.4408, 0.2993, 0.6402, 0.7404, 0.0308, 0.9209, 0.4261,
-          0.1806, 0.0804, 0.1950, 0.3846]]], device='mps:0')
-pred = " tensor([[-0.3187, -0.0391]], device='mps:0', grad_fn=&lt;LinearBackward0&gt;) " (pytorch tensor format)
-pred_numpy = " [[-0.31869474 -0.03905538]] " (numpy format)</code></pre>
+<pre><code>test_data= tensor([[[9.9905e-01, 1.0443e-01, 8.6779e-01, 6.6410e-01, 2.6765e-01,
+          3.0579e-01, 8.3061e-01, 2.1545e-03, 9.3924e-01, 3.2814e-01,
+          1.2284e-01, 4.4792e-01],
+         [6.7325e-01, 7.2292e-01, 1.4194e-01, 9.1369e-01, 8.2602e-01,
+          3.8811e-01, 4.8375e-01, 3.0279e-01, 3.9723e-01, 9.4624e-01,
+          7.7136e-01, 4.6563e-01],
+         [2.0083e-02, 8.5847e-01, 6.3434e-01, 4.4390e-01, 3.5225e-01,
+          5.0454e-01, 7.0295e-01, 2.8191e-01, 6.9066e-01, 8.5711e-01,
+          5.9398e-01, 3.7165e-01],
+         [8.7687e-01, 5.6346e-01, 3.3366e-01, 6.1878e-01, 9.6298e-01,
+          4.9849e-01, 4.9843e-01, 1.5370e-01, 5.5957e-01, 3.6142e-01,
+          4.4155e-01, 5.9388e-01],
+         [9.4979e-01, 3.2256e-01, 3.0280e-01, 5.0337e-01, 3.9201e-01,
+          9.9419e-01, 1.6993e-01, 5.2423e-01, 1.2411e-01, 6.1835e-01,
+          7.0069e-01, 8.7767e-01],
+         [1.1036e-01, 8.1951e-01, 6.1241e-01, 8.3477e-01, 2.3271e-01,
+          4.5096e-01, 9.3167e-02, 6.3943e-01, 7.1112e-02, 6.9390e-02,
+          5.4557e-01, 5.5413e-01],
+         [6.7520e-04, 2.8757e-01, 9.8652e-01, 1.3540e-03, 5.5331e-01,
+          2.8947e-01, 7.5296e-01, 7.9390e-01, 4.6192e-01, 2.3037e-01,
+          9.5128e-03, 2.2951e-01],
+         [6.7398e-01, 5.6195e-02, 3.3444e-02, 8.7981e-01, 2.3037e-01,
+          9.9677e-01, 3.8786e-01, 5.7501e-01, 3.2707e-01, 5.0473e-01,
+          4.4552e-01, 9.7519e-01],
+         [1.6873e-01, 6.0940e-01, 8.6280e-01, 8.0880e-01, 7.5555e-01,
+          1.5525e-01, 4.0801e-01, 5.4635e-01, 1.4039e-01, 1.2429e-01,
+          1.4869e-01, 5.1706e-02],
+         [9.5982e-01, 6.5002e-01, 4.9812e-02, 6.7351e-01, 6.4761e-01,
+          9.1964e-01, 6.5039e-01, 1.7261e-01, 7.4254e-01, 3.6378e-01,
+          8.1820e-01, 7.3676e-01],
+         [1.4350e-01, 6.7997e-01, 6.9720e-01, 4.5635e-01, 3.3715e-01,
+          3.2860e-01, 2.8961e-01, 3.7464e-01, 9.7524e-01, 6.7169e-01,
+          7.2361e-01, 5.4394e-01],
+         [5.7067e-01, 7.9562e-01, 1.5230e-03, 7.4052e-01, 4.3939e-01,
+          5.4857e-01, 5.2375e-01, 9.4757e-01, 3.0011e-02, 4.5022e-01,
+          5.1870e-01, 6.9582e-01]]], device='mps:0')
+pred = " tensor([[ 0.0753, -0.3882]], device='mps:0', grad_fn=&lt;LinearBackward0&gt;) " (pytorch tensor format)
+pred_numpy = " [[ 0.07531799 -0.38824344]] " (numpy format)</code></pre>
 </div>
 </div>
 </section>
@@ -326,7 +338,7 @@ pred_numpy = " [[-0.31869474 -0.03905538]] " (numpy format)</code></pre>
 </ul></li>
 <li>If we were to provide actual images to this network, do you think it would be able to generate meaningful predictions? Why would it (not)?</li>
 </ul>
-<div id="2932a09d" class="cell" data-execution_count="3">
+<div id="798b9745" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Since this network is so simple, we can manually calculate it's outcome</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Now acquire the weights stored in the neural network</span></span>
@@ -343,7 +355,7 @@ pred_numpy = " [[-0.31869474 -0.03905538]] " (numpy format)</code></pre>
 <span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>output_element2 <span class="op">=</span> np.<span class="bu">sum</span>(test_data_np <span class="op">*</span> weights[<span class="dv">1</span>]) <span class="op">+</span> bias[<span class="dv">1</span>]</span>
 <span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(output_element1, <span class="st">', '</span>, output_element2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>-0.31869474 ,  -0.039055362</code></pre>
+<pre><code>0.075318 ,  -0.38824344</code></pre>
 </div>
 </div>
 <section id="question" class="level3">
@@ -355,7 +367,7 @@ pred_numpy = " [[-0.31869474 -0.03905538]] " (numpy format)</code></pre>
 <section id="exercise-load-your-images" class="level3">
 <h3 class="anchored" data-anchor-id="exercise-load-your-images">Exercise: load your images</h3>
 <p>Adapt the code below to load the images you were asked to draw earlier.</p>
-<div id="fde2d9d0" class="cell" data-execution_count="4">
+<div id="abb3a815" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's load some potential input and training data</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Here, we'll load only the few images you just created. </span></span>
@@ -388,7 +400,7 @@ pred_numpy = " [[-0.31869474 -0.03905538]] " (numpy format)</code></pre>
 </section>
 <section id="seaborn-plotting-can-be-skipped" class="level3">
 <h3 class="anchored" data-anchor-id="seaborn-plotting-can-be-skipped">Seaborn plotting (can be skipped)</h3>
-<div id="c796ac0a" class="cell" data-execution_count="5">
+<div id="6cdeeb7e" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's use seaborn to create some more sophisticated plots</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> mw_showimg2(img, annotcolor<span class="op">=</span><span class="st">'white'</span>,SX<span class="op">=</span><span class="dv">8</span>,SY<span class="op">=</span><span class="dv">8</span>,SF<span class="op">=</span><span class="dv">7</span>,VMIN<span class="op">=</span><span class="dv">0</span>,VMAX<span class="op">=</span><span class="dv">255</span>, CMAP<span class="op">=</span><span class="st">'hot'</span>, FMT<span class="op">=</span><span class="st">"d"</span>):</span>
@@ -450,7 +462,7 @@ pred_numpy = " [[-0.31869474 -0.03905538]] " (numpy format)</code></pre>
 <section id="defining-a-data-loader" class="level3">
 <h3 class="anchored" data-anchor-id="defining-a-data-loader">Defining a data loader</h3>
 <p>To train a model, pytorch needs to be able to quickly look at a load of data efficiently. In the pytorch workflow, a data class is defined, such that training data can be stored in tensor format, and can be supplied easily to the training algorithm later.</p>
-<div id="42472739" class="cell" data-execution_count="6">
+<div id="f1899a39" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Data_HappySad(Dataset):</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Again, we use a class, see above for an explanation.</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># (Remember the blueprint/house analogy.)</span></span>
@@ -491,7 +503,7 @@ pred_numpy = " [[-0.31869474 -0.03905538]] " (numpy format)</code></pre>
 <span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>        </span>
 <span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.data[idx].to(<span class="va">self</span>.targetdevice), <span class="va">self</span>.label[idx].to(<span class="va">self</span>.targetdevice)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="d8ea07f4" class="cell" data-execution_count="7">
+<div id="e2aab89e" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Show an image from the dataloader</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create an object from the class</span></span>
@@ -508,7 +520,7 @@ pred_numpy = " [[-0.31869474 -0.03905538]] " (numpy format)</code></pre>
 <span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot it</span></span>
 <span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>mw_showimg2(img_np, annotcolor<span class="op">=</span><span class="st">'blue'</span>, VMIN<span class="op">=</span><span class="dv">0</span>, VMAX<span class="op">=</span><span class="fl">1.0</span>, FMT<span class="op">=</span><span class="st">".2f"</span>, SX<span class="op">=</span><span class="dv">5</span>, SY<span class="op">=</span><span class="dv">5</span>, SF<span class="op">=</span><span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/var/folders/8w/2thz_cgn3xn13rhrxb2dvb5w0000gn/T/ipykernel_76951/2484028174.py:21: UserWarning:
+<pre><code>/var/folders/8w/2thz_cgn3xn13rhrxb2dvb5w0000gn/T/ipykernel_69926/2484028174.py:21: UserWarning:
 
 Creating a tensor from a list of numpy.ndarrays is extremely slow. Please consider converting the list to a single numpy.ndarray with numpy.array() before converting to a tensor. (Triggered internally at /Users/runner/miniforge3/conda-bld/libtorch_1741947704867/work/torch/csrc/utils/tensor_new.cpp:257.)
 </code></pre>
@@ -534,7 +546,7 @@ Creating a tensor from a list of numpy.ndarrays is extremely slow. Please consid
 <h3 class="anchored" data-anchor-id="dataloader">Dataloader</h3>
 <p>We’re now getting close to actually training this model. We’ll need to define a dataloader. In more advanced neural network setups, the DataLoader provides convenient functionalities like shuffling the data, or loading it in parallel from disk. Here, we’ll just use it to be able to loop over the data easily, and provide the data in batches of three images.</p>
 <p>We’ll also initialize the model itself (create an object from the class <code>VerySimpleNN</code> defined earlier).</p>
-<div id="83b8f7ad" class="cell" data-execution_count="8">
+<div id="ef4980a0" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># initialize the dataset and dataloader objects</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>my_data_happysad <span class="op">=</span> Data_HappySad()</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>my_data_happysad_loader <span class="op">=</span> torch.utils.data.DataLoader(my_data_happysad, </span>
@@ -543,7 +555,7 @@ Creating a tensor from a list of numpy.ndarrays is extremely slow. Please consid
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co"># initialize the model</span></span>
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>my_simple_model  <span class="op">=</span> VerySimpleNN().to(<span class="st">'mps'</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="62bac6a0" class="cell" data-execution_count="9">
+<div id="23547a05" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's check the data object works as expected</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>my_data_happysad.<span class="fu">__getitem__</span>(<span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="9">
@@ -574,7 +586,7 @@ Creating a tensor from a list of numpy.ndarrays is extremely slow. Please consid
 <p>Now we need to train the model by presenting it a picture, calculating the prediction (which might be completely off initially), determine which weight adjustments would improve the prediction (using the loss function), and update the weights accordingly. And repeat that multiple times.</p>
 <p>Training a “real” neural network might take presenting the model with many images, for many iterations, and might take hours or days.</p>
 <p>Here, our extremely simple model will be trained swiftly.</p>
-<div id="cbdea231" class="cell" data-execution_count="10">
+<div id="cbfc6182" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the training loop</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a loss function</span></span>
@@ -644,306 +656,306 @@ Creating a tensor from a list of numpy.ndarrays is extremely slow. Please consid
 <span id="cb14-67"><a href="#cb14-67" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Print some information to see what's going on</span></span>
 <span id="cb14-68"><a href="#cb14-68" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">'epoch ='</span>, epoch_idx, <span class="st">'batch ='</span>,b_idx,<span class="st">', loss = '</span>, loss.item())<span class="co">#, 'X.shape=', X.shape)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>epoch = 0 batch = 0 , loss =  0.638950526714325
-epoch = 1 batch = 0 , loss =  0.5674177408218384
-epoch = 2 batch = 0 , loss =  0.5398913621902466
-epoch = 3 batch = 0 , loss =  0.491190642118454
-epoch = 4 batch = 0 , loss =  0.4439147412776947
-epoch = 5 batch = 0 , loss =  0.41297438740730286
-epoch = 6 batch = 0 , loss =  0.38909757137298584
-epoch = 7 batch = 0 , loss =  0.36027398705482483
-epoch = 8 batch = 0 , loss =  0.3290550708770752
-epoch = 9 batch = 0 , loss =  0.302172988653183
-epoch = 10 batch = 0 , loss =  0.28163817524909973
-epoch = 11 batch = 0 , loss =  0.2645113170146942
-epoch = 12 batch = 0 , loss =  0.2473682165145874
-epoch = 13 batch = 0 , loss =  0.22956334054470062
-epoch = 14 batch = 0 , loss =  0.21265946328639984
-epoch = 15 batch = 0 , loss =  0.19820432364940643
-epoch = 16 batch = 0 , loss =  0.18632538616657257
-epoch = 17 batch = 0 , loss =  0.17592667043209076
-epoch = 18 batch = 0 , loss =  0.16583950817584991
-epoch = 19 batch = 0 , loss =  0.15568707883358002
-epoch = 20 batch = 0 , loss =  0.14585727453231812
-epoch = 21 batch = 0 , loss =  0.13693386316299438
-epoch = 22 batch = 0 , loss =  0.12919287383556366
-epoch = 23 batch = 0 , loss =  0.12247216701507568
-epoch = 24 batch = 0 , loss =  0.1163691058754921
-epoch = 25 batch = 0 , loss =  0.11053416877985
-epoch = 26 batch = 0 , loss =  0.10484462976455688
-epoch = 27 batch = 0 , loss =  0.09938838332891464
-epoch = 28 batch = 0 , loss =  0.09432939440011978
-epoch = 29 batch = 0 , loss =  0.08977264165878296
-epoch = 30 batch = 0 , loss =  0.08570531010627747
-epoch = 31 batch = 0 , loss =  0.08202090114355087
-epoch = 32 batch = 0 , loss =  0.07858819514513016
-epoch = 33 batch = 0 , loss =  0.07531353831291199
-epoch = 34 batch = 0 , loss =  0.07216747850179672
-epoch = 35 batch = 0 , loss =  0.06917201727628708
-epoch = 36 batch = 0 , loss =  0.06636787205934525
-epoch = 37 batch = 0 , loss =  0.06378232687711716
-epoch = 38 batch = 0 , loss =  0.06141375005245209
-epoch = 39 batch = 0 , loss =  0.059233713895082474
-epoch = 40 batch = 0 , loss =  0.05720142647624016
-epoch = 41 batch = 0 , loss =  0.05527966096997261
-epoch = 42 batch = 0 , loss =  0.053445134311914444
-epoch = 43 batch = 0 , loss =  0.051691364496946335
-epoch = 44 batch = 0 , loss =  0.050022710114717484
-epoch = 45 batch = 0 , loss =  0.04844753071665764
-epoch = 46 batch = 0 , loss =  0.04697037860751152
-epoch = 47 batch = 0 , loss =  0.04558885097503662
-epoch = 48 batch = 0 , loss =  0.04429401829838753
-epoch = 49 batch = 0 , loss =  0.04307316243648529
-epoch = 50 batch = 0 , loss =  0.041913729161024094
-epoch = 51 batch = 0 , loss =  0.04080589488148689
-epoch = 52 batch = 0 , loss =  0.03974438086152077
-epoch = 53 batch = 0 , loss =  0.03872739151120186
-epoch = 54 batch = 0 , loss =  0.03775535523891449
-epoch = 55 batch = 0 , loss =  0.03682918846607208
-epoch = 56 batch = 0 , loss =  0.035948511213064194
-epoch = 57 batch = 0 , loss =  0.03511149808764458
-epoch = 58 batch = 0 , loss =  0.03431466221809387
-epoch = 59 batch = 0 , loss =  0.03355385735630989
-epoch = 60 batch = 0 , loss =  0.032824885100126266
-epoch = 61 batch = 0 , loss =  0.03212423995137215
-epoch = 62 batch = 0 , loss =  0.0314495749771595
-epoch = 63 batch = 0 , loss =  0.030799413099884987
-epoch = 64 batch = 0 , loss =  0.030173122882843018
-epoch = 65 batch = 0 , loss =  0.0295703187584877
-epoch = 66 batch = 0 , loss =  0.02899055927991867
-epoch = 67 batch = 0 , loss =  0.028433039784431458
-epoch = 68 batch = 0 , loss =  0.02789667248725891
-epoch = 69 batch = 0 , loss =  0.02738005481660366
-epoch = 70 batch = 0 , loss =  0.026881545782089233
-epoch = 71 batch = 0 , loss =  0.02639986015856266
-epoch = 72 batch = 0 , loss =  0.025933757424354553
-epoch = 73 batch = 0 , loss =  0.02548219822347164
-epoch = 74 batch = 0 , loss =  0.02504449337720871
-epoch = 75 batch = 0 , loss =  0.02462022192776203
-epoch = 76 batch = 0 , loss =  0.024208953604102135
-epoch = 77 batch = 0 , loss =  0.02381029725074768
-epoch = 78 batch = 0 , loss =  0.023423826321959496
-epoch = 79 batch = 0 , loss =  0.023049065843224525
-epoch = 80 batch = 0 , loss =  0.022685280069708824
-epoch = 81 batch = 0 , loss =  0.022332116961479187
-epoch = 82 batch = 0 , loss =  0.021988824009895325
-epoch = 83 batch = 0 , loss =  0.021654879674315453
-epoch = 84 batch = 0 , loss =  0.021329915151000023
-epoch = 85 batch = 0 , loss =  0.02101343683898449
-epoch = 86 batch = 0 , loss =  0.020705213770270348
-epoch = 87 batch = 0 , loss =  0.02040482498705387
-epoch = 88 batch = 0 , loss =  0.020112240687012672
-epoch = 89 batch = 0 , loss =  0.019826993346214294
-epoch = 90 batch = 0 , loss =  0.019548894837498665
-epoch = 91 batch = 0 , loss =  0.019277719780802727
-epoch = 92 batch = 0 , loss =  0.019013235345482826
-epoch = 93 batch = 0 , loss =  0.018755026161670685
-epoch = 94 batch = 0 , loss =  0.018503019586205482
-epoch = 95 batch = 0 , loss =  0.01825679838657379
-epoch = 96 batch = 0 , loss =  0.018016252666711807
-epoch = 97 batch = 0 , loss =  0.01778111793100834
-epoch = 98 batch = 0 , loss =  0.017551247030496597
-epoch = 99 batch = 0 , loss =  0.017326490953564644
-epoch = 100 batch = 0 , loss =  0.017106663435697556
-epoch = 101 batch = 0 , loss =  0.01689157634973526
-epoch = 102 batch = 0 , loss =  0.016681158915162086
-epoch = 103 batch = 0 , loss =  0.016475221142172813
-epoch = 104 batch = 0 , loss =  0.016273653134703636
-epoch = 105 batch = 0 , loss =  0.016076264902949333
-epoch = 106 batch = 0 , loss =  0.01588302105665207
-epoch = 107 batch = 0 , loss =  0.015693655237555504
-epoch = 108 batch = 0 , loss =  0.015508132986724377
-epoch = 109 batch = 0 , loss =  0.015326297841966152
-epoch = 110 batch = 0 , loss =  0.015148078091442585
-epoch = 111 batch = 0 , loss =  0.014973354525864124
-epoch = 112 batch = 0 , loss =  0.014802019111812115
-epoch = 113 batch = 0 , loss =  0.014633949846029282
-epoch = 114 batch = 0 , loss =  0.014469112269580364
-epoch = 115 batch = 0 , loss =  0.014307431876659393
-epoch = 116 batch = 0 , loss =  0.014148752205073833
-epoch = 117 batch = 0 , loss =  0.013992995023727417
-epoch = 118 batch = 0 , loss =  0.0138402059674263
-epoch = 119 batch = 0 , loss =  0.01369014848023653
-epoch = 120 batch = 0 , loss =  0.013542826287448406
-epoch = 121 batch = 0 , loss =  0.013398162089288235
-epoch = 122 batch = 0 , loss =  0.013256040401756763
-epoch = 123 batch = 0 , loss =  0.013116504065692425
-epoch = 124 batch = 0 , loss =  0.0129793556407094
-epoch = 125 batch = 0 , loss =  0.012844562530517578
-epoch = 126 batch = 0 , loss =  0.012712162919342518
-epoch = 127 batch = 0 , loss =  0.012582081370055676
-epoch = 128 batch = 0 , loss =  0.012454082258045673
-epoch = 129 batch = 0 , loss =  0.01232832670211792
-epoch = 130 batch = 0 , loss =  0.012204696424305439
-epoch = 131 batch = 0 , loss =  0.012083078734576702
-epoch = 132 batch = 0 , loss =  0.011963509023189545
-epoch = 133 batch = 0 , loss =  0.01184595376253128
-epoch = 134 batch = 0 , loss =  0.011730175465345383
-epoch = 135 batch = 0 , loss =  0.011616374365985394
-epoch = 136 batch = 0 , loss =  0.011504354886710644
-epoch = 137 batch = 0 , loss =  0.011394194327294827
-epoch = 138 batch = 0 , loss =  0.01128577720373869
-epoch = 139 batch = 0 , loss =  0.01117898803204298
-epoch = 140 batch = 0 , loss =  0.011073902249336243
-epoch = 141 batch = 0 , loss =  0.010970485396683216
-epoch = 142 batch = 0 , loss =  0.010868619196116924
-epoch = 143 batch = 0 , loss =  0.010768302716314793
-epoch = 144 batch = 0 , loss =  0.01066953968256712
-epoch = 145 batch = 0 , loss =  0.010572288185358047
-epoch = 146 batch = 0 , loss =  0.010476511903107166
-epoch = 147 batch = 0 , loss =  0.010382132604718208
-epoch = 148 batch = 0 , loss =  0.010289189405739307
-epoch = 149 batch = 0 , loss =  0.01019760500639677
-epoch = 150 batch = 0 , loss =  0.010107380338013172
-epoch = 151 batch = 0 , loss =  0.010018437169492245
-epoch = 152 batch = 0 , loss =  0.009930775500833988
-epoch = 153 batch = 0 , loss =  0.009844436310231686
-epoch = 154 batch = 0 , loss =  0.009759299457073212
-epoch = 155 batch = 0 , loss =  0.009675408713519573
-epoch = 156 batch = 0 , loss =  0.009592684917151928
-epoch = 157 batch = 0 , loss =  0.009511086158454418
-epoch = 158 batch = 0 , loss =  0.009430695325136185
-epoch = 159 batch = 0 , loss =  0.009351394139230251
-epoch = 160 batch = 0 , loss =  0.00927314069122076
-epoch = 161 batch = 0 , loss =  0.009196018800139427
-epoch = 162 batch = 0 , loss =  0.009119986556470394
-epoch = 163 batch = 0 , loss =  0.00904492661356926
-epoch = 164 batch = 0 , loss =  0.008970879018306732
-epoch = 165 batch = 0 , loss =  0.008897844702005386
-epoch = 166 batch = 0 , loss =  0.008825784549117088
-epoch = 167 batch = 0 , loss =  0.008754697628319263
-epoch = 168 batch = 0 , loss =  0.008684586733579636
-epoch = 169 batch = 0 , loss =  0.008615330792963505
-epoch = 170 batch = 0 , loss =  0.008547011762857437
-epoch = 171 batch = 0 , loss =  0.00847958866506815
-epoch = 172 batch = 0 , loss =  0.008413024246692657
-epoch = 173 batch = 0 , loss =  0.008347316645085812
-epoch = 174 batch = 0 , loss =  0.008282466791570187
-epoch = 175 batch = 0 , loss =  0.008218437433242798
-epoch = 176 batch = 0 , loss =  0.008155186660587788
-epoch = 177 batch = 0 , loss =  0.008092794567346573
-epoch = 178 batch = 0 , loss =  0.008031144738197327
-epoch = 179 batch = 0 , loss =  0.007970274426043034
-epoch = 180 batch = 0 , loss =  0.007910185493528843
-epoch = 181 batch = 0 , loss =  0.007850877940654755
-epoch = 182 batch = 0 , loss =  0.007792233023792505
-epoch = 183 batch = 0 , loss =  0.007734330836683512
-epoch = 184 batch = 0 , loss =  0.007677131798118353
-epoch = 185 batch = 0 , loss =  0.007620555814355612
-epoch = 186 batch = 0 , loss =  0.007564762607216835
-epoch = 187 batch = 0 , loss =  0.007509594317525625
-epoch = 188 batch = 0 , loss =  0.0074550495482981205
-epoch = 189 batch = 0 , loss =  0.007401249837130308
-epoch = 190 batch = 0 , loss =  0.007347995415329933
-epoch = 191 batch = 0 , loss =  0.007295405957847834
-epoch = 192 batch = 0 , loss =  0.00724344328045845
-epoch = 193 batch = 0 , loss =  0.0071920654736459255
-epoch = 194 batch = 0 , loss =  0.007141313049942255
-epoch = 195 batch = 0 , loss =  0.007091108709573746
-epoch = 196 batch = 0 , loss =  0.007041530683636665
-epoch = 197 batch = 0 , loss =  0.0069924998097121716
-epoch = 198 batch = 0 , loss =  0.006943937391042709
-epoch = 199 batch = 0 , loss =  0.0068960413336753845
-epoch = 200 batch = 0 , loss =  0.006848654244095087
-epoch = 201 batch = 0 , loss =  0.006801813840866089
-epoch = 202 batch = 0 , loss =  0.00675548380240798
-epoch = 203 batch = 0 , loss =  0.006709699984639883
-epoch = 204 batch = 0 , loss =  0.006664346903562546
-epoch = 205 batch = 0 , loss =  0.0066195824183523655
-epoch = 206 batch = 0 , loss =  0.006575247272849083
-epoch = 207 batch = 0 , loss =  0.006531421095132828
-epoch = 208 batch = 0 , loss =  0.006488064769655466
-epoch = 209 batch = 0 , loss =  0.006445219274610281
-epoch = 210 batch = 0 , loss =  0.006402764469385147
-epoch = 211 batch = 0 , loss =  0.006360857281833887
-epoch = 212 batch = 0 , loss =  0.006319303065538406
-epoch = 213 batch = 0 , loss =  0.006278259214013815
-epoch = 214 batch = 0 , loss =  0.0062375664710998535
-epoch = 215 batch = 0 , loss =  0.006197422742843628
-epoch = 216 batch = 0 , loss =  0.006157671567052603
-epoch = 217 batch = 0 , loss =  0.0061182728968560696
-epoch = 218 batch = 0 , loss =  0.006079344544559717
-epoch = 219 batch = 0 , loss =  0.0060407682321965694
-epoch = 220 batch = 0 , loss =  0.006002623587846756
-epoch = 221 batch = 0 , loss =  0.005964871030300856
-epoch = 222 batch = 0 , loss =  0.005927510559558868
-epoch = 223 batch = 0 , loss =  0.0058905030600726604
-epoch = 224 batch = 0 , loss =  0.005853926297277212
-epoch = 225 batch = 0 , loss =  0.005817664321511984
-epoch = 226 batch = 0 , loss =  0.005781833548098803
-epoch = 227 batch = 0 , loss =  0.005746316164731979
-epoch = 228 batch = 0 , loss =  0.0057111517526209354
-epoch = 229 batch = 0 , loss =  0.005676379892975092
-epoch = 230 batch = 0 , loss =  0.005641883239150047
-epoch = 231 batch = 0 , loss =  0.005607739090919495
-epoch = 232 batch = 0 , loss =  0.00557398796081543
-epoch = 233 batch = 0 , loss =  0.0055405497550964355
-epoch = 234 batch = 0 , loss =  0.005507465451955795
-epoch = 235 batch = 0 , loss =  0.005474655423313379
-epoch = 236 batch = 0 , loss =  0.005442159716039896
-epoch = 237 batch = 0 , loss =  0.005410017911344767
-epoch = 238 batch = 0 , loss =  0.005378149915486574
-epoch = 239 batch = 0 , loss =  0.005346635822206736
-epoch = 240 batch = 0 , loss =  0.005315357353538275
-epoch = 241 batch = 0 , loss =  0.005284391809254885
-epoch = 242 batch = 0 , loss =  0.005253781098872423
-epoch = 243 batch = 0 , loss =  0.005223406013101339
-epoch = 244 batch = 0 , loss =  0.0051933047361671925
-epoch = 245 batch = 0 , loss =  0.005163518711924553
-epoch = 246 batch = 0 , loss =  0.005133967846632004
-epoch = 247 batch = 0 , loss =  0.005104731302708387
-epoch = 248 batch = 0 , loss =  0.005075809545814991
-epoch = 249 batch = 0 , loss =  0.0050470842979848385
-epoch = 250 batch = 0 , loss =  0.00501863332465291
-epoch = 251 batch = 0 , loss =  0.004990458022803068
-epoch = 252 batch = 0 , loss =  0.004962557461112738
-epoch = 253 batch = 0 , loss =  0.0049348920583724976
-epoch = 254 batch = 0 , loss =  0.00490746321156621
-epoch = 255 batch = 0 , loss =  0.0048802699893713
-epoch = 256 batch = 0 , loss =  0.00485339155420661
-epoch = 257 batch = 0 , loss =  0.004826669115573168
-epoch = 258 batch = 0 , loss =  0.004800223279744387
-epoch = 259 batch = 0 , loss =  0.004774052184075117
-epoch = 260 batch = 0 , loss =  0.004748077597469091
-epoch = 261 batch = 0 , loss =  0.0047223386354744434
-epoch = 262 batch = 0 , loss =  0.004696836229413748
-epoch = 263 batch = 0 , loss =  0.004671529866755009
-epoch = 264 batch = 0 , loss =  0.004646459594368935
-epoch = 265 batch = 0 , loss =  0.004621585831046104
-epoch = 266 batch = 0 , loss =  0.004596948157995939
-epoch = 267 batch = 0 , loss =  0.004572546575218439
-epoch = 268 batch = 0 , loss =  0.004548341501504183
-epoch = 269 batch = 0 , loss =  0.00452433293685317
-epoch = 270 batch = 0 , loss =  0.004500521346926689
-epoch = 271 batch = 0 , loss =  0.004476945847272873
-epoch = 272 batch = 0 , loss =  0.004453527275472879
-epoch = 273 batch = 0 , loss =  0.004430344793945551
-epoch = 274 batch = 0 , loss =  0.004407359752804041
-epoch = 275 batch = 0 , loss =  0.004384531173855066
-epoch = 276 batch = 0 , loss =  0.0043619791977107525
-epoch = 277 batch = 0 , loss =  0.004339504521340132
-epoch = 278 batch = 0 , loss =  0.004317306447774172
-epoch = 279 batch = 0 , loss =  0.0042952257208526134
-epoch = 280 batch = 0 , loss =  0.004273381549865007
-epoch = 281 batch = 0 , loss =  0.00425165519118309
-epoch = 282 batch = 0 , loss =  0.004230125341564417
-epoch = 283 batch = 0 , loss =  0.004208832513540983
-epoch = 284 batch = 0 , loss =  0.004187656566500664
-epoch = 285 batch = 0 , loss =  0.00416667852550745
-epoch = 286 batch = 0 , loss =  0.004145857412368059
-epoch = 287 batch = 0 , loss =  0.004125233739614487
-epoch = 288 batch = 0 , loss =  0.004104727413505316
-epoch = 289 batch = 0 , loss =  0.004084418062120676
-epoch = 290 batch = 0 , loss =  0.004064267035573721
-epoch = 291 batch = 0 , loss =  0.00404431251809001
-epoch = 292 batch = 0 , loss =  0.004024475812911987
-epoch = 293 batch = 0 , loss =  0.004004836082458496
-epoch = 294 batch = 0 , loss =  0.00398527504876256
-epoch = 295 batch = 0 , loss =  0.003965910989791155
-epoch = 296 batch = 0 , loss =  0.00394670432433486
-epoch = 297 batch = 0 , loss =  0.0039276559837162495
-epoch = 298 batch = 0 , loss =  0.003908724989742041
-epoch = 299 batch = 0 , loss =  0.003889990970492363</code></pre>
+<pre><code>epoch = 0 batch = 0 , loss =  0.7076053619384766
+epoch = 1 batch = 0 , loss =  0.5945865511894226
+epoch = 2 batch = 0 , loss =  0.5677168965339661
+epoch = 3 batch = 0 , loss =  0.5356113910675049
+epoch = 4 batch = 0 , loss =  0.4835260808467865
+epoch = 5 batch = 0 , loss =  0.4316984713077545
+epoch = 6 batch = 0 , loss =  0.3950776159763336
+epoch = 7 batch = 0 , loss =  0.37260618805885315
+epoch = 8 batch = 0 , loss =  0.3518429100513458
+epoch = 9 batch = 0 , loss =  0.3254968225955963
+epoch = 10 batch = 0 , loss =  0.2962389886379242
+epoch = 11 batch = 0 , loss =  0.2697352468967438
+epoch = 12 batch = 0 , loss =  0.2490600347518921
+epoch = 13 batch = 0 , loss =  0.2334994226694107
+epoch = 14 batch = 0 , loss =  0.22027675807476044
+epoch = 15 batch = 0 , loss =  0.2070031613111496
+epoch = 16 batch = 0 , loss =  0.19298601150512695
+epoch = 17 batch = 0 , loss =  0.1789882332086563
+epoch = 18 batch = 0 , loss =  0.16621960699558258
+epoch = 19 batch = 0 , loss =  0.15543906390666962
+epoch = 20 batch = 0 , loss =  0.14660677313804626
+epoch = 21 batch = 0 , loss =  0.13908565044403076
+epoch = 22 batch = 0 , loss =  0.1321100890636444
+epoch = 23 batch = 0 , loss =  0.12518610060214996
+epoch = 24 batch = 0 , loss =  0.1182294487953186
+epoch = 25 batch = 0 , loss =  0.11145740747451782
+epoch = 26 batch = 0 , loss =  0.10517320781946182
+epoch = 27 batch = 0 , loss =  0.09958338737487793
+epoch = 28 batch = 0 , loss =  0.09471824020147324
+epoch = 29 batch = 0 , loss =  0.09045496582984924
+epoch = 30 batch = 0 , loss =  0.08659803122282028
+epoch = 31 batch = 0 , loss =  0.08296670764684677
+epoch = 32 batch = 0 , loss =  0.07945216447114944
+epoch = 33 batch = 0 , loss =  0.07603039592504501
+epoch = 34 batch = 0 , loss =  0.07273969054222107
+epoch = 35 batch = 0 , loss =  0.06964169442653656
+epoch = 36 batch = 0 , loss =  0.06678613275289536
+epoch = 37 batch = 0 , loss =  0.06419024616479874
+epoch = 38 batch = 0 , loss =  0.06183655932545662
+epoch = 39 batch = 0 , loss =  0.05968325212597847
+epoch = 40 batch = 0 , loss =  0.057680290192365646
+epoch = 41 batch = 0 , loss =  0.055784206837415695
+epoch = 42 batch = 0 , loss =  0.05396683141589165
+epoch = 43 batch = 0 , loss =  0.052217502146959305
+epoch = 44 batch = 0 , loss =  0.05053910240530968
+epoch = 45 batch = 0 , loss =  0.048941317945718765
+epoch = 46 batch = 0 , loss =  0.04743405804038048
+epoch = 47 batch = 0 , loss =  0.046022381633520126
+epoch = 48 batch = 0 , loss =  0.044704657047986984
+epoch = 49 batch = 0 , loss =  0.043473292142152786
+epoch = 50 batch = 0 , loss =  0.04231643304228783
+epoch = 51 batch = 0 , loss =  0.04122143238782883
+epoch = 52 batch = 0 , loss =  0.04017725586891174
+epoch = 53 batch = 0 , loss =  0.03917579725384712
+epoch = 54 batch = 0 , loss =  0.03821246698498726
+epoch = 55 batch = 0 , loss =  0.03728576377034187
+epoch = 56 batch = 0 , loss =  0.03639618679881096
+epoch = 57 batch = 0 , loss =  0.035544637590646744
+epoch = 58 batch = 0 , loss =  0.03473183140158653
+epoch = 59 batch = 0 , loss =  0.03395739570260048
+epoch = 60 batch = 0 , loss =  0.03321962431073189
+epoch = 61 batch = 0 , loss =  0.03251579776406288
+epoch = 62 batch = 0 , loss =  0.03184271976351738
+epoch = 63 batch = 0 , loss =  0.031196916475892067
+epoch = 64 batch = 0 , loss =  0.030575422570109367
+epoch = 65 batch = 0 , loss =  0.029975758865475655
+epoch = 66 batch = 0 , loss =  0.02939627133309841
+epoch = 67 batch = 0 , loss =  0.028835922479629517
+epoch = 68 batch = 0 , loss =  0.02829413115978241
+epoch = 69 batch = 0 , loss =  0.027770599350333214
+epoch = 70 batch = 0 , loss =  0.027264997363090515
+epoch = 71 batch = 0 , loss =  0.026776961982250214
+epoch = 72 batch = 0 , loss =  0.026305899024009705
+epoch = 73 batch = 0 , loss =  0.02585102617740631
+epoch = 74 batch = 0 , loss =  0.025411320850253105
+epoch = 75 batch = 0 , loss =  0.024985915049910545
+epoch = 76 batch = 0 , loss =  0.024573737755417824
+epoch = 77 batch = 0 , loss =  0.02417382411658764
+epoch = 78 batch = 0 , loss =  0.023785501718521118
+epoch = 79 batch = 0 , loss =  0.023408090695738792
+epoch = 80 batch = 0 , loss =  0.02304106019437313
+epoch = 81 batch = 0 , loss =  0.022684140130877495
+epoch = 82 batch = 0 , loss =  0.022336864843964577
+epoch = 83 batch = 0 , loss =  0.021999115124344826
+epoch = 84 batch = 0 , loss =  0.021670466288924217
+epoch = 85 batch = 0 , loss =  0.021350691094994545
+epoch = 86 batch = 0 , loss =  0.021039480343461037
+epoch = 87 batch = 0 , loss =  0.020736493170261383
+epoch = 88 batch = 0 , loss =  0.020441310480237007
+epoch = 89 batch = 0 , loss =  0.020153634250164032
+epoch = 90 batch = 0 , loss =  0.01987304724752903
+epoch = 91 batch = 0 , loss =  0.01959928870201111
+epoch = 92 batch = 0 , loss =  0.01933206059038639
+epoch = 93 batch = 0 , loss =  0.019071100279688835
+epoch = 94 batch = 0 , loss =  0.018816186115145683
+epoch = 95 batch = 0 , loss =  0.018567094579339027
+epoch = 96 batch = 0 , loss =  0.018323680385947227
+epoch = 97 batch = 0 , loss =  0.018085680902004242
+epoch = 98 batch = 0 , loss =  0.017853064462542534
+epoch = 99 batch = 0 , loss =  0.017625609412789345
+epoch = 100 batch = 0 , loss =  0.017403123900294304
+epoch = 101 batch = 0 , loss =  0.01718554086983204
+epoch = 102 batch = 0 , loss =  0.01697259396314621
+epoch = 103 batch = 0 , loss =  0.016764136031270027
+epoch = 104 batch = 0 , loss =  0.016560127958655357
+epoch = 105 batch = 0 , loss =  0.01636030524969101
+epoch = 106 batch = 0 , loss =  0.016164517030119896
+epoch = 107 batch = 0 , loss =  0.015972763299942017
+epoch = 108 batch = 0 , loss =  0.015784814953804016
+epoch = 109 batch = 0 , loss =  0.015600595623254776
+epoch = 110 batch = 0 , loss =  0.015419990755617619
+epoch = 111 batch = 0 , loss =  0.015242884866893291
+epoch = 112 batch = 0 , loss =  0.015069241635501385
+epoch = 113 batch = 0 , loss =  0.014898906461894512
+epoch = 114 batch = 0 , loss =  0.014731761999428272
+epoch = 115 batch = 0 , loss =  0.014567811973392963
+epoch = 116 batch = 0 , loss =  0.014406900852918625
+epoch = 117 batch = 0 , loss =  0.014249070547521114
+epoch = 118 batch = 0 , loss =  0.014094047248363495
+epoch = 119 batch = 0 , loss =  0.013941836543381214
+epoch = 120 batch = 0 , loss =  0.01379239559173584
+epoch = 121 batch = 0 , loss =  0.01364565547555685
+epoch = 122 batch = 0 , loss =  0.013501455076038837
+epoch = 123 batch = 0 , loss =  0.013359878212213516
+epoch = 124 batch = 0 , loss =  0.013220730237662792
+epoch = 125 batch = 0 , loss =  0.01308401208370924
+epoch = 126 batch = 0 , loss =  0.012949608266353607
+epoch = 127 batch = 0 , loss =  0.012817523442208767
+epoch = 128 batch = 0 , loss =  0.012687638401985168
+epoch = 129 batch = 0 , loss =  0.01255999505519867
+epoch = 130 batch = 0 , loss =  0.012434477917850018
+epoch = 131 batch = 0 , loss =  0.01231097150593996
+epoch = 132 batch = 0 , loss =  0.012189592234790325
+epoch = 133 batch = 0 , loss =  0.012070187367498875
+epoch = 134 batch = 0 , loss =  0.011952679604291916
+epoch = 135 batch = 0 , loss =  0.011837068013846874
+epoch = 136 batch = 0 , loss =  0.011723355390131474
+epoch = 137 batch = 0 , loss =  0.011611384339630604
+epoch = 138 batch = 0 , loss =  0.011501158587634563
+epoch = 139 batch = 0 , loss =  0.011392754502594471
+epoch = 140 batch = 0 , loss =  0.01128601748496294
+epoch = 141 batch = 0 , loss =  0.011180910281836987
+epoch = 142 batch = 0 , loss =  0.01107743103057146
+epoch = 143 batch = 0 , loss =  0.01097550243139267
+epoch = 144 batch = 0 , loss =  0.010875165462493896
+epoch = 145 batch = 0 , loss =  0.010776340961456299
+epoch = 146 batch = 0 , loss =  0.010678992606699467
+epoch = 147 batch = 0 , loss =  0.010583080351352692
+epoch = 148 batch = 0 , loss =  0.010488604195415974
+epoch = 149 batch = 0 , loss =  0.01039548683911562
+epoch = 150 batch = 0 , loss =  0.010303768329322338
+epoch = 151 batch = 0 , loss =  0.010213370434939861
+epoch = 152 batch = 0 , loss =  0.010124254040420055
+epoch = 153 batch = 0 , loss =  0.010036458261311054
+epoch = 154 batch = 0 , loss =  0.009949907660484314
+epoch = 155 batch = 0 , loss =  0.009864561259746552
+epoch = 156 batch = 0 , loss =  0.00978046003729105
+epoch = 157 batch = 0 , loss =  0.009697484783828259
+epoch = 158 batch = 0 , loss =  0.009615677408874035
+epoch = 159 batch = 0 , loss =  0.009535036981105804
+epoch = 160 batch = 0 , loss =  0.009455525316298008
+epoch = 161 batch = 0 , loss =  0.009377064183354378
+epoch = 162 batch = 0 , loss =  0.009299692697823048
+epoch = 163 batch = 0 , loss =  0.009223333559930325
+epoch = 164 batch = 0 , loss =  0.00914806593209505
+epoch = 165 batch = 0 , loss =  0.009073770605027676
+epoch = 166 batch = 0 , loss =  0.009000449441373348
+epoch = 167 batch = 0 , loss =  0.008928141556680202
+epoch = 168 batch = 0 , loss =  0.00885676871985197
+epoch = 169 batch = 0 , loss =  0.008786330930888653
+epoch = 170 batch = 0 , loss =  0.008716829121112823
+epoch = 171 batch = 0 , loss =  0.008648225106298923
+epoch = 172 batch = 0 , loss =  0.008580476976931095
+epoch = 173 batch = 0 , loss =  0.008513587526977062
+epoch = 174 batch = 0 , loss =  0.008447674103081226
+epoch = 175 batch = 0 , loss =  0.00838250108063221
+epoch = 176 batch = 0 , loss =  0.008318147622048855
+epoch = 177 batch = 0 , loss =  0.008254612796008587
+epoch = 178 batch = 0 , loss =  0.008191858418285847
+epoch = 179 batch = 0 , loss =  0.008129924535751343
+epoch = 180 batch = 0 , loss =  0.008068771101534367
+epoch = 181 batch = 0 , loss =  0.008008359931409359
+epoch = 182 batch = 0 , loss =  0.007948611862957478
+epoch = 183 batch = 0 , loss =  0.007889684289693832
+epoch = 184 batch = 0 , loss =  0.007831459864974022
+epoch = 185 batch = 0 , loss =  0.007773938123136759
+epoch = 186 batch = 0 , loss =  0.0077170804142951965
+epoch = 187 batch = 0 , loss =  0.0076609267853200436
+epoch = 188 batch = 0 , loss =  0.007605475839227438
+epoch = 189 batch = 0 , loss =  0.0075506106950342655
+epoch = 190 batch = 0 , loss =  0.0074964105151593685
+epoch = 191 batch = 0 , loss =  0.00744287483394146
+epoch = 192 batch = 0 , loss =  0.007389965001493692
+epoch = 193 batch = 0 , loss =  0.007337640505284071
+epoch = 194 batch = 0 , loss =  0.007285942789167166
+epoch = 195 batch = 0 , loss =  0.007234830409288406
+epoch = 196 batch = 0 , loss =  0.0071843452751636505
+epoch = 197 batch = 0 , loss =  0.007134407293051481
+epoch = 198 batch = 0 , loss =  0.007085016462951899
+epoch = 199 batch = 0 , loss =  0.007036212831735611
+epoch = 200 batch = 0 , loss =  0.006987918168306351
+epoch = 201 batch = 0 , loss =  0.006940210238099098
+epoch = 202 batch = 0 , loss =  0.00689304992556572
+epoch = 203 batch = 0 , loss =  0.0068463594652712345
+epoch = 204 batch = 0 , loss =  0.006800217088311911
+epoch = 205 batch = 0 , loss =  0.006754584610462189
+epoch = 206 batch = 0 , loss =  0.0067094601690769196
+epoch = 207 batch = 0 , loss =  0.006664805114269257
+epoch = 208 batch = 0 , loss =  0.006620659958571196
+epoch = 209 batch = 0 , loss =  0.006576985120773315
+epoch = 210 batch = 0 , loss =  0.00653374008834362
+epoch = 211 batch = 0 , loss =  0.006491004955023527
+epoch = 212 batch = 0 , loss =  0.0064487396739423275
+epoch = 213 batch = 0 , loss =  0.006406905595213175
+epoch = 214 batch = 0 , loss =  0.006365463137626648
+epoch = 215 batch = 0 , loss =  0.0063245296478271484
+epoch = 216 batch = 0 , loss =  0.006283989641815424
+epoch = 217 batch = 0 , loss =  0.0062438794411718845
+epoch = 218 batch = 0 , loss =  0.006204240024089813
+epoch = 219 batch = 0 , loss =  0.006164953112602234
+epoch = 220 batch = 0 , loss =  0.00612605782225728
+epoch = 221 batch = 0 , loss =  0.006087634712457657
+epoch = 222 batch = 0 , loss =  0.0060495235957205296
+epoch = 223 batch = 0 , loss =  0.006011845078319311
+epoch = 224 batch = 0 , loss =  0.00597459776327014
+epoch = 225 batch = 0 , loss =  0.005937623325735331
+epoch = 226 batch = 0 , loss =  0.005901122000068426
+epoch = 227 batch = 0 , loss =  0.005864893551915884
+epoch = 228 batch = 0 , loss =  0.0058290972374379635
+epoch = 229 batch = 0 , loss =  0.005793654825538397
+epoch = 230 batch = 0 , loss =  0.005758486222475767
+epoch = 231 batch = 0 , loss =  0.005723748356103897
+epoch = 232 batch = 0 , loss =  0.005689286161214113
+epoch = 233 batch = 0 , loss =  0.005655177403241396
+epoch = 234 batch = 0 , loss =  0.005621460732072592
+epoch = 235 batch = 0 , loss =  0.005588018801063299
+epoch = 236 batch = 0 , loss =  0.0055549307726323605
+epoch = 237 batch = 0 , loss =  0.005522195249795914
+epoch = 238 batch = 0 , loss =  0.005489695817232132
+epoch = 239 batch = 0 , loss =  0.005457549821585417
+epoch = 240 batch = 0 , loss =  0.00542571721598506
+epoch = 241 batch = 0 , loss =  0.005394159350544214
+epoch = 242 batch = 0 , loss =  0.005362877156585455
+epoch = 243 batch = 0 , loss =  0.005331948399543762
+epoch = 244 batch = 0 , loss =  0.005301254335790873
+epoch = 245 batch = 0 , loss =  0.00527087552472949
+epoch = 246 batch = 0 , loss =  0.0052407714538276196
+epoch = 247 batch = 0 , loss =  0.005210982169955969
+epoch = 248 batch = 0 , loss =  0.005181467160582542
+epoch = 249 batch = 0 , loss =  0.005152187775820494
+epoch = 250 batch = 0 , loss =  0.005123183596879244
+epoch = 251 batch = 0 , loss =  0.005094454623758793
+epoch = 252 batch = 0 , loss =  0.005066040437668562
+epoch = 253 batch = 0 , loss =  0.0050378222949802876
+epoch = 254 batch = 0 , loss =  0.005009839776903391
+epoch = 255 batch = 0 , loss =  0.004982171580195427
+epoch = 256 batch = 0 , loss =  0.004954699892550707
+epoch = 257 batch = 0 , loss =  0.00492750434204936
+epoch = 258 batch = 0 , loss =  0.004900504369288683
+epoch = 259 batch = 0 , loss =  0.004873819183558226
+epoch = 260 batch = 0 , loss =  0.0048473309725522995
+epoch = 261 batch = 0 , loss =  0.004821078386157751
+epoch = 262 batch = 0 , loss =  0.00479506142437458
+epoch = 263 batch = 0 , loss =  0.004769280552864075
+epoch = 264 batch = 0 , loss =  0.004743735771626234
+epoch = 265 batch = 0 , loss =  0.004718387499451637
+epoch = 266 batch = 0 , loss =  0.004693235736340284
+epoch = 267 batch = 0 , loss =  0.00466835917904973
+epoch = 268 batch = 0 , loss =  0.004643640946596861
+epoch = 269 batch = 0 , loss =  0.004619197454303503
+epoch = 270 batch = 0 , loss =  0.004594910889863968
+epoch = 271 batch = 0 , loss =  0.004570860881358385
+epoch = 272 batch = 0 , loss =  0.004546967800706625
+epoch = 273 batch = 0 , loss =  0.004523350391536951
+epoch = 274 batch = 0 , loss =  0.004499890375882387
+epoch = 275 batch = 0 , loss =  0.004476666450500488
+epoch = 276 batch = 0 , loss =  0.004453560337424278
+epoch = 277 batch = 0 , loss =  0.004430729895830154
+epoch = 278 batch = 0 , loss =  0.0044080172665417194
+epoch = 279 batch = 0 , loss =  0.004385541658848524
+epoch = 280 batch = 0 , loss =  0.004363222513347864
+epoch = 281 batch = 0 , loss =  0.0043411399237811565
+epoch = 282 batch = 0 , loss =  0.004319175612181425
+epoch = 283 batch = 0 , loss =  0.004297446925193071
+epoch = 284 batch = 0 , loss =  0.004275836516171694
+epoch = 285 batch = 0 , loss =  0.00425442261621356
+epoch = 286 batch = 0 , loss =  0.004233206156641245
+epoch = 287 batch = 0 , loss =  0.00421214709058404
+epoch = 288 batch = 0 , loss =  0.004191284999251366
+epoch = 289 batch = 0 , loss =  0.0041705407202243805
+epoch = 290 batch = 0 , loss =  0.0041499934159219265
+epoch = 291 batch = 0 , loss =  0.004129643086344004
+epoch = 292 batch = 0 , loss =  0.004109371453523636
+epoch = 293 batch = 0 , loss =  0.004089296329766512
+epoch = 294 batch = 0 , loss =  0.004069419112056494
+epoch = 295 batch = 0 , loss =  0.004049659240990877
+epoch = 296 batch = 0 , loss =  0.0040300567634403706
+epoch = 297 batch = 0 , loss =  0.004010612610727549
+epoch = 298 batch = 0 , loss =  0.003991325851529837
+epoch = 299 batch = 0 , loss =  0.003972156438976526</code></pre>
 </div>
 </div>
 </section>
@@ -961,7 +973,7 @@ epoch = 299 batch = 0 , loss =  0.003889990970492363</code></pre>
 </section>
 <section id="loss-value-over-time" class="level3">
 <h3 class="anchored" data-anchor-id="loss-value-over-time">Loss value over time</h3>
-<div id="b68b6a05" class="cell" data-execution_count="11">
+<div id="966a908d" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's plot the loss value over time</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.plot(np.array(loss_list).squeeze())</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Iteration (or epoch)'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'Loss value'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -980,7 +992,7 @@ epoch = 299 batch = 0 , loss =  0.003889990970492363</code></pre>
 <section id="visualization-of-what-happened" class="level3">
 <h3 class="anchored" data-anchor-id="visualization-of-what-happened">Visualization of what happened</h3>
 <p>The code below visualizes what happened during model training with the weights. Since this model is so simple, we can interpret the weights.</p>
-<div id="eb69b8c7" class="cell" data-execution_count="12">
+<div id="a470985a" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># visualize the weights</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>TO_SHOW_NR <span class="op">=</span> <span class="dv">35</span></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(TO_SHOW_NR<span class="op">//</span><span class="dv">7</span>, <span class="dv">7</span>, figsize<span class="op">=</span>(<span class="dv">15</span><span class="op">/</span><span class="fl">2.54</span>, <span class="dv">15</span><span class="op">/</span><span class="fl">2.54</span><span class="op">*</span>(TO_SHOW_NR<span class="op">//</span><span class="dv">7</span>)<span class="op">/</span><span class="dv">7</span>))</span>
@@ -1029,7 +1041,7 @@ epoch = 299 batch = 0 , loss =  0.003889990970492363</code></pre>
 <li>Do you recognize any features in it from your input images?</li>
 </ul></li>
 </ul>
-<div id="0b9c87da" class="cell" data-execution_count="13">
+<div id="fb89d80a" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># show the final weights as images</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">8</span><span class="op">/</span><span class="fl">2.54</span>, <span class="dv">4</span><span class="op">/</span><span class="fl">2.54</span>))</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>_<span class="op">=</span>axs[<span class="dv">0</span>].imshow(weight_list[<span class="op">-</span><span class="dv">1</span>][<span class="dv">0</span>].reshape(<span class="dv">12</span>,<span class="dv">12</span>),cmap<span class="op">=</span><span class="st">'gray'</span>)</span>
@@ -1060,7 +1072,7 @@ epoch = 299 batch = 0 , loss =  0.003889990970492363</code></pre>
 <section id="proof-of-the-pudding-did-it-work" class="level2">
 <h2 class="anchored" data-anchor-id="proof-of-the-pudding-did-it-work">Proof of the pudding: did it work?</h2>
 <p>Let’s feed the original input images to the model again, and look at the predictions. (In a real scenario, you’d hope the model will also be able to classify unseen data, with our limited training data and limited model, that’s not something we can expect.)</p>
-<div id="2839f2d0" class="cell" data-execution_count="14">
+<div id="28d930d9" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># apply the model to image 1</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>X1 <span class="op">=</span> my_data_happysad.<span class="fu">__getitem__</span>(<span class="dv">0</span>)[<span class="dv">0</span>].unsqueeze(<span class="dv">0</span>)</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>pred <span class="op">=</span> my_simple_model(X1)</span>
@@ -1074,9 +1086,9 @@ epoch = 299 batch = 0 , loss =  0.003889990970492363</code></pre>
 <span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>pred <span class="op">=</span> my_simple_model(X3)</span>
 <span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'X3='</span>, pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>X1= tensor([[ 2.7323, -2.4240]], device='mps:0', grad_fn=&lt;LinearBackward0&gt;)
-X2= tensor([[-2.4628,  2.7629]], device='mps:0', grad_fn=&lt;LinearBackward0&gt;)
-X3= tensor([[-3.6662,  3.9231]], device='mps:0', grad_fn=&lt;LinearBackward0&gt;)</code></pre>
+<pre><code>X1= tensor([[ 2.3313, -2.8072]], device='mps:0', grad_fn=&lt;LinearBackward0&gt;)
+X2= tensor([[-2.7184,  2.5144]], device='mps:0', grad_fn=&lt;LinearBackward0&gt;)
+X3= tensor([[-3.6430,  3.6406]], device='mps:0', grad_fn=&lt;LinearBackward0&gt;)</code></pre>
 </div>
 </div>
 <section id="questions-4" class="level3">
@@ -1092,7 +1104,7 @@ X3= tensor([[-3.6662,  3.9231]], device='mps:0', grad_fn=&lt;LinearBackward0&gt;
 <section id="congratulations" class="level1">
 <h1>Congratulations!</h1>
 <p>You have reached the end of the machine learning part of this workshop! Let us know if you have any questions, comments or discussion points.</p>
-<div id="14758dd1" class="cell" data-execution_count="15">
+<div id="ded0e69e" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>img_party<span class="op">=</span>tiff.imread(<span class="st">'images/emoji/party.tif'</span>)</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">4</span>, figsize<span class="op">=</span>(<span class="dv">12</span><span class="op">/</span><span class="fl">2.54</span>, <span class="dv">3</span><span class="op">/</span><span class="fl">2.54</span>))</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ch <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">3</span>):</span>
@@ -1108,13 +1120,13 @@ X3= tensor([[-3.6662,  3.9231]], device='mps:0', grad_fn=&lt;LinearBackward0&gt;
 </div>
 <section id="more-code-for-other-purposes-can-be-skipped" class="level3">
 <h3 class="anchored" data-anchor-id="more-code-for-other-purposes-can-be-skipped">More code for other purposes (can be skipped)</h3>
-<div id="a6cfd077" class="cell" data-execution_count="16">
+<div id="4c02397c" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Final weights in different style</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(np.<span class="bu">min</span>(weight_list[<span class="op">-</span><span class="dv">1</span>][<span class="dv">0</span>]), np.<span class="bu">max</span>(weight_list[<span class="op">-</span><span class="dv">1</span>][<span class="dv">0</span>]))</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>mw_showimg2(weight_list[<span class="op">-</span><span class="dv">1</span>][<span class="dv">0</span>].reshape((<span class="dv">12</span>,<span class="dv">12</span>)), </span>
 <span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>            annotcolor<span class="op">=</span><span class="st">'blue'</span>, VMIN<span class="op">=-</span><span class="dv">1</span>, VMAX<span class="op">=</span><span class="fl">1.0</span>, FMT<span class="op">=</span><span class="st">".2f"</span>, CMAP<span class="op">=</span><span class="st">'gray'</span>, SF<span class="op">=</span><span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>-0.7406729 0.684697</code></pre>
+<pre><code>-0.83229744 0.6411072</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <div>
@@ -1124,7 +1136,7 @@ X3= tensor([[-3.6662,  3.9231]], device='mps:0', grad_fn=&lt;LinearBackward0&gt;
 </div>
 </div>
 </div>
-<div id="3d0ba90b" class="cell" data-execution_count="17">
+<div id="0f499ab2" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># show the first and second gradients</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">2</span>,<span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">12</span><span class="op">/</span><span class="fl">2.54</span>, <span class="dv">6</span><span class="op">/</span><span class="fl">2.54</span>))</span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>_<span class="op">=</span>axs[<span class="dv">0</span>,<span class="dv">0</span>].imshow(gradient_list[<span class="dv">0</span>][<span class="dv">0</span>].reshape(<span class="dv">12</span>,<span class="dv">12</span>))</span>
@@ -1141,7 +1153,7 @@ X3= tensor([[-3.6662,  3.9231]], device='mps:0', grad_fn=&lt;LinearBackward0&gt;
 </div>
 </div>
 </div>
-<div id="de7972e1" class="cell" data-execution_count="18">
+<div id="4e26513b" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(gradient_list))</span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>gradient_list[<span class="dv">0</span>].shape</span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>gradient_list[<span class="dv">4</span>][<span class="dv">0</span>].reshape((<span class="dv">12</span>,<span class="dv">12</span>)).shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1152,12 +1164,12 @@ X3= tensor([[-3.6662,  3.9231]], device='mps:0', grad_fn=&lt;LinearBackward0&gt;
 <pre><code>(12, 12)</code></pre>
 </div>
 </div>
-<div id="9692041d" class="cell" data-execution_count="19">
+<div id="04761112" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Doesn't seem to work ??</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co"># from torchsummary import summary</span></span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(my_simple_model, input_size=(12,12))</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="0b73d5d7" class="cell" data-execution_count="20">
+<div id="5235f3d1" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># There should be 12x12 + 1 + 12x12 + 1 = 290 model parameters</span></span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="bu">sum</span>(p.numel() <span class="cf">for</span> p <span class="kw">in</span> my_simple_model.parameters() <span class="cf">if</span> p.requires_grad)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="20">

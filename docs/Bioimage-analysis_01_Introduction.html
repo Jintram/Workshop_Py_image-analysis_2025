@@ -145,14 +145,14 @@ ul.task-list li input[type="checkbox"] {
 <p>If you have trouble with installing any of these, <strong>please contact us before the workshop</strong>!</p>
 <section id="libraries-to-install" class="level4">
 <h4 class="anchored" data-anchor-id="libraries-to-install">Libraries to install</h4>
-<p>You can create and activate an envirnoment, plus install the required libraries, with the commands below.</p>
+<p>You can create and activate an environment, plus install the required libraries, with the commands below.</p>
 <pre class="{bash}"><code># Create and activate conda environment
 conda create -n 2025_py_image_workshop
 conda activate 2025_py_image_workshop
 # Add "conda-forge" to default channels
 conda config --add channels conda-forge
 # Libraries to install
-conda install matplotlib seaborn tifffile numpy scikit-image scipy imageio ipykernel
+conda install matplotlib seaborn tifffile numpy scikit-image scipy imageio ipykernel napari
 
 # You can choose to also install pytorch (doesn't work on all computers)
 # or use google colab for that chapter.

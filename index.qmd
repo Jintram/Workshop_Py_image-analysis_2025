@@ -53,15 +53,19 @@ course topics, philosophy and goals.
         - Style guides
         - Modularity
         - Refactoring
-        - Not included <font color=red>(????)</font>: 
+        - Not included:
             - using version trackers 
             - online repositories (github)
             - environment managers
 5. [Combining building blocks into a pipeline](Bioimage-analysis_05_Pipelines.qmd)
-    - [Link to v.2.](answers/Bioimage-analysis_05_REVISED.qmd)
+    - See also:
+        - [Building blocks for bacteria exercise](Bioimage-analysis_05a_Pipelines_buildingblocks.qmd)
     - **Topics**
         - Working with (large) image sets
-        - <font color=red>Human-in-the loop, Napari package</font>
+        - How to set up a pipeline
+        - Image processing (part 3): 
+            - Background correction
+        - Human-in-the loop, Napari package
 6. [Machine learning fundamentals (basics)](Bioimage-analysis_06_MachineLearning-basics.qmd)
     - **Topics**    
         - Machine learning fundamentals;
@@ -73,38 +77,24 @@ course topics, philosophy and goals.
             - Activation functions
             - Neural network architectures
 7. [Plotting](Bioimage-analysis_07_Plotting.qmd)
+    <font color=red>
+    - **Topics**
+        - Dataframes 
+        - Matplotlib
+        - Seaborn
+    </font>
+8. [Appendix](Bioimage-analysis_08_Useful_tools.qmd)
+    - **Topics**
+        - List of tools that might be convenient
+
 
 --------------------------------------------------------------------------------
-
-
-### Course outline
-
-<font color=red>
-
-    
-#### Day 2
-- Data processing pipelines
-- Machine learning
-- Good coding practices
-    - Documentation
-    - Version control
-    - Modularity
-    - Reproduction packages
-
-#### Day 3
-- From raw data to plot
-    - Dataframes 
-    - Matplotlib
-    - Seaborn
-    
-</font>
 
 <font color=red>
 
 #### Topics to still include
 
 - Background corrections
-- Thresholding, specificially global vs. local
 
 </font>
 

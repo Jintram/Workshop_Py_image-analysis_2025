@@ -134,7 +134,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p><em>Martijn Wehrens, September 2025</em></p>
-<div id="8abc54b0" class="cell" data-execution_count="1">
+<div id="ba0bd5d9" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># imports </span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -147,14 +147,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li>Detecting other bright cars:</li>
 </ul>
-<div id="f018d4d0" class="cell" data-execution_count="2">
+<div id="3f91384f" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The following parameters will detect more white cars:</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>MIN_SIZE1 <span class="op">=</span> <span class="dv">400</span><span class="op">;</span> DISK_SIZE<span class="op">=</span><span class="dv">4</span><span class="op">;</span> MIN_SIZE2<span class="op">=</span><span class="dv">300</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li>Detecting dark cars</li>
 </ul>
-<div id="8f480b80" class="cell" data-execution_count="3">
+<div id="e6794211" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The code snippet below will segment bright cars in a car park image</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># The general strategy is to use a threshold to create a binary image, </span></span>
@@ -221,7 +221,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="a-more-modular-version-of-the-dna-script" class="level2">
 <h2 class="anchored" data-anchor-id="a-more-modular-version-of-the-dna-script">A more modular version of the DNA script</h2>
-<div id="0913fec3" class="cell" data-execution_count="4">
+<div id="45ceca89" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> gc_content(seq: <span class="bu">str</span>) <span class="op">-&gt;</span> <span class="bu">float</span>:</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Return GC content as a fraction of sequence length."""</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    gc_count <span class="op">=</span> <span class="bu">sum</span>(<span class="dv">1</span> <span class="cf">for</span> base <span class="kw">in</span> seq <span class="cf">if</span> base <span class="kw">in</span> [<span class="st">"G"</span>, <span class="st">"C"</span>])</span>
