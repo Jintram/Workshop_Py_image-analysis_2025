@@ -17,89 +17,29 @@ from skimage.util import invert
 from scipy import ndimage
 ```
 
-## Bacterial data
+## Bacterial filamentation data
 
-The code below uses the same building-block strategy from chapter 05a and then
-loops over all frames.
+To do this, we can make use of the functions provided in [the building block page](Bioimage-analysis_05a_Pipelines_buildingblocks.qmd). (These are not re-iterated here.)
 
+
+Let's load the data again:
 ```{python}
-def _global_mask(input_img, disksize_range=20):
-    img_min = ndimage.minimum_filter(input_img, footprint=sk.morphology.disk(disksize_range))
-    img_max = ndimage.maximum_filter(input_img, footprint=sk.morphology.disk(disksize_range))
-    img_delta = img_max - img_min
 
-    thresh = sk.filters.threshold_otsu(img_delta)
-    mask_global = img_delta > thresh
-    mask_global_fill = ndimage.binary_fill_holes(mask_global)
-
-    labeled_global = sk.measure.label(mask_global_fill)
-    largest_region = np.argmax([r.area for r in sk.measure.regionprops(labeled_global)]) + 1
-    mask_global_filled = labeled_global == largest_region
-
-    border_margin = 5
-    disksize_shrink = max(0, disksize_range - border_margin)
-    mask_global_final = sk.morphology.erosion(
-        mask_global_filled,
-        footprint=sk.morphology.disk(disksize_shrink),
-    )
-
-    bbox = sk.measure.regionprops(mask_global_final.astype(int))[0].bbox
-    return mask_global_final, bbox
-
-
-def _get_edges(input_img_crop, sigma_smooth=3, disksize_crossing=1):
-    img_gauss = sk.filters.gaussian(input_img_crop, sigma=sigma_smooth)
-    img_laplacian = sk.filters.laplace(img_gauss)
-
-    edges_min = ndimage.minimum_filter(img_laplacian, footprint=sk.morphology.disk(disksize_crossing))
-    edges_max = ndimage.maximum_filter(img_laplacian, footprint=sk.morphology.disk(disksize_crossing))
-    mask_edges = np.logical_and(edges_min < 0, edges_max > 0)
-    return mask_edges
-
-
-def _bacterial_seeds(input_img_crop, min_distance=5):
-    img_smooth = sk.filters.gaussian(input_img_crop, sigma=3)
-    seed_locations = sk.feature.peak_local_max(img_smooth, min_distance=min_distance)
-    return seed_locations
-
-
-def _flood_fill_multiple(mask_edges, seed_locations):
-    mask_filled = mask_edges.copy()
-    for x, y in seed_locations:
-        mask_filled = sk.morphology.flood_fill(mask_filled, (x, y), 2)
-    return mask_filled
-
-
-def _unique_seeds_distance(mask_bacteria, sigma_seed=3, distance_threshold=3):
-    distance_map = ndimage.distance_transform_edt(mask_bacteria)
-    distance_map_blur = sk.filters.gaussian(distance_map, sigma=sigma_seed)
-    mask_seeds = distance_map_blur > distance_threshold
-    return sk.measure.label(mask_seeds)
-
-
-def seg_bacterium(input_img):
-    mask_global, bbox = _global_mask(input_img, disksize_range=20)
-
-    input_img_crop = input_img[bbox[0]:bbox[2], bbox[1]:bbox[3]]
-    mask_global_crop = mask_global[bbox[0]:bbox[2], bbox[1]:bbox[3]]
-
-    mask_edges = _get_edges(input_img_crop, sigma_smooth=3, disksize_crossing=1)
-    seed_locations = _bacterial_seeds(input_img_crop, min_distance=5)
-    mask_filled = _flood_fill_multiple(mask_edges, seed_locations)
-
-    mask_bacteria = np.logical_and(mask_filled, mask_global_crop)
-    mask_unique_seeds = _unique_seeds_distance(mask_bacteria, sigma_seed=3, distance_threshold=3)
-
-    result = sk.segmentation.watershed(-1 * mask_bacteria, markers=mask_unique_seeds, mask=mask_bacteria)
-    return result
-```
-
-```{python}
 # Put the location of the data here.
 path_ecoli_data = "/Users/m.wehrens/Data_notbacked/2025_Py-Image-workshop_Filamentation-example-data/pos3crop_timelapse_switch890.98.tif"
 
 # Load data
 imgs_ecoli = tiff.imread(path_ecoli_data)
+
+```
+
+```{python}
+# Show a few example images
+plt.imshow(invert(imgs_ecoli[10,:,:]))
+plt.show()
+```
+
+```{python}
 
 # Loop over all frames and segment
 segmasks_ecoli = []

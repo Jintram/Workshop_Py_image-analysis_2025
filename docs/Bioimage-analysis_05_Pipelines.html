@@ -195,6 +195,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul></li>
 </ul>
 <p><em>These topics were covered in our previous “Introduction to Python” course.</em></p>
+<section id="writing-reusable-parameterized-pipelines" class="level3">
+<h3 class="anchored" data-anchor-id="writing-reusable-parameterized-pipelines">Writing reusable, parameterized pipelines</h3>
+<p>Additionally, it’s good practice to write scripts that can process any dataset, rather than scripts tailored hard-coded for a specific one. This allows you to maintain a clear record of how each dataset was analyzed (e.g.&nbsp;by having a text document with previous execution commands).</p>
+<p>To read input arguments, use - <code>sys.argv</code>, or - <code>argparse</code> (<a href="https://docs.python.org/3/library/argparse.html">documentation</a>)</p>
+<p>If you need to tune parameters for analyzing data, it might be good practice to create a config file.</p>
+<p>You can e.g.&nbsp; - read a table using <code>csv</code> (built-in python library) - read an excel file using <code>pandas.read_excel()</code> - use <code>yaml</code> (or <code>json</code>) to read config files</p>
+</section>
 </section>
 <section id="guided-exercises" class="level2">
 <h2 class="anchored" data-anchor-id="guided-exercises">Guided exercises</h2>
@@ -324,7 +331,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>We’ve seen that sometimes computer annotations require human correction.</p>
 <p>A very convenient tool in image analysis is <code>Napari</code>. This allows a user to interactively view and edit images and segmentation masks. It also allows you to write custom functions that can be executed on click, or with widgets.</p>
 <p>Let’s load some example data:</p>
-<div id="856cf012" class="cell" data-execution_count="1">
+<div id="fda32114" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tifffile <span class="im">as</span> tiff</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -346,7 +353,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Now, it would be nice to be able to correct the mask in the picture above. Napari offers a way to do this:</p>
-<div id="00ec290f" class="cell" data-execution_count="2">
+<div id="24e7268f" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># now show this data in napari</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> napari</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skimage.measure <span class="im">import</span> label</span>

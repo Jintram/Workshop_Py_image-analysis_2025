@@ -802,7 +802,7 @@
     "href": "Bioimage-analysis_05_Pipelines.html#automation",
     "title": "Workshop Python Image Analysis",
     "section": "Automation",
-    "text": "Automation\nTo automate a pipeline, the following components are useful:\n\nLoops\nFunctions\n\nTry to code in a modular fashion!\n\nInteraction with the filesystem using:\n\nos, glob.glob\n\n\nThese topics were covered in our previous “Introduction to Python” course."
+    "text": "Automation\nTo automate a pipeline, the following components are useful:\n\nLoops\nFunctions\n\nTry to code in a modular fashion!\n\nInteraction with the filesystem using:\n\nos, glob.glob\n\n\nThese topics were covered in our previous “Introduction to Python” course.\n\nWriting reusable, parameterized pipelines\nAdditionally, it’s good practice to write scripts that can process any dataset, rather than scripts tailored hard-coded for a specific one. This allows you to maintain a clear record of how each dataset was analyzed (e.g. by having a text document with previous execution commands).\nTo read input arguments, use - sys.argv, or - argparse (documentation)\nIf you need to tune parameters for analyzing data, it might be good practice to create a config file.\nYou can e.g.  - read a table using csv (built-in python library) - read an excel file using pandas.read_excel() - use yaml (or json) to read config files"
   },
   {
     "objectID": "Bioimage-analysis_05_Pipelines.html#guided-exercises",

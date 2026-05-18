@@ -50,8 +50,25 @@ To automate a pipeline, the following components are useful:
 
 *These topics were covered in our previous "Introduction to Python" course.*
 
-## Guided exercises
+### Writing reusable, parameterized pipelines
 
+Additionally, it's good practice to write scripts that can process any dataset, rather than scripts tailored hard-coded for a specific one. 
+This allows you to maintain a clear record of how each dataset was analyzed
+(e.g. by having a text document with previous execution commands).
+
+To read input arguments, use
+- `sys.argv`, or
+- `argparse` ([documentation](https://docs.python.org/3/library/argparse.html))
+
+If you need to tune parameters for analyzing data, it might be good practice to 
+create a config file. 
+
+You can e.g. 
+- read a table using `csv` (built-in python library)
+- read an excel file using `pandas.read_excel()`
+- use `yaml` (or `json`) to read config files
+
+## Guided exercises
 
 ### Bacterial data
 
