@@ -1,6 +1,6 @@
 path_input: /Users/m.wehrens/Data_notbacked/2025_Py-Image-workshop_Filamentation-example-data/pos3crop_timelapse_switch890.98.tif
 path_output: /Users/m.wehrens/Data_notbacked/2025_Py-Image-workshop_OUTPUT-examples/Filamentation/
-frame_range: [0, 100]
+frame_range: [254, 1050]
 sigma_smooth: 3
 disksize_crossing: 1
 disksize_range: 20
