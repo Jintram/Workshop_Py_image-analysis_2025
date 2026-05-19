@@ -1,0 +1,197 @@
+---
+title: Workshop Python Image Analysis
+jupyter: python3
+execute:
+    eval: false
+    echo: true    
+---
+
+*Martijn Wehrens, September 2025*
+
+## Answers to exercises 05
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+import tifffile as tiff
+
+import skimage as sk
+from skimage.util import invert
+from scipy import ndimage
+```
+
+
+
+CONTINUE IN OTHER SCRIPTS, USE THIS CODE PERHAPS FOR SOME INSPIRATION
+
+
+## Nuclear data
+
+### Segment nuclei and extract nuclear KTR signal for a single image
+
+```{python}
+#| execute: false
+
+def seg_nuclei(input_img):
+    thresh = sk.filters.threshold_triangle(input_img)
+    mask = input_img > thresh
+    mask = sk.morphology.remove_small_objects(mask, min_size=60)
+    mask = ndimage.binary_fill_holes(mask)
+    result = sk.measure.label(mask)
+    return result
+
+
+# Set path
+img_path_KTR = \
+    "/Users/m.wehrens/Data_notbacked/2025_Py-Image-workshop_KTR-example-data/raw/Composite_KTR.tif"
+img_KTR = tiff.imread(img_path_KTR)
+
+# Single frame
+t0 = 0
+img_nuclei_t0 = img_KTR[t0, 0]
+img_ktr_t0 = img_KTR[t0, 1]
+
+segmask_nuclei_t0 = seg_nuclei(img_nuclei_t0)
+
+props_t0 = sk.measure.regionprops_table(
+    segmask_nuclei_t0,
+    intensity_image=img_ktr_t0,
+    properties=("label", "mean_intensity", "area"),
+)
+nuclear_ktr_t0 = props_t0["mean_intensity"]
+
+fig, axs = plt.subplots(1, 2, figsize=(12 / 2.54, 5 / 2.54))
+axs[0].imshow(img_nuclei_t0, cmap="gray")
+axs[0].contour(segmask_nuclei_t0 > 0, levels=[0.5], colors="r", linewidths=0.5)
+axs[0].set_title("Nuclear segmentation")
+axs[0].axis("off")
+
+axs[1].hist(nuclear_ktr_t0, bins=20)
+axs[1].set_xlabel("Nuclear signal")
+axs[1].set_ylabel("Count")
+axs[1].set_title("Single-frame per-nucleus means")
+
+plt.tight_layout()
+plt.show()
+```
+
+### Extract nuclear KTR signals over time
+
+```{python}
+#| execute: false
+
+def ring_mask_for_label(labeled_nuclei, label_id, ring_width=4):
+    nucleus_i = labeled_nuclei == label_id
+    if not np.any(nucleus_i):
+        return np.zeros_like(nucleus_i, dtype=bool)
+
+    ring_i = sk.morphology.binary_dilation(nucleus_i, footprint=sk.morphology.disk(ring_width))
+    ring_i = np.logical_and(ring_i, labeled_nuclei == 0)
+    return ring_i
+
+
+n_frames = img_KTR.shape[0]
+
+segmasks_nuclei = []
+all_nuclear_signals = []
+all_ring_signals = []
+mean_nuclear_signal = []
+mean_cytoplasmic_signal = []
+ratio_nuc_cyto = []
+
+for t in range(n_frames):
+    img_nuclei_t = img_KTR[t, 0]
+    img_ktr_t = img_KTR[t, 1]
+
+    segmask_t = seg_nuclei(img_nuclei_t)
+    segmasks_nuclei.append(segmask_t)
+
+    props_t = sk.measure.regionprops_table(
+        segmask_t,
+        intensity_image=img_ktr_t,
+        properties=("label", "mean_intensity", "area"),
+    )
+
+    labels_t = props_t["label"]
+    nuclear_signal_t = props_t["mean_intensity"]
+    ring_signal_t = np.full_like(nuclear_signal_t, np.nan, dtype=float)
+
+    for i, lab in enumerate(labels_t):
+        mask_ring_i = ring_mask_for_label(segmask_t, lab, ring_width=4)
+        if np.any(mask_ring_i):
+            ring_signal_t[i] = np.mean(img_ktr_t[mask_ring_i])
+
+    all_nuclear_signals.append(nuclear_signal_t)
+    all_ring_signals.append(ring_signal_t)
+
+    mean_nuc_t = np.nanmean(nuclear_signal_t) if len(nuclear_signal_t) > 0 else np.nan
+    mean_cyto_t = np.nanmean(ring_signal_t) if len(ring_signal_t) > 0 else np.nan
+
+    mean_nuclear_signal.append(mean_nuc_t)
+    mean_cytoplasmic_signal.append(mean_cyto_t)
+    ratio_nuc_cyto.append(mean_nuc_t / mean_cyto_t)
+
+# Store masks and summaries
+np.savez_compressed(
+    "output-test/KTR_pipeline_results.npz",
+    segmasks=np.array(segmasks_nuclei, dtype=object),
+    mean_nuclear=np.array(mean_nuclear_signal),
+    mean_cytoplasmic=np.array(mean_cytoplasmic_signal),
+    ratio_nuc_cyto=np.array(ratio_nuc_cyto),
+)
+
+# Plot nuclear and cytoplasmic signal over time
+fig, axs = plt.subplots(1, 2, figsize=(14 / 2.54, 5 / 2.54))
+
+axs[0].plot(mean_nuclear_signal, lw=1.2, label="Nuclear")
+axs[0].plot(mean_cytoplasmic_signal, lw=1.2, label="Cytoplasmic ring")
+axs[0].set_xlabel("Frame")
+axs[0].set_ylabel("Mean KTR signal")
+axs[0].set_title("KTR signal over time")
+axs[0].legend()
+
+axs[1].plot(ratio_nuc_cyto, color="k", lw=1.2)
+axs[1].set_xlabel("Frame")
+axs[1].set_ylabel("Nuclear : cytoplasmic")
+axs[1].set_title("Nuclear:cytoplasmic ratio")
+
+plt.tight_layout()
+plt.show()
+```
+
+A likely interpretation is that kinase activity changes over time.
+When activity is higher, KTR tends to shift to cytoplasm, so the
+nuclear:cytoplasmic ratio tends to decrease.
+
+## Background correction
+
+```{python}
+#| execute: false
+
+# Simple correction strategy from chapter text: subtract a per-frame mode.
+
+def mode_uint(img):
+    img_u = img.astype(np.uint16)
+    return np.argmax(np.bincount(img_u.ravel()))
+
+
+bg_values = np.array([mode_uint(img_KTR[t, 1]) for t in range(n_frames)], dtype=float)
+
+mean_nuclear_signal_bg = np.array(mean_nuclear_signal) - bg_values
+mean_cytoplasmic_signal_bg = np.array(mean_cytoplasmic_signal) - bg_values
+ratio_nuc_cyto_bg = np.where(
+    mean_cytoplasmic_signal_bg > 0,
+    mean_nuclear_signal_bg / mean_cytoplasmic_signal_bg,
+    np.nan,
+)
+
+plt.figure(figsize=(9 / 2.54, 5 / 2.54))
+plt.plot(ratio_nuc_cyto, label="Raw ratio")
+plt.plot(ratio_nuc_cyto_bg, label="Background-corrected ratio")
+plt.xlabel("Frame")
+plt.ylabel("Nuclear : cytoplasmic")
+plt.title("Effect of background correction")
+plt.legend()
+plt.tight_layout()
+plt.show()
+```

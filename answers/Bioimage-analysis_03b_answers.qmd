@@ -93,6 +93,7 @@ def seg_nuclei(input_img):
     result = sk.measure.label(mask_filtered)
     
     return result
+        
 
 # Now let's test the above functions
 
