@@ -76,14 +76,14 @@ course topics, philosophy and goals.
         - Not included:
             - Activation functions
             - Neural network architectures
+<!-- Removed, as its covered in other parts and previous course 
 7. [Plotting](Bioimage-analysis_07_Plotting.qmd)
-    <font color=red>
     - **Topics**
         - Dataframes 
         - Matplotlib
-        - Seaborn
-    </font>
-8. [Appendix](Bioimage-analysis_08_Useful_tools.qmd)
+        - Seaborn 
+-->
+8. [Appendix, tools & remarks](Bioimage-analysis_08_Useful_tools.qmd)
     - **Topics**
         - List of tools that might be convenient
 

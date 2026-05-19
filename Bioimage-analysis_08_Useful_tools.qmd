@@ -3,7 +3,47 @@ title: Topics to add
 jupyter: python3
 ---
 
+# Tools & remarks
 
-- [ ] troubles when working with processed images, that keep pointing to original image, `image.copy()`
+## Remarks
 
+#### Often, `image.copy()` is required
 
+Some image-processing operations do not create a new, independent image, but instead return a view or reference to the same underlying data. This can cause unexpected behavior: changes made to the “processed” image also modify the original image. To avoid this, explicitly create a separate copy (for example, with image.copy()) before applying in-place edits.
+
+## Convenient tools
+
+<font color=red>
+
+- Napari
+- Bapy
+- Stardist, 
+- Cellpose, 
+- Microsam, 
+- organoidtracker
+- biapy
+- https://github.com/hallvaaw/awesome-biological-image-analysis
+
+Suggested by LLM:
+
+- Napari: interactive multidimensional image viewer with a rich plugin ecosystem
+StarDist: robust nucleus and cell instance segmentation using star-convex shapes
+Cellpose: generalist deep-learning segmentation for many cell types with easy GUI and Python API
+- micro-sam: SAM-based interactive and automated segmentation workflows for microscopy
+OrganoidTracker: tracking and lineage analysis for organoid time-lapse data
+- BaSiCPy: illumination and background correction (very useful preprocessing step)
+scikit-image: core Python toolbox for classical image processing
+- OpenCV: fast, broad computer-vision toolkit useful for filtering, morphology, transforms, and geometry
+- SimpleITK: strong for registration, resampling, and medical/microscopy image operations
+
+- ilastik: user-friendly pixel/object classification and segmentation with minimal coding
+- Squidpy: spatial omics analysis with image feature extraction support
+
+- CellProfiler: pipeline-based high-throughput image analysis and feature extraction
+
+Non-python convenient tools;
+
+- Fiji ImageJ: classic GUI platform with many plugins and macro support
+- TrackMate: easy and powerful particle/cell tracking in Fiji
+
+</red>

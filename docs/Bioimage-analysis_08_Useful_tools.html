@@ -99,13 +99,51 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<ul class="task-list">
-<li><label><input type="checkbox">troubles when working with processed images, that keep pointing to original image, <code>image.copy()</code></label></li>
+<section id="tools-remarks" class="level1">
+<h1>Tools &amp; remarks</h1>
+<section id="remarks" class="level2">
+<h2 class="anchored" data-anchor-id="remarks">Remarks</h2>
+<section id="often-image.copy-is-required" class="level4">
+<h4 class="anchored" data-anchor-id="often-image.copy-is-required">Often, <code>image.copy()</code> is required</h4>
+<p>Some image-processing operations do not create a new, independent image, but instead return a view or reference to the same underlying data. This can cause unexpected behavior: changes made to the “processed” image also modify the original image. To avoid this, explicitly create a separate copy (for example, with image.copy()) before applying in-place edits.</p>
+</section>
+</section>
+<section id="convenient-tools" class="level2">
+<h2 class="anchored" data-anchor-id="convenient-tools">Convenient tools</h2>
+<p><font color="red"></font></p><font color="red">
+<ul>
+<li>Napari</li>
+<li>Bapy</li>
+<li>Stardist,</li>
+<li>Cellpose,</li>
+<li>Microsam,</li>
+<li>organoidtracker</li>
+<li>biapy</li>
+<li>https://github.com/hallvaaw/awesome-biological-image-analysis</li>
 </ul>
+<p>Suggested by LLM:</p>
+<ul>
+<li><p>Napari: interactive multidimensional image viewer with a rich plugin ecosystem StarDist: robust nucleus and cell instance segmentation using star-convex shapes Cellpose: generalist deep-learning segmentation for many cell types with easy GUI and Python API</p></li>
+<li><p>micro-sam: SAM-based interactive and automated segmentation workflows for microscopy OrganoidTracker: tracking and lineage analysis for organoid time-lapse data</p></li>
+<li><p>BaSiCPy: illumination and background correction (very useful preprocessing step) scikit-image: core Python toolbox for classical image processing</p></li>
+<li><p>OpenCV: fast, broad computer-vision toolkit useful for filtering, morphology, transforms, and geometry</p></li>
+<li><p>SimpleITK: strong for registration, resampling, and medical/microscopy image operations</p></li>
+<li><p>ilastik: user-friendly pixel/object classification and segmentation with minimal coding</p></li>
+<li><p>Squidpy: spatial omics analysis with image feature extraction support</p></li>
+<li><p>CellProfiler: pipeline-based high-throughput image analysis and feature extraction</p></li>
+</ul>
+<p>Non-python convenient tools;</p>
+<ul>
+<li>Fiji ImageJ: classic GUI platform with many plugins and macro support</li>
+<li>TrackMate: easy and powerful particle/cell tracking in Fiji</li>
+</ul>
+<p></p>
 
 
+</font></section><font color="red">
+</font></section><font color="red">
 
-</main> <!-- /main -->
+</font></main><font color="red"> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -526,9 +564,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
-</div> <!-- /content -->
+</font></div><font color="red"> <!-- /content -->
 
 
 
 
-</body></html>
+</font></body></html>
