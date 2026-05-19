@@ -6,6 +6,7 @@
 import sys, os
 import yaml
 import time, datetime
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
@@ -26,17 +27,6 @@ from skimage.feature import peak_local_max
 
 from skimage.morphology import dilation, disk
 
-################################################################################
-
-# test whether dilation works on labeled mask
-test_img = np.zeros((100,100))
-test_img[10:20, 5] = 1
-test_img[10:20, 80] = 2
-plt.imshow(test_img)
-
-test_rings = dilation(test_img)
-test_rings[test_img>0] = 0
-plt.imshow(test_rings)
 
 ################################################################################
 # %%
@@ -104,9 +94,9 @@ def separate_nuclei(seg_mask, split_distance=5, showplot=False):
     return mask_final
         
 
-def get_rings(seg_mask):
+def get_rings(seg_mask, width=2):
     
-    mask_rings = dilation(seg_mask)
+    mask_rings = dilation(seg_mask, disk(width))
     mask_rings[seg_mask>0] = 0
     
     return mask_rings
@@ -126,56 +116,64 @@ def get_mean_intensity(img, mask):
 ################################################################################
 # %%
 
-# Nuclei
-img_path_KTR = '/Users/m.wehrens/Data_notbacked/2025_Py-Image-workshop_KTR-example-data/raw/Composite_KTR.tif'
-KTR_data = tiff.imread(img_path_KTR)
-img_nuclei = KTR_data[0, 0, 0:200, 0:200]
+if __name__ == "__main__":
 
-mask_nuclei = seg_nuclei(img_nuclei)
-mask_nuclei_split = separate_nuclei(mask_nuclei, split_distance=5, showplot=False)
+    # Input arguments
+    img_path_KTR = sys.argv[1]
+    channel_nuc = sys.argv[2]
+    channel_cyt = sys.argv[3]
 
-plt.imshow(get_rings(mask_nuclei_split), cmap=cmap_random(300))
+    # Load data
+    # img_path_KTR = '/Users/m.wehrens/Data_notbacked/2025_Py-Image-workshop_KTR-example-data/raw/Composite_KTR.tif'
+    # channel_nuc = 0; channel_cyt = 2
+    KTR_data = tiff.imread(img_path_KTR)
 
-_ = plt.imshow(mask_nuclei)
-plt.show()
+    # Initialize empty list to store dataframes
+    df_KTR_list = [None]*KTR_data.shape[0]
+    # Loop over the frames
+    for fr_idx in range(0, KTR_data.shape[0]):
+        # fr_idx=0
+        
+        print(f"Working on frame {fr_idx} / {KTR_data.shape[0]}")
+        
+        # get nuclei and KTR intensity images
+        img_nuc = KTR_data[fr_idx, channel_nuc, 0:200, 0:200]
+        img_KTR = KTR_data[fr_idx, channel_cyt, 0:200, 0:200]
+            # plt.imshow(img_nuc)
+            # plt.imshow(img_KTR)
+            
+        # Calculate the mask
+        mask_nuclei       = seg_nuclei(img_nuc)
+        mask_nuclei_split = separate_nuclei(mask_nuclei, split_distance=5)
 
+        # Calculate averages
+        KTR_means_nucl = get_mean_intensity(img_KTR, mask_nuclei_split)
+        KTR_means_cyto = get_mean_intensity(img_KTR, get_rings(mask_nuclei_split))
+            # plt.imshow(get_rings(mask_nuclei_split), cmap=cmap_random(200))
 
-df_KTR_list = [None]*KTR_data.shape[0]
-for fr_idx in range(0, KTR_data.shape[0]):
-    # fr_idx=0
-    
-    print(f"Working on frame {fr_idx} / {KTR_data.shape[0]}")
-    
-    # now analyze the data
-    img_KTR = KTR_data[fr_idx, 2, 0:200, 0:200]
-        # plt.imshow(img_KTR)
-
-    # Calculate averages
-    KTR_means_nucl = get_mean_intensity(img_KTR, mask_nuclei_split)
-    KTR_means_cyto = get_mean_intensity(img_KTR, get_rings(mask_nuclei_split))
-
-    # Get ratio
-    KTR_ratios = KTR_means_cyto/KTR_means_nucl
-    
-    # Store the data
-    df_KTR_list[fr_idx] = pd.DataFrame({
-        "frame": fr_idx, 
-        "KTR_ratio": KTR_ratios,
-        "int_nucleus": KTR_means_nucl,
-        "int_cytoplasm": KTR_means_cyto
-    })
+        # Get ratio
+        KTR_ratios = KTR_means_cyto/KTR_means_nucl
+        
+        # Store the data
+        df_KTR_list[fr_idx] = pd.DataFrame({
+            "frame": fr_idx, 
+            "KTR_ratio": KTR_ratios,
+            "int_nucleus": KTR_means_nucl,
+            "int_cytoplasm": KTR_means_cyto
+        })
 
 # Now merge the dataframes
 df_KTR = pd.concat(df_KTR_list, ignore_index=True)
 
-# Now plot the data
-plt.rcParams["font.family"] = "Arial"
-plt.rcParams["font.size"] = 8
-fig, axs = plt.subplots(1,1, figsize=(5/2.54,5/2.54))
-sns.scatterplot(df_KTR, x="frame", y="KTR_ratio", ax=axs, color="k", alpha=0.5, s=10)
-sns.lineplot(df_KTR, x="frame", y="KTR_ratio", estimator="mean", color="r", ax=axs)
-axs.set_ylim(0, 1.5)
-plt.tight_layout()
+# Save the data in a new directory "analysis" in the parent directory
+# (This assumes the raw data is stored in its own subdirectory in sample folder)
+OUTPUT_PATH = Path(os.path.dirname(img_path_KTR)).parent / "analysis"
+os.makedirs(OUTPUT_PATH, exist_ok=True)
 
+output_path = os.path.join(OUTPUT_PATH, f"KTR_ratios_ch{channel_cyt}.csv")
+df_KTR.to_csv(output_path, index=False)
+print(f"Data saved to {output_path}")
+
+# save in the data directory
 
 

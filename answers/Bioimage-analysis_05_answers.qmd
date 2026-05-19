@@ -44,10 +44,16 @@ And the following file, `bacterial_len_plot.py`, creates a plot using the analyz
 
 ## KTR data set
 
-!!!!CONTINUE EDITING HERE!!!!
+The KTR dataset can be analyzed with the following scripts:
 
-!!!!CONTINUE EDITING HERE!!!!
-!!!!CONTINUE EDITING HERE!!!!
+Creating a dataframe with C/N values:
 
-see `answers/Bioimage-analysis_05_answers_2.qmd` (poor claude solution), 
-and `answers/Bioimage-analysis_05_answers_KTR/KTR_pipe.py`
+```{.python include="Bioimage-analysis_05_answers_KTR/KTR_pipe.py"}
+#| eval: false
+```
+
+Creating a plot:
+
+```{.python include="Bioimage-analysis_05_answers_KTR/KTR_plot.py"}
+#| eval: false
+```

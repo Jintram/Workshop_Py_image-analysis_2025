@@ -139,7 +139,7 @@ os.chdir("/Users/m.wehrens/Documents/git_repos/_UVA/_Teaching/2025_teaching_Py_i
 -->
 <section id="answers-to-exercises-03" class="level2">
 <h2 class="anchored" data-anchor-id="answers-to-exercises-03">Answers to exercises 03</h2>
-<div id="3f343820" class="cell" data-execution_count="1">
+<div id="2a4b3a63" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tifffile <span class="im">as</span> tiff</span>
@@ -165,7 +165,7 @@ os.chdir("/Users/m.wehrens/Documents/git_repos/_UVA/_Teaching/2025_teaching_Py_i
 </section>
 <section id="creating-segmentation-functions" class="level2">
 <h2 class="anchored" data-anchor-id="creating-segmentation-functions">Creating segmentation functions</h2>
-<div id="28a70dac" class="cell" data-execution_count="2">
+<div id="54d1b8d8" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> seg_bacterium(input_img):</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Segment bacteria in an image using LoG zero crossings and watershed.</span></span>
@@ -220,22 +220,23 @@ os.chdir("/Users/m.wehrens/Documents/git_repos/_UVA/_Teaching/2025_teaching_Py_i
 <span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>    result <span class="op">=</span> sk.measure.label(mask_filtered)</span>
 <span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> result</span>
-<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a><span class="co"># Now let's test the above functions</span></span>
-<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a><span class="co"># Now let's test the above functions</span></span>
 <span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a><span class="co"># Bacteria</span></span>
-<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>img_ecoli <span class="op">=</span> tiff.imread(<span class="st">'../images/biological/microcolony_ecoli.tif'</span>)</span>
-<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>mask_bacteria <span class="op">=</span> seg_bacterium(np.<span class="bu">max</span>(img_ecoli)<span class="op">-</span>img_ecoli)</span>
-<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.imshow(mask_bacteria)</span>
-<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a><span class="co"># Nuclei</span></span>
-<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>img_path_KTR <span class="op">=</span> <span class="st">'/Users/m.wehrens/Data_notbacked/2025_Py-Image-workshop_KTR-example-data/raw/Composite_KTR.tif'</span></span>
-<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>img_nuclei <span class="op">=</span> tiff.imread(img_path_KTR)[<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>:<span class="dv">200</span>, <span class="dv">0</span>:<span class="dv">200</span>]</span>
-<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>mask_nuclei <span class="op">=</span> seg_nuclei(img_nuclei)</span>
-<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.imshow(mask_nuclei)</span>
-<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a><span class="co"># Bacteria</span></span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>img_ecoli <span class="op">=</span> tiff.imread(<span class="st">'../images/biological/microcolony_ecoli.tif'</span>)</span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>mask_bacteria <span class="op">=</span> seg_bacterium(np.<span class="bu">max</span>(img_ecoli)<span class="op">-</span>img_ecoli)</span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.imshow(mask_bacteria)</span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a><span class="co"># Nuclei</span></span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>img_path_KTR <span class="op">=</span> <span class="st">'/Users/m.wehrens/Data_notbacked/2025_Py-Image-workshop_KTR-example-data/raw/Composite_KTR.tif'</span></span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>img_nuclei <span class="op">=</span> tiff.imread(img_path_KTR)[<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>:<span class="dv">200</span>, <span class="dv">0</span>:<span class="dv">200</span>]</span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>mask_nuclei <span class="op">=</span> seg_nuclei(img_nuclei)</span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.imshow(mask_nuclei)</span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -254,7 +255,7 @@ os.chdir("/Users/m.wehrens/Documents/git_repos/_UVA/_Teaching/2025_teaching_Py_i
 </section>
 <section id="counting-spots" class="level2">
 <h2 class="anchored" data-anchor-id="counting-spots">Counting spots</h2>
-<div id="3830f2ac" class="cell" data-execution_count="3">
+<div id="a5a91287" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read the image</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>img_spots <span class="op">=</span> tiff.imread(<span class="st">"../images/bioimagebook/spots.tif"</span>)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.title(<span class="st">"Original spots image"</span>)</span>
@@ -349,7 +350,7 @@ os.chdir("/Users/m.wehrens/Documents/git_repos/_UVA/_Teaching/2025_teaching_Py_i
 </section>
 <section id="license-plate" class="level2">
 <h2 class="anchored" data-anchor-id="license-plate">License plate</h2>
-<div id="16b1d4a0" class="cell" data-execution_count="4">
+<div id="93ac7347" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>img_shady <span class="op">=</span> tiff.imread(<span class="st">'../images/car/chatGPT_shadybusiness_licensehigh-8bit.tif'</span>)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>img_shady_inv <span class="op">=</span> np.<span class="bu">max</span>(img_shady)<span class="op">-</span>img_shady</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>my_plot_1(img_shady_inv, mycmap<span class="op">=</span><span class="st">'viridis'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -361,7 +362,7 @@ os.chdir("/Users/m.wehrens/Documents/git_repos/_UVA/_Teaching/2025_teaching_Py_i
 </div>
 </div>
 </div>
-<div id="cdf3e01c" class="cell" data-execution_count="5">
+<div id="5a8ed75e" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Segment the symbols on the license plate</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># apply triangle thresholding</span></span>
@@ -384,7 +385,7 @@ os.chdir("/Users/m.wehrens/Documents/git_repos/_UVA/_Teaching/2025_teaching_Py_i
 </div>
 </div>
 </div>
-<div id="33555b89" class="cell" data-execution_count="6">
+<div id="e5b24090" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># acquire labels and regionprops</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>mask_shady_filt_label <span class="op">=</span> sk.measure.label(mask_shady_filt)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>props_shady <span class="op">=</span> sk.measure.regionprops(mask_shady_filt_label)</span>
@@ -407,7 +408,7 @@ os.chdir("/Users/m.wehrens/Documents/git_repos/_UVA/_Teaching/2025_teaching_Py_i
 </section>
 <section id="distance-transform" class="level2">
 <h2 class="anchored" data-anchor-id="distance-transform">Distance transform</h2>
-<div id="4d803d1b" class="cell" data-execution_count="7">
+<div id="c2ad4160" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load images</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>img_path_KTR <span class="op">=</span> <span class="st">'/Users/m.wehrens/Data_notbacked/2025_Py-Image-workshop_KTR-example-data/raw/Composite_KTR.tif'</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>img_nuclei <span class="op">=</span> tiff.imread(img_path_KTR)[<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>:<span class="dv">200</span>, <span class="dv">0</span>:<span class="dv">200</span>]</span>
@@ -421,7 +422,7 @@ os.chdir("/Users/m.wehrens/Documents/git_repos/_UVA/_Teaching/2025_teaching_Py_i
 <span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>mask_nuclei_triangle <span class="op">=</span> img_nuclei <span class="op">&gt;</span> sk.filters.threshold_triangle(img_nuclei)</span>
 <span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>mask_ecoli_triangle <span class="op">=</span> img_ecoli_inv <span class="op">&gt;</span> sk.filters.threshold_triangle(img_ecoli_inv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="84253774" class="cell" data-execution_count="8">
+<div id="4b918438" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform a distance perform on the bacterial image</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>distance_nuclei <span class="op">=</span> ndimage.distance_transform_edt(mask_nuclei_triangle)</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>distance_ecoli  <span class="op">=</span> ndimage.distance_transform_edt(mask_ecoli_triangle)</span>
@@ -439,7 +440,7 @@ os.chdir("/Users/m.wehrens/Documents/git_repos/_UVA/_Teaching/2025_teaching_Py_i
 </div>
 </div>
 </div>
-<div id="7cf788b6" class="cell" data-execution_count="9">
+<div id="3bee58e6" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get local maxima for the nuclei</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>local_max_nuclei <span class="op">=</span> sk.feature.peak_local_max(distance_nuclei, </span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                                             min_distance <span class="op">=</span> <span class="dv">10</span>,</span>
