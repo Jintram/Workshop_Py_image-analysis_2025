@@ -9,8 +9,10 @@ jupyter: python3
 
 ## Chapter 6: A very basic introduction into machine learning
 
-
-<font face='Times New Roman' color=red>This notebook will probably need to be run on Google colab or the like, as laptops might not have the right architecture to run this.</font>
+::: {.callout-warning}
+### Pytorch required
+Code in this notebook might need to be run on [Google colab](https://colab.research.google.com/drive/1qJgibG2-ACfXJZky_VMP8Wjm3quhpgY_?usp=sharing) or the like, as laptops might not have the right architecture to run the required `pytorch` library.
+:::
 
 ### Outline of this mini-workshop
 
@@ -139,6 +141,20 @@ As you can see the output has the type `tensor`. This is an internal data struct
     - What the output of the neural network looks like?
 - If we were to provide actual images to this network, do you think it would be able to generate meaningful predictions? Why would it (not)?
 
+::: {.callout-caution collapse="true"}
+### Concise answers
+
+- $\delta\text{loss}/\delta w$ is the gradient, which indicates in which direction the weights should be adjusted to reduce the loss.
+- This network expects 12x12 images, the input we give here is just random values
+in the correct shape. The output is an array corresponding to each of the classes,
+with a respective score that reflects to what extend the input matched that class.
+In our example [score_happy, score_sad]. Whichever value is the highest,
+is the predicted class. The output now shows random numbers since the input as well
+as the weights had random values.
+-  No, since the weights are not set during a training setting yet.
+
+:::
+
 ```{python}
 # Since this network is so simple, we can manually calculate it's outcome
 
@@ -160,6 +176,13 @@ print(output_element1, ', ', output_element2)
 ### Question
 
 - What does the calculation look like that is done inside the neural network, to get from the input elements, to the output elements?
+
+::: {.callout-caution collapse="true"}
+### Concise answers
+
+- For each output element, we multiply each input element by its corresponding weight, sum these products together, and then add the bias for that output element.
+
+:::
 
 ### Exercise: load your images
 
@@ -295,6 +318,12 @@ mw_showimg2(img_np, annotcolor='blue', VMIN=0, VMAX=1.0, FMT=".2f", SX=5, SY=5, 
 - Execute the code in the cell directly above, to check if you can make it show your own image.
 - This code will show the first image in your dataset, can you also make it show the 2nd and 3rd image?
 
+::: {.callout-caution collapse="true"}
+### Concise answers
+- To load your own images, replace the `self.data` and `self.label` appropriately.
+- To show different images, change the index in `data_happysad[0]` to another number.
+:::
+
 ### Dataloader
 
 We're now getting close to actually training this model. We'll need to define a dataloader. In more advanced neural network setups, the DataLoader provides convenient functionalities like shuffling the data, or loading it in parallel from disk. Here, we'll just use it to be able to loop over the data easily, and provide the data in batches of three images.
@@ -319,6 +348,13 @@ my_data_happysad.__getitem__(0)
 ### Question
 
 - The amount of classes and library functions used at this point might be a bit overwhelming. Can you draw a cartoon that depicts the fundamental aspects of the workflow (or otherwise recreate an overview of it)?
+
+::: {.callout-caution}
+### Concise answers
+
+- (..)
+
+:::
 
 ### The actual training
 
@@ -409,6 +445,21 @@ for epoch_idx in range(300):
     - What would happen to the loss if you'd train for more iterations? 
     - Would you reckon the training has worked? Will the model now recognize something?
 
+::: {.callout-caution collapse="true"}
+### Concise answers
+
+- The loss is decreasing since the training is working: a gradient is calculated
+that shows in which direction each weight should be adjusted to lower the loss.
+And indeed, this is done each iteration, such that the loss decreases.
+- Regarding learning rate; the gradient only gives the direction in which to adjust the weights 
+(how the weights should be adjusted relative to each other), but not by how much.
+The learning rate scales to what extend the weights are adjusted. If the learning rate is too high, you might "overshoot" the optimal weights, and end up with a higher loss again. If it's too low, training will be very slow.
+- If you train for more iterations, the loss will likely decrease further.
+- For the original examples, the trianing has likely worked, as the loss 
+decreased a load. However, since the model is so simple, and the training data is so limited, it probably won't be able to recognize anything beyond these specific images. 
+
+:::
+
 ### Loss value over time
 
 ```{python}
@@ -469,6 +520,19 @@ _=axs[1].axis('off')
 - Do you think overfitting is a problem for this model? 
 - In a more complex network architecture, do you think it will be possible to interpret weights in the same way as we did here?
 
+::: {.callout-caution collapse="true"}
+### Concise answers
+
+- (..)
+- This model will likely perform very poorly on a validation set, since it is
+overfitted on the few training images it saw. To detect 
+generalized patterns, a more complex model and more training data would be needed.
+- So yes, overfitting is a problem. One can test for overfitting by carefully
+checking performance on a validation set (pictures the model hasn't seen yet), which should be good if the model is not overfitted.
+- In a more complex network architecture, it will likely not be possible to interpret the weights in the same way as we did here, since there are many more parameters, and they interact in a more complex way. There are ways to try to interpret the results of complex models, but this is wholly outside our scope, and it is not always possible to fully understand how a complex model makes its decisions.
+
+:::
+
 ## Proof of the pudding: did it work?
 
 Let's feed the original input images to the model again, and look at the predictions. (In a real scenario, you'd hope the model will also be able to classify unseen data, with our limited training data and limited model, that's not something we can expect.)
@@ -493,6 +557,18 @@ print('X3=', pred)
 - Are the predictions correct?
 - Try drawing a new image in one of your classes, and let the model predict the class. What do you see?
 
+
+::: {.callout-caution collapse="true"}
+### Concise answers
+
+- (..)
+- If your old and new images have specific pixels that consistently
+show different values per class, it might be that the class gets predicted 
+correctly, as this simple model will pick up on those. 
+But as mentioned throughout earlier answers, this model is very simple, and the training data is very limited, so it won't be able to generalize well to new images.
+
+:::
+
 **Biological images**
 
 - Say you have biological data from multiple conditions and multiple biological replicates. How would you divide this data among the training and validation sets?
@@ -506,6 +582,29 @@ print('X3=', pred)
 - How could overfitting impact the performance of your model when applied to new biological images?
 - How might differences in image acquisition (e.g. microscope settings, lighting) influence the results of your analysis?
 - How can you assess whether your model is generalizing well to unseen data, rather than just memorizing the training set?
+
+::: {.callout-caution collapse="true"}
+### Concise answers
+
+My thoughts:
+
+- Ideally, both the training and validation class reflect the same distribution of data, so you would want to have a mix of conditions and biological replicates in both sets. You could for example randomly assign 80% of the data to the training set, and 20% to the validation set, while ensuring that all conditions and replicates are represented in both sets.
+- Generally, it's easy to see by eye, even in new images, whether segmentation corresponds to the intended result. Manually drawing segmentations is likely much more work than
+quickly checking whether the segmentation is correct.
+- Phenotype learning:
+    - It's not as easy to check whether the score correctly reflects leaf health, since this is a more abstract concept than segmentation. 
+    Manually checking all output will likely be difficult, as this is almost as 
+    laborious as checking predicted scores. 
+    - It will be very hard to understand how the model determined its score,
+    in case you have used a more complex model. The model is a "black box".
+    - Segmentation usually either has worked or not. 
+    How something is recognized is usually not key to understanding your biological question (depending on your topic).
+    On the other hand, understanding the phenotype, and its nuances, is probably
+    much more related to your biological question. 
+    - I would try to avoid "black box" approaches as solution to biological 
+    questions.
+
+:::
 
 <!--
 (Article is behind paywall now.)

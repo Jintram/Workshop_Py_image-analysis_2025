@@ -25,24 +25,12 @@ from scipy import ndimage
 MIN_SIZE1 = 400; DISK_SIZE=4; MIN_SIZE2=300 
 ```
 
-- Detecting dark cars
+- To detect dark cars, in the provided code, change the threshold value and apply it using `<` (instead of `>`):
 
 ```{python}
-# The code snippet below will segment bright cars in a car park image
-#
-# The general strategy is to use a threshold to create a binary image, 
-# apply morphological opening and removal of small objects to get
-# the desired mask. This mask is then used to get bounding boxes around 
-# the cars.
+#| eval: false
 
-import matplotlib.pyplot as plt
-import tifffile as tiff
-import numpy as np
-import skimage as sk
-
-# Load the image
-img_path = '../images/car/chatGPT_shadybusiness_zoomlow-8bit.tif'
-img_carpark = tiff.imread(img_path)
+# (..)
 
 # Determine a dark threshold using the 20th percentile
 thresh = np.percentile(img_carpark,20)
@@ -50,39 +38,8 @@ thresh = np.percentile(img_carpark,20)
 # Apply treshold
 img_carpark_mask = img_carpark < thresh
 
-# Improve the mask with morphological operations
-# (The opening operation is intended to remove extrusions that are connected
-# to more uniformily shaped areas.)
-# Tuning parameters
-MIN_SIZE1 = 2000; DISK_SIZE=4; MIN_SIZE2=1000 
-# Execute operations
-img_carpark_mask = sk.morphology.remove_small_objects(img_carpark_mask, min_size=MIN_SIZE1)
-img_carpark_mask = sk.morphology.binary_opening(img_carpark_mask, footprint=sk.morphology.disk(DISK_SIZE))     
-img_carpark_mask = sk.morphology.remove_small_objects(img_carpark_mask, min_size=MIN_SIZE2)
+# (..)
 
-# Get the labeled mask and region properties
-labeled_img, n_labels = sk.measure.label(img_carpark_mask, return_num=True)
-img_mask_regions = sk.measure.regionprops(labeled_img)
-
-# Plotting
-
-# Function to plot a recteangle in a plot
-def plot_rect(region):
-    """Plot rectangle for the bounding box of a region."""
-    minr, minc, maxr, maxc = region.bbox
-    rect = plt.Rectangle((minc, minr), maxc - minc, maxr - minr,
-                         fill=False, edgecolor='blue', linewidth=1)
-    plt.gca().add_patch(rect)
-
-# Actual plotting
-
-# Original image
-plt.imshow(img_carpark, cmap='gray')
-# Mask
-_ = plt.contour(img_carpark_mask, colors='r', linewidths=0.5, levels=[0.5])
-# Boxes
-for region in img_mask_regions:
-    plot_rect(region)
 ```
 
 

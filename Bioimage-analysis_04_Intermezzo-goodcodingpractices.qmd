@@ -187,8 +187,8 @@ To write code that can be read by others and future you [[1](https://github.com/
 - Use consistent style (styleguides, see [[2](https://peps.python.org/pep-0008/)] and [[3](https://google.github.io/styleguide/pyguide.html)] )
 - Write modular code
 - Refactor regularly
-- Make code easy to run, with reproducable outcome
-    - (Reproducible randomness with seeds, track software versions, parameter settings and metadata)
+- Make code easy to run, with reproducible outcome
+    - (Reproducible randomness with seeds, track software versions, parameter settings and metadata -- don't end up with figures for which you don't know how they were made.)
 - Use version tracking (git and [github](https://github.com/))
 
 More advanced:

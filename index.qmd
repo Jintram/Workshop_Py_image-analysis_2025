@@ -87,15 +87,6 @@ course topics, philosophy and goals.
 <!--        - Matplotlib-->
 <!--        - Seaborn     -->
 
---------------------------------------------------------------------------------
-
-<font color=red>
-
-#### Topics to still include
-
-- Background corrections
-
-</font>
 
 --------------------------------------------------------------------------------
 

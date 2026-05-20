@@ -156,13 +156,15 @@ areas_spots = np.array([r.area for r in regionprops_spots])
 print("Total nr of spots:", np.sum(areas_spots>3))
 
 # In case we're perfectionists
+# Using a relative margin of 0.2
+# Similar as to what is done in Zack et al. in 1977. (https://doi.org/10.1177/25.7.7045)
 img_mode = np.bincount(img_spots_convolved.ravel()).argmax()
 img_max  = np.max(img_spots_convolved)
 threshold_margin = (img_max-img_mode)/5
 mask_spots2   = img_spots_convolved > (threshold_triangle+threshold_margin)
 rprops_spots2 = regionprops(label(mask_spots2))
 # And plot
-_ = plt.title('Identified spots (triangle, using "Zack" margin)')
+_ = plt.title('Identified spots (triangle, using "Zack" margin)') 
 _ = plt.imshow(img_spots_convolved)
 _ = plt.contour(mask_spots2, colors='w', linewidths=1, levels=[0.5])
 # add labels
@@ -257,3 +259,10 @@ x = local_max_nuclei[:, 1]
 y = local_max_nuclei[:, 0]
 _ = ax.plot(x, y, 'r+')
 ```
+
+Thus, the local maxima correspond relatively well to individual nuclei. This 
+could be used in further processing (watershedding) to separate them.
+
+Another approach to identify individual nuclei is to erode the mask that
+was found, in the hope that for nuclei that are connected only a little, 
+the connection gets eroded away.
