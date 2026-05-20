@@ -1,43 +1,38 @@
 ---
-title: Topics to add
+title: Tools & remarks
 jupyter: python3
 ---
 
-# Tools & remarks
 
 ## Convenient tools
 
-<font color=red>
+- Generic tools
+    - [Napari](https://napari.org/stable/): interactive multidimensional image viewer and annotation tool, 
+    with a rich plugin ecosystem
 
-- Napari
-- Bapy
-- Stardist, 
-- Cellpose, 
-- Microsam, 
-- organoidtracker
-- biapy
-- https://github.com/hallvaaw/awesome-biological-image-analysis
+- Segmentation tools (ML based)
+    - [StarDist](https://github.com/stardist/stardist): robust nucleus and cell instance segmentation using star-convex shapes
+    - [Cellpose](https://www.cellpose.org/): generalist deep-learning segmentation for many cell types
+    - [micro-sam](https://github.com/computational-cell-analytics/micro-sam): SAM-based interactive and automated segmentation workflows for microscopy
+    - [OrganoidTracker](https://organoidtracker.org/): tracking and lineage analysis for organoid time-lapse data
+    - [ilastik](https://www.ilastik.org/): pixel/object classification and segmentation with minimal coding
+    - [biapy](https://biapyx.github.io/): (generic) deep learning-based segmentation and tracking for bioimage analysis
 
-Suggested by LLM:
+Additional tools (*suggested by LLM*):
 
-- Napari: interactive multidimensional image viewer with a rich plugin ecosystem
-StarDist: robust nucleus and cell instance segmentation using star-convex shapes
-Cellpose: generalist deep-learning segmentation for many cell types with easy GUI and Python API
-- micro-sam: SAM-based interactive and automated segmentation workflows for microscopy
-OrganoidTracker: tracking and lineage analysis for organoid time-lapse data
-- BaSiCPy: illumination and background correction (very useful preprocessing step)
-scikit-image: core Python toolbox for classical image processing
-- OpenCV: fast, broad computer-vision toolkit useful for filtering, morphology, transforms, and geometry
-- SimpleITK: strong for registration, resampling, and medical/microscopy image operations
+- [SimpleITK](https://simpleitk.org/):  medical/microscopy image analysis tool package
+- [Squidpy](https://github.com/scverse/squidpy): spatial omics analysis with image feature extraction support
 
-- ilastik: user-friendly pixel/object classification and segmentation with minimal coding
-- Squidpy: spatial omics analysis with image feature extraction support
 
-- CellProfiler: pipeline-based high-throughput image analysis and feature extraction
 
-Non-python convenient tools;
+Convenient non-python tools:
 
-- Fiji ImageJ: classic GUI platform with many plugins and macro support
-- TrackMate: easy and powerful particle/cell tracking in Fiji
+- [Fiji/ImageJ]((https://imagej.net/software/fiji/)): classic GUI platform with many plugins and macro support
+    - [Labkit](https://imagej.net/plugins/labkit/): interactive machine learning segmentation in Fiji
+    - [TrackMate](https://imagej.net/plugins/trackmate/): particle/cell tracking in Fiji
+- [CellProfiler](https://cellprofiler.org/): pipeline-based high-throughput image analysis and feature extraction
 
-</red>
+An extensive list of bio-image analysis tools:
+
+- [https://github.com/hallvaaw/awesome-biological-image-analysis](https://github.com/hallvaaw/awesome-biological-image-analysis)
+
