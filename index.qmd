@@ -15,7 +15,7 @@ course topics, philosophy and goals.
 
 --------------------------------------------------------------------------------
 
-#### Afternoon I
+#### Afternoon I (the basics)
 
 1. [About, goals, setting up & introduction](Bioimage-analysis_01_Introduction.qmd)
 2. Working with images
@@ -32,7 +32,7 @@ course topics, philosophy and goals.
 
 --------------------------------------------------------------------------------
 
-#### Afternoon II
+#### Afternoon II (dive into image processing methods)
 
 3. Image processing (continued)
     b. [Image Processing (part 2)](Bioimage-analysis_03B_Imageprocessing.qmd)    
@@ -45,7 +45,7 @@ course topics, philosophy and goals.
             
 --------------------------------------------------------------------------------
 
-#### Afternoon III
+#### Afternoon III (bringing it all together)
          
 4. [Good coding practices](Bioimage-analysis_04_Intermezzo-goodcodingpractices.qmd)
     - **Topics**
@@ -76,17 +76,16 @@ course topics, philosophy and goals.
         - Not included:
             - Activation functions
             - Neural network architectures
-<!-- Removed, as its covered in other parts and previous course 
-7. [Plotting](Bioimage-analysis_07_Plotting.qmd)
-    - **Topics**
-        - Dataframes 
-        - Matplotlib
-        - Seaborn 
--->
-8. [Appendix, tools & remarks](Bioimage-analysis_08_Useful_tools.qmd)
+7. [Appendix, tools & remarks](Bioimage-analysis_07_Useful_tools.qmd)
     - **Topics**
         - List of tools that might be convenient
 
+<!-- Removed, as its covered in other parts and previous course -->
+<!-- 7. [Plotting](Bioimage-analysis_07_Plotting.qmd) -->
+<!--    - **Topics** -->
+<!--        - Dataframes -->
+<!--        - Matplotlib-->
+<!--        - Seaborn     -->
 
 --------------------------------------------------------------------------------
 

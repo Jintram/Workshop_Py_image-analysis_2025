@@ -52,11 +52,14 @@ Regarding your experience:
 - We require you to have followed our "introduction to python" course, OR ..
 - .. require you to be familiar with the topics we taught there.
 
-On your computer, we require you to have:
+On your computer, we require you to have **before the workshop starts**:
 
 - A working conda environment with python installed ([link](https://www.biodsc.nl/posts/installing_conda_python.html)).
 - The software "FIJI" ([link](https://imagej.net/software/fiji/)).
-- And editor in which you can edit and run python code (see also [link](https://www.biodsc.nl/posts/installing_conda_python.html)).
+- And editor in which you can edit and run python code
+    - For this advanced workshop we require an IDE (integrated development environment)
+    - Good options are Spyder, PyCharm or Visual Studio Code.
+    - See also this [link](https://www.biodsc.nl/posts/installing_conda_python.html) to see how to install Spyder.
 - The libraries listed below installed.
 - Download the datasets linked below.
 
@@ -175,6 +178,7 @@ We'll be using two example image sets for this tutorial, plus some additional si
     - Save human labor, scalable
     - Transparant, reproducible
     - Unbiased
+    - Highly customizable
 
 
 

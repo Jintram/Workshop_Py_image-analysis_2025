@@ -5,12 +5,6 @@ jupyter: python3
 
 # Tools & remarks
 
-## Remarks
-
-#### Often, `image.copy()` is required
-
-Some image-processing operations do not create a new, independent image, but instead return a view or reference to the same underlying data. This can cause unexpected behavior: changes made to the “processed” image also modify the original image. To avoid this, explicitly create a separate copy (for example, with image.copy()) before applying in-place edits.
-
 ## Convenient tools
 
 <font color=red>

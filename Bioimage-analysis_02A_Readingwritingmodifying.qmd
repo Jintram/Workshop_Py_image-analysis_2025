@@ -10,6 +10,10 @@ jupyter: python3
 
 ## Chapter IIA: Reading, modifying and displaying images
 
+### Reading and displaying images
+
+#### Setup: Importing libraries
+
 ```{python}
 # Importing libraries
 
@@ -34,6 +38,8 @@ import numpy as np
     # for general math, matrix operations, etc
 ```
 
+#### Reading image files
+
 ```{python}
 # Read a tif file
 image_path = 'images/emoji/emoji-8bit-gray.tif'
@@ -41,6 +47,8 @@ img = tiff.imread(image_path)
 
 _ = plt.imshow(img)
 ```
+
+#### Understanding image data
 
 ```{python}
 _ = plt.imshow(img, cmap='gray') # we can change the display colors
@@ -67,6 +75,8 @@ _ = sns.heatmap(img, annot=True,
     # find: https://docs.python.org/3/library/string.html#format-specification-mini-language
 ```
 
+#### Creating a visualization helper function
+
 ```{python}
 def mw_showimg(img, fontcol='white'):
     _ = sns.heatmap(img, annot=True,
@@ -78,12 +88,18 @@ def mw_showimg(img, fontcol='white'):
 mw_showimg(img)
 ```
 
+#### Analyzing image intensity distributions
+
 ```{python}
 plt.hist(img.flatten())
     # img.flatten() vs. img.ravel()
     # - flatten: copy reduced to 1d
     # - ravel: view reduced to 1d (original stays, less memory used)
 ```
+
+### Modifying images
+
+#### Thresholding and pixel manipulation
 
 ```{python}
 # Modifying an image
@@ -96,6 +112,8 @@ img_bw[img_bw>=MY_THRESHOLD]=255
 
 mw_showimg(img_bw, fontcol='red')
 ```
+
+#### Managing image copies and references
 
 ```{python}
 # Illustration why img.copy
@@ -113,6 +131,10 @@ mw_showimg(img3)
 mw_showimg(img2)
 ```
 
+Conclusion: often, `image.copy()` is required. Some image-processing operations do not create a new, independent image, but instead return a view or reference to the same underlying data. This can cause unexpected behavior: changes made to the “processed” image also modify the original image. To avoid this, explicitly create a separate copy (for example, with image.copy()) before applying in-place edits.
+### Multi-channel images
+
+#### Working with RGB and multi-channel data
 ```{python}
 # Reading an RGB image
 img_path_light = 'images/car/chatGPT_shadybusiness_zoomhigh-crop3.tif'
@@ -137,14 +159,20 @@ _ = ax[1].imshow(img_KTR[0, 1, 0:200, 0:200], cmap='gray')
 _ = ax[2].imshow(img_KTR[0, 2, 0:200, 0:200], cmap='gray')
 ```
 
+### Saving images
+
+Images can be saved using `tiff.imwrite()` for TIFF format or other libraries depending on the desired output format.
+
 ```{python}
 # Saving an image
 tiff.imwrite('output-test/img_bw.tif', data=img_bw)
 ```
 
+
+
 ### Exercises
 
-- Read the image "chatGPT_shadybusiness_zoomhigh-custom.tif" and see if you can display it nicely.
+- Read the image "images/car/chatGPT_shadybusiness_zoomhigh-custom.tif" and see if you can display it nicely.
 - Can you display a zoom of the license plate?
 - Can you similarly zoom and read the license plate in the image "chatGPT_shadybusiness_zoomlow-8bit.tif"?
     - Try out some different `cmap` values to display that same image.

@@ -3,7 +3,9 @@ title: Topics to add
 jupyter: python3
 ---
 
-
+<!--
 - [ ] troubles when working with processed images, that keep pointing to original image, `image.copy()`
+    - THIS IS NOW ADDRESSED IN THE INTRO
+-->
 
 

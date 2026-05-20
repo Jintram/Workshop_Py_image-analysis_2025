@@ -122,12 +122,12 @@ plt.show()
 _ = plt.imshow(img_nuclei, cmap='magma')
 _ = plt.contour(
         mask_nuclei, 
-        bins = [0.5],
+        levels = [0.5],
         colors='lightblue',
     )
 # And put a cross in their centers
 centroids = np.array([r.centroid for r in regions])
-_ = plt.plot(centroids[:,1], centroids[:,0], 'xr')
+_ = plt.plot(centroids[:,1], centroids[:,0], 'xw')
     
 plt.show()
 ```
@@ -196,3 +196,4 @@ for i, size in enumerate(sizes_dodgy):
 np.unique(sizes_dodgy, return_counts=True)
 ```
 
+So the face corresponding to size `1743` occurs only once.

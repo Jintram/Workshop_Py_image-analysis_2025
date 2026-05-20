@@ -14,6 +14,10 @@ jupyter: python3
 
 ### Outline of this mini-workshop
 
+*This chapter introduces quite some concepts, and is sometimes a bit concise. It
+is intended to be combined with questions or discussions with an instructor
+that is present.*
+
 - Mini lecture about Machine Learning  
     - /Users/m.wehrens/Documents/PRESENTATIONS/TEACHING/ML_verybasic.pptx
     
@@ -490,6 +494,7 @@ print('X3=', pred)
 - Try drawing a new image in one of your classes, and let the model predict the class. What do you see?
 
 **Biological images**
+
 - Say you have biological data from multiple conditions and multiple biological replicates. How would you divide this data among the training and validation sets?
 - Let's say you use an existing machine learning model (e.g. micro-sam) to segment your data. Do you think you can manually check the segmentation went OK by investigating the original input images and segmentation result?
 - Now, let's say you use a machine learning model to quantify a specific phenotype (say 'leaf health' trained on human scoring of leafs) that you expect to change for your conditions. 
@@ -497,14 +502,16 @@ print('X3=', pred)
     - If you use a more complex machine learning model, is it possible to understand how the scoring was determined, or which features the model used to make its decision? What challenges might arise in interpreting the results?
     - Is the interpretability equally important for segmentation and for phenotyping?
     - What are your thoughts on applying ML in this way?
-- Say the images used to train the leaf damage also included several groups of insects that contribute to the damage in various degree respectively. Do you see any issue with this training data set?
+- Say the images used to train the leaf damage also included (in the picture) several groups of insects that contribute to the damage in various degree respectively. Do you see any issue with this training data set?
 - How could overfitting impact the performance of your model when applied to new biological images?
 - How might differences in image acquisition (e.g. microscope settings, lighting) influence the results of your analysis?
 - How can you assess whether your model is generalizing well to unseen data, rather than just memorizing the training set?
 
+<!--
+(Article is behind paywall now.)
 **Further reading.**
 Generally, ML can show learning of unwanted features, see for example this article: ["Amazon scraps secret AI recruiting tool that showed bias against women"](https://www.reuters.com/article/world/insight-amazon-scraps-secret-ai-recruiting-tool-that-showed-bias-against-women-idUSKCN1MK0AG/). 
-    
+-->
 
 # Congratulations!
 
