@@ -51,6 +51,20 @@ import matplotlib.pyplot as plt
 ```
 
 ```{python}
+# Technical note: ".to(DEVICE)" tells the computer to run this 
+# neural network on a specific architecture, which enables 
+# faster calculations.
+#
+# Common options:
+    # CPU: .to("cpu")
+    # NVIDIA GPU: .to("cuda") or .to("cuda:0")
+    # Apple GPU via Metal: .to("mps")
+    # Intel GPU with supported PyTorch build: .to("xpu")
+    
+DEVICE = 'mps'
+```
+
+```{python}
 # This code defines a VERY simple model for 12x12 pixels,
 # meant for illustratory purposes.
 
@@ -113,12 +127,10 @@ class VerySimpleNN(nn.Module):
 # Now test the neural network
 
 # Instantiate the neural network (create an object from the class)
-# Technical note: ".to('mps')" tells the computer to run this network
-# on an Apple GPU.
-simpleNN = VerySimpleNN().to('mps')
+simpleNN = VerySimpleNN().to(DEVICE)
 
 # Generate a random 12x12 image
-test_data = torch.rand(1, 12, 12, device='mps')  
+test_data = torch.rand(1, 12, 12, device=DEVICE)  
 print('test_data=',test_data)
 # Generate a prediction; calling the object will automatically 
 # call the forward function (since this is a pytorch class)
@@ -259,7 +271,7 @@ class Data_HappySad(Dataset):
     # in the pytorch library. Data_HappySad is the name we 
     # give to this class. Hence the notation "Data_HappySad(Dataset)".
     
-    def __init__(self, targetdevice="mps"):
+    def __init__(self, targetdevice=DEVICE):
         
         # Technical: tell the class how to store the data (e.g. on CPU or GPU)
         self.targetdevice = targetdevice
@@ -337,7 +349,7 @@ my_data_happysad_loader = torch.utils.data.DataLoader(my_data_happysad,
                                                       batch_size=3, shuffle=False)
 
 # initialize the model
-my_simple_model  = VerySimpleNN().to('mps') 
+my_simple_model  = VerySimpleNN().to(DEVICE) 
 ```
 
 ```{python}
@@ -561,7 +573,8 @@ print('X3=', pred)
 ::: {.callout-caution collapse="true"}
 ### Concise answers
 
-- (..)
+- If the location in the array corresponding to the actual 
+class has the highest value, then the prediction is correct. 
 - If your old and new images have specific pixels that consistently
 show different values per class, it might be that the class gets predicted 
 correctly, as this simple model will pick up on those. 
