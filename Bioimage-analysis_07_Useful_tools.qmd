@@ -6,6 +6,7 @@ jupyter: python3
 
 ## Convenient tools
 
+
 - Generic tools
     - [Napari](https://napari.org/stable/): interactive multidimensional image viewer and annotation tool, 
     with a rich plugin ecosystem
@@ -22,8 +23,6 @@ Additional tools (*suggested by LLM*):
 
 - [SimpleITK](https://simpleitk.org/):  medical/microscopy image analysis tool package
 - [Squidpy](https://github.com/scverse/squidpy): spatial omics analysis with image feature extraction support
-
-
 
 Convenient non-python tools:
 
