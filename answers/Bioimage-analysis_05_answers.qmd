@@ -29,6 +29,7 @@ As an example solution, we created `bacterial_seg_pipe.py`:
 #| eval: false
 ```
 
+PLOTTING FUNCTION???
 This file makes use of the following `config_bacteria_seg.yaml` file:
 
 ```{.python include="Bioimage-analysis_05_answers_bacteria/config_bacteria_seg.yaml"}

@@ -1,9 +1,7 @@
 """
-
-!!ADD A SUMMARY HERE!!
-
-
-
+Bacterial segmentation pipeline, which uses the functions defined in 
+`bacterial_seg_functions.py` to segment each frame in time-lapse tiff file,
+and store resulting segmentation masks as npz files in output folder.
 """
 
 ################################################################################
@@ -14,24 +12,19 @@ import yaml
 import time, datetime
 
 import matplotlib.pyplot as plt
-from matplotlib.colors import ListedColormap
 
 import seaborn as sns
 import tifffile as tiff
 import numpy as np
 
-import skimage as sk
-from skimage.util import invert
+################################################################################
+# %% Custom imports
 
-from scipy import stats
-from scipy import ndimage
-
-from skimage.measure import label, regionprops
+import answers.Bioimage_analysis_05_answers_bacteria.bacterial_seg_functions as sf
 
 ################################################################################
-# %% Segmentation functions
+# %% Plotting function
 
-    
 def plot_sidebyside(img_inv_crop, segmask_oneframe, frame_idx):
 
     # set font to arial 8
@@ -49,24 +42,49 @@ def plot_sidebyside(img_inv_crop, segmask_oneframe, frame_idx):
     return fig
 
 ################################################################################
-# %% Apply it
+# %% Function to run the whole pipeline
 
-# This statements checks if the script is being run directly
-if __name__ == "__main__":
+def run_seg_pipeline(config):
+    """
+    Runs the whole pipeline.
+     
+    Config is a dict with the following parameters:
+    - path_input: path to the input time lapse tiff file (frame * x * y)
+    - path_output: path to the output folder
+    - frame_range: tuple with the range of frames to process (start, end)
+    - disksize_range:  disk radius for global mask, should be >radius bacteria (e.g. 20)
+    - sigma_smooth: smoothing sigma for the LoG (set e.g. to 3)
+    - disksize_crossing: disk radius for neighborhood that defines zero-crossing (e.g. 1)
+    - min_distance: minimum distance for local peak finder to identify bacteria,
+        set to <bacterial radius (e.g. 5)
+    - sigma_seed: gaussian blur applied to distance mask of preliminary mask to
+        identify unique bacteria (e.g. 3)
+    - distance_threshold: pixels with distance-to-background values >distance_threshold
+        are kept to identify individual bacteria. Should be <expected minimum width
+        of bacteria. (E.g. 3)
 
-    # read config file
-    # config_file_path = "answers/Bioimage-analysis_05_answers_bacteria/config_bacteria_seg.yaml"
-    config_file_path = sys.argv[1]
-    with open(config_file_path, 'r') as f:
-        config = yaml.safe_load(f)
+    Example:
+    config = {
+        "path_input": "/path/to/input.tiff",
+        "path_output": "/path/to/output/folder",
+        "frame_range": (0, 100),
+        "disksize_range": 20,
+        "sigma_smooth": 3,
+        "disksize_crossing": 1,
+        "min_distance": 5,
+        "sigma_seed": 3,
+        "distance_threshold": 3
+    } 
+    """
 
-    # set up output folder
+    # set up output folder (take name of input subfolder as identifier)
     basename = config['path_input'].split('/')[-1].split('.')[0]
     output_subfolder = os.path.join(config['path_output'], basename)
-    # create output sub folder
-    os.makedirs(output_subfolder, exist_ok=True)
+    # create output sub folders
+    os.makedirs(os.path.join(output_subfolder, "seg"), exist_ok=True)
     os.makedirs(os.path.join(output_subfolder, "plots"), exist_ok=True)    
-    # write the configuration file to the subfolder
+    # Write a log file to the output folder    
+    config['scriptname'] = os.path.basename(__file__) # Add this script's name 
     yaml.dump(config, open(os.path.join(output_subfolder, 'config_dump.yaml'), 'w'))
     
     # Load data
@@ -89,7 +107,7 @@ if __name__ == "__main__":
             continue
     
         # now segment a frame
-        segmask_oneframe, img_inv_crop = seg_bacterium(
+        segmask_oneframe, img_inv_crop = sf.seg_bacterium(
             input_img = invert(imgs_ecoli[frame_idx,:,:]), 
             sigma_smooth=config['sigma_smooth'], 
             disksize_crossing=config['disksize_crossing'], 
