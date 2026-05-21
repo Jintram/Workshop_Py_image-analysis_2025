@@ -3,7 +3,7 @@ title: Workshop Python Image Analysis
 jupyter: python3
 ---
 
-*Martijn Wehrens, September 2025*
+*Martijn Wehrens, May 2026*
 
 **Estimated time:** 120 mins exercises
 
@@ -53,20 +53,67 @@ To automate a pipeline, the following components are useful:
 ### Writing reusable, parameterized pipelines
 
 Additionally, it's good practice to write scripts that can process any dataset, rather than scripts tailored hard-coded for a specific one. 
-This allows you to maintain a clear record of how each dataset was analyzed
-(e.g. by having a text document with previous execution commands).
+
+It is convenient to **separate functionality and execution**. 
+
+Write **scripts that process your data in a generalized way**, such that they
+can be applied to any dataset. 
+Parameter settings, data set paths, and other settings specific to specific
+datasets are not hard coded in the generalized script, but provided as 
+**parameters**.
+
+You can use one of the following strategies to then execute your script.
+
+#### 1. Your generalized script is imported like a "mini library"
+
+You can write now write a separate script that is tailored toward a specific 
+dataset, which imports all functionalities from the main script.
+
+This **tailored script** (`.py` or `.ipynb`) does **contain hard coded parameters**, 
+and is basically
+your administration of how a dataset-specific run of your pipeline was 
+performed.
+
+You make a script like this for each dataset, or otherwise organize scripts
+like this in a way to easily find back how your analysis where performed. 
+It might be smart to store these scripts in a **separate (sub)folder** like 
+`/runs/` or `/analyses/`.
+
+#### 2. Your generalized script reads command line arguments, or a config file
+
+*Somewhat more advanced.*
+
+Executing your script by **command line**,
+and have it read its own arguments and **config files**,
+allows you to maintain a clear record of how each dataset was analyzed.
 
 To read input arguments, use
+
 - `sys.argv`, or
 - `argparse` ([documentation](https://docs.python.org/3/library/argparse.html))
 
-If you need to tune parameters for analyzing data, it might be good practice to 
-create a config file. 
+If you have many tunable parameters, you can store them in a file, e.g.:
 
-You can e.g. 
 - read a table using `csv` (built-in python library)
 - read an excel file using `pandas.read_excel()`
 - use `yaml` (or `json`) to read config files
+
+#### 3. Other approaches
+
+If you really have a large pipeline you can make use of more advanced
+approaches like [Snakemake](https://snakemake.readthedocs.io/en/stable/),
+which is a **workflow management system** that allows you to define complex pipelines with dependencies between steps. 
+
+#### Organize your output!
+
+Additionally, it's important to make sure that when you look at your output
+folders, **you know how the output was generated**. 
+Export a text file (`analysis.log` or something) to your output directory
+which lists the script file used to generate the output and (importantly)
+all parameter settings.
+
+Prevent looking at a subpanel in your manuscript figure and thinking: **"Now 
+where did this data come from again, and how am I going to write methods?"**
 
 ## Guided exercises
 

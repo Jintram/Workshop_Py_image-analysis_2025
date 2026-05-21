@@ -133,7 +133,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p><em>Martijn Wehrens, September 2025</em></p>
+<p><em>Martijn Wehrens, May 2026</em></p>
 <p><strong>Estimated time:</strong> 120 mins exercises</p>
 <section id="chapter-5-combining-building-blocks-into-a-pipeline" class="level2">
 <h2 class="anchored" data-anchor-id="chapter-5-combining-building-blocks-into-a-pipeline">Chapter 5: Combining building blocks into a pipeline</h2>
@@ -197,10 +197,41 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><em>These topics were covered in our previous “Introduction to Python” course.</em></p>
 <section id="writing-reusable-parameterized-pipelines" class="level3">
 <h3 class="anchored" data-anchor-id="writing-reusable-parameterized-pipelines">Writing reusable, parameterized pipelines</h3>
-<p>Additionally, it’s good practice to write scripts that can process any dataset, rather than scripts tailored hard-coded for a specific one. This allows you to maintain a clear record of how each dataset was analyzed (e.g.&nbsp;by having a text document with previous execution commands).</p>
-<p>To read input arguments, use - <code>sys.argv</code>, or - <code>argparse</code> (<a href="https://docs.python.org/3/library/argparse.html">documentation</a>)</p>
-<p>If you need to tune parameters for analyzing data, it might be good practice to create a config file.</p>
-<p>You can e.g.&nbsp; - read a table using <code>csv</code> (built-in python library) - read an excel file using <code>pandas.read_excel()</code> - use <code>yaml</code> (or <code>json</code>) to read config files</p>
+<p>Additionally, it’s good practice to write scripts that can process any dataset, rather than scripts tailored hard-coded for a specific one.</p>
+<p>It is convenient to <strong>separate functionality and execution</strong>.</p>
+<p>Write <strong>scripts that process your data in a generalized way</strong>, such that they can be applied to any dataset. Parameter settings, data set paths, and other settings specific to specific datasets are not hard coded in the generalized script, but provided as <strong>parameters</strong>.</p>
+<p>You can use one of the following strategies to then execute your script.</p>
+<section id="your-generalized-script-is-imported-like-a-mini-library" class="level4">
+<h4 class="anchored" data-anchor-id="your-generalized-script-is-imported-like-a-mini-library">1. Your generalized script is imported like a “mini library”</h4>
+<p>You can write now write a separate script that is tailored toward a specific dataset, which imports all functionalities from the main script.</p>
+<p>This <strong>tailored script</strong> (<code>.py</code> or <code>.ipynb</code>) does <strong>contain hard coded parameters</strong>, and is basically your administration of how a dataset-specific run of your pipeline was performed.</p>
+<p>You make a script like this for each dataset, or otherwise organize scripts like this in a way to easily find back how your analysis where performed. It might be smart to store these scripts in a <strong>separate (sub)folder</strong> like <code>/runs/</code> or <code>/analyses/</code>.</p>
+</section>
+<section id="your-generalized-script-reads-command-line-arguments-or-a-config-file" class="level4">
+<h4 class="anchored" data-anchor-id="your-generalized-script-reads-command-line-arguments-or-a-config-file">2. Your generalized script reads command line arguments, or a config file</h4>
+<p><em>Somewhat more advanced.</em></p>
+<p>Executing your script by <strong>command line</strong>, and have it read its own arguments and <strong>config files</strong>, allows you to maintain a clear record of how each dataset was analyzed.</p>
+<p>To read input arguments, use</p>
+<ul>
+<li><code>sys.argv</code>, or</li>
+<li><code>argparse</code> (<a href="https://docs.python.org/3/library/argparse.html">documentation</a>)</li>
+</ul>
+<p>If you have many tunable parameters, you can store them in a file, e.g.:</p>
+<ul>
+<li>read a table using <code>csv</code> (built-in python library)</li>
+<li>read an excel file using <code>pandas.read_excel()</code></li>
+<li>use <code>yaml</code> (or <code>json</code>) to read config files</li>
+</ul>
+</section>
+<section id="other-approaches" class="level4">
+<h4 class="anchored" data-anchor-id="other-approaches">3. Other approaches</h4>
+<p>If you really have a large pipeline you can make use of more advanced approaches like <a href="https://snakemake.readthedocs.io/en/stable/">Snakemake</a>, which is a <strong>workflow management system</strong> that allows you to define complex pipelines with dependencies between steps.</p>
+</section>
+<section id="organize-your-output" class="level4">
+<h4 class="anchored" data-anchor-id="organize-your-output">Organize your output!</h4>
+<p>Additionally, it’s important to make sure that when you look at your output folders, <strong>you know how the output was generated</strong>. Export a text file (<code>analysis.log</code> or something) to your output directory which lists the script file used to generate the output and (importantly) all parameter settings.</p>
+<p>Prevent looking at a subpanel in your manuscript figure and thinking: <strong>“Now where did this data come from again, and how am I going to write methods?”</strong></p>
+</section>
 </section>
 </section>
 <section id="guided-exercises" class="level2">
@@ -331,7 +362,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>We’ve seen that sometimes computer annotations require human correction.</p>
 <p>A very convenient tool in image analysis is <code>Napari</code>. This allows a user to interactively view and edit images and segmentation masks. It also allows you to write custom functions that can be executed on click, or with widgets.</p>
 <p>Let’s load some example data:</p>
-<div id="fda32114" class="cell" data-execution_count="1">
+<div id="04d706cf" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tifffile <span class="im">as</span> tiff</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -353,7 +384,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Now, it would be nice to be able to correct the mask in the picture above. Napari offers a way to do this:</p>
-<div id="24e7268f" class="cell" data-execution_count="2">
+<div id="e3f0bf62" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># now show this data in napari</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> napari</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skimage.measure <span class="im">import</span> label</span>

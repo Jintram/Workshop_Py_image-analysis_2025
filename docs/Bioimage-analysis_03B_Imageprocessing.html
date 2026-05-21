@@ -184,7 +184,7 @@ window.Quarto = {
 </section>
 <section id="loading-the-data" class="level3">
 <h3 class="anchored" data-anchor-id="loading-the-data">Loading the data</h3>
-<div id="1d0ebd6b" class="cell" data-execution_count="1">
+<div id="4a4187f0" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tifffile <span class="im">as</span> tiff</span>
@@ -198,7 +198,7 @@ window.Quarto = {
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># something convenient for later</span></span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>FIGSIZE21 <span class="op">=</span> (<span class="dv">10</span><span class="op">/</span><span class="fl">2.54</span>, <span class="dv">5</span><span class="op">/</span><span class="fl">2.54</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="10343233" class="cell" data-execution_count="2">
+<div id="abebb062" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load part of the KTR data (Chavez-Abiega et al.)</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>img_path_KTR <span class="op">=</span> <span class="st">'/Users/m.wehrens/Data_notbacked/2025_Py-Image-workshop_KTR-example-data/raw/Composite_KTR.tif'</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>img_nuclei <span class="op">=</span> tiff.imread(img_path_KTR)[<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>:<span class="dv">200</span>, <span class="dv">0</span>:<span class="dv">200</span>]</span>
@@ -249,7 +249,7 @@ window.Quarto = {
 <p><br></p>
 <p><img src="images/figures/biobook_fig68.png" width="75%"></p>
 <p><em>Image taken from <a href="https://bioimagebook.github.io/chapters/2-processing/3-thresholding/thresholding.html">biobook</a> (fig.&nbsp;68), <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</em></p>
-<div id="f735a711" class="cell" data-execution_count="3">
+<div id="e1d4e762" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>img_page <span class="op">=</span> tiff.imread(<span class="st">"images/misc/page_original.tif"</span>)</span>
@@ -301,7 +301,7 @@ window.Quarto = {
 <section id="the-bimodal-histogram" class="level5">
 <h5 class="anchored" data-anchor-id="the-bimodal-histogram">The bimodal histogram</h5>
 <p>One algorithm that works well is Otsu’s method. It will try to find a threshold that minimizes the variance in the intensities that respectively fall above and below that threshold. (For more info, see <a href="https://bioimagebook.github.io/chapters/2-processing/3-thresholding/thresholding.html">biobook</a>.)</p>
-<div id="e7982a80" class="cell" data-execution_count="4">
+<div id="d76430e0" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Illustrate bimodal + otsu</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Load </span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>img_happycell <span class="op">=</span> tiff.imread(<span class="st">"images/bioimagebook/happy_cell_noise.tif"</span>)</span>
@@ -326,7 +326,7 @@ window.Quarto = {
 </div>
 </div>
 <p><em>“Happy cell” <a href="https://bioimagebook.github.io/chapters/2-processing/3-thresholding/thresholding.html">image source</a>, <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</em></p>
-<div id="45850c0f" class="cell" data-execution_count="5">
+<div id="aa5f9ba4" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Determine otsu threshold</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>thresh_otsu <span class="op">=</span> sk.filters.threshold_otsu(img_happycell)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect</span></span>
@@ -356,7 +356,7 @@ window.Quarto = {
 <p>A method that’s suitable for the “dominant background” case is the “triangle method”, which was published already by <a href="https://doi.org/10.1177/25.7.7045">Zack et al.</a> in 1977.</p>
 <p><img src="images/figures/triangle_method.png" alt="The triangle method." height="400px"></p>
 <p>In the figure above (from <a href="https://doi.org/10.1177/25.7.7045">Zack et al.</a>), the method is explained. A line is drawn in the histogram between <span class="math inline">\(x_\text{mode}, y(x_\text{mode})\)</span> and <span class="math inline">\(x_\text{max}, 0\)</span>. Then, a second line is drawn, perpendicular to the first line, which maximizes the distance to the histogram line. The x-value where that second line touches the histogram, will be the threshold. (Originally, a margin of 0.2 was included, but modern implementations leave that out.)</p>
-<div id="e33adf17" class="cell" data-execution_count="6">
+<div id="6d61e566" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's check some data that has a dominant background</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.imshow(img_nuclei)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
@@ -377,7 +377,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div id="b4a7ae5d" class="cell" data-execution_count="7">
+<div id="0af69d1a" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># and apply the triangle method</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>thresh_triangle <span class="op">=</span> sk.filters.threshold_triangle(img_nuclei)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.hist(img_nuclei.ravel(), bins<span class="op">=</span><span class="dv">256</span>)</span>
@@ -421,7 +421,7 @@ threshold_yen()</code></pre>
 <h4 class="anchored" data-anchor-id="local-thresholding">Local thresholding</h4>
 <p>If there is a contrast that is local (e.g.&nbsp;due to uneven illumination), local thresholding can be very useful.</p>
 <p>This can be done with the function <code>threshold_local()</code>.</p>
-<div id="20f031f3" class="cell" data-execution_count="8">
+<div id="e16e52db" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's use the page as an example</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>img_page <span class="op">=</span> tiff.imread(<span class="st">"images/misc/page_original.tif"</span>)</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>img_page_inv <span class="op">=</span> np.<span class="bu">max</span>(img_page)<span class="op">-</span>img_page</span>
@@ -454,7 +454,7 @@ threshold_yen()</code></pre>
 <section id="applying-automatic-thresholding" class="level3">
 <h3 class="anchored" data-anchor-id="applying-automatic-thresholding">Applying automatic thresholding</h3>
 <p>The classic approaches above work well for the nuclei. For the bacteria it works less well. Let’s try it.</p>
-<div id="7f7b9960" class="cell" data-execution_count="9">
+<div id="70fbfc81" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Little plotting function</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_sidebyside(img1, img2, mycmap1 <span class="op">=</span> <span class="st">'gray'</span>, mycmap2 <span class="op">=</span> <span class="st">'viridis'</span>):</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    </span>
@@ -465,7 +465,7 @@ threshold_yen()</code></pre>
 <span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> fig</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="bca7c7e5" class="cell" data-execution_count="10">
+<div id="bc94f93a" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's try some of these thresholding approaches</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># The Otsu method</span></span>
@@ -481,7 +481,7 @@ threshold_yen()</code></pre>
 </div>
 </div>
 </div>
-<div id="516e2df5" class="cell" data-execution_count="11">
+<div id="b0af32ee" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The Triangle method</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>mask_ecoli_triangle <span class="op">=</span> img_ecoli_inv <span class="op">&gt;</span> sk.filters.threshold_triangle(img_ecoli_inv)</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plot_sidebyside(img_ecoli_inv, mask_ecoli_triangle)</span>
@@ -498,7 +498,7 @@ threshold_yen()</code></pre>
 </div>
 </div>
 <p>The result is not horrible. However, due to the intensity of ‘bacteria pixels’ not being uniform, the mask shows different results depending on the image location. In addition, due to some boundaries having low or different contrasts, some bacteria are not separated well.</p>
-<div id="50ce6e59" class="cell" data-execution_count="12">
+<div id="353341f3" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Applying local thresholding</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>mask_ecoli_local <span class="op">=</span> img_ecoli_inv <span class="op">&gt;</span> sk.filters.threshold_local(img_ecoli_inv, block_size<span class="op">=</span><span class="dv">35</span>, offset<span class="op">=-</span><span class="dv">10</span>)</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plot_sidebyside(img_ecoli_inv, mask_ecoli_local)</span>
@@ -527,7 +527,7 @@ threshold_yen()</code></pre>
 <p>Let’s dive into convolutions.</p>
 <p><img src="images/figures/pytorch_convolution_upscaled.jpg" width="85%"></p>
 <p><em>Image via <a href="https://discuss.pytorch.org/t/deformable-convolution-layer-with-variable-filter/58799">discuss.pytorch.org</a>. In convolution, a new image is created by for each pixel summing its neighborhood pixels multiplied with neighborhood location specific weights, as specified by the convolution kernel.</em></p>
-<div id="33566541" class="cell" data-execution_count="13">
+<div id="bf1d39d3" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's illustrate this concept with some examples</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Load an example picture</span></span>
@@ -541,7 +541,7 @@ threshold_yen()</code></pre>
 </div>
 </div>
 </div>
-<div id="d36b485e" class="cell" data-execution_count="14">
+<div id="30939724" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a horizontal line "kernel"</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>kernel_h <span class="op">=</span> np.zeros((<span class="dv">25</span>,<span class="dv">25</span>))</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>kernel_h[<span class="dv">12</span>,:] <span class="op">=</span> <span class="dv">1</span></span>
@@ -555,7 +555,7 @@ threshold_yen()</code></pre>
 </div>
 </div>
 </div>
-<div id="6e7babd0" class="cell" data-execution_count="15">
+<div id="cb90fbf8" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a vertical line "kernel"</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>kernel_v <span class="op">=</span> np.zeros((<span class="dv">25</span>,<span class="dv">25</span>))</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>kernel_v[:,<span class="dv">12</span>] <span class="op">=</span> <span class="dv">1</span></span>
@@ -569,7 +569,7 @@ threshold_yen()</code></pre>
 </div>
 </div>
 </div>
-<div id="c63cf3ec" class="cell" data-execution_count="16">
+<div id="10ef2ccd" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply them both to the image</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>img_pika_h <span class="op">=</span> ndimage.convolve(img_pika, kernel_h)</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>img_pika_v <span class="op">=</span> ndimage.convolve(img_pika, kernel_v)</span>
@@ -580,7 +580,7 @@ threshold_yen()</code></pre>
 <span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Can you see what happened?</span></span>
 <span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># shapes</span></span>
 <span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># intensities</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="53">
+<div class="cell-output cell-output-display" data-execution_count="16">
 <div>
 <figure class="figure">
 <p><img src="Bioimage-analysis_03B_Imageprocessing_files/figure-html/cell-17-output-1.png" class="img-fluid figure-img"></p>
@@ -599,12 +599,12 @@ threshold_yen()</code></pre>
 </section>
 <section id="two-more-kernels-blur-and-edge" class="level4">
 <h4 class="anchored" data-anchor-id="two-more-kernels-blur-and-edge">Two more kernels, blur and edge</h4>
-<div id="14835a0a" class="cell" data-execution_count="17">
+<div id="9e7668aa" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># An additional convenience</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_sidebyside_samecmap(img1, img2, mycmap<span class="op">=</span><span class="st">'viridis'</span>):</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> plot_sidebyside(img1, img2, mycmap1<span class="op">=</span>mycmap, mycmap2<span class="op">=</span>mycmap)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="520ba0b0" class="cell" data-execution_count="18">
+<div id="ee488240" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a disk kernel</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>kernel_disk <span class="op">=</span> sk.morphology.disk(<span class="dv">15</span>) </span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>kernel_disk <span class="op">=</span> kernel_disk<span class="op">/</span>np.<span class="bu">sum</span>(kernel_disk)</span>
@@ -617,7 +617,7 @@ threshold_yen()</code></pre>
 </div>
 </div>
 </div>
-<div id="15398a40" class="cell" data-execution_count="19">
+<div id="3f2ad646" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define an edge kernel</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>kernel_laplacian <span class="op">=</span> np.array(</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    [[<span class="dv">0</span>, <span class="op">-</span><span class="dv">1</span>,  <span class="dv">0</span>],</span>
@@ -637,7 +637,7 @@ threshold_yen()</code></pre>
 </div>
 </div>
 </div>
-<div id="7bb23849" class="cell" data-execution_count="20">
+<div id="df70bedd" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>minmaxval2 <span class="op">=</span> np.<span class="bu">max</span>(np.<span class="bu">abs</span>(img_pika_edge))</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.imshow(img_pika_edge, cmap<span class="op">=</span><span class="st">'seismic'</span>, vmin<span class="op">=-</span>minmaxval2, vmax<span class="op">=</span>minmaxval2)</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -654,7 +654,7 @@ threshold_yen()</code></pre>
 </div>
 <p>Can you explain what happened here?</p>
 <p>Answer: The first kernel, averages over a local neighborhood, which results in blurring. The second kernel, if you would work it out, takes the second derivative. This is illustrated by the graph below:</p>
-<div id="150a88c1" class="cell" data-execution_count="21">
+<div id="cd8b58f1" class="cell" data-execution_count="21">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>kernel_1d_deriv  <span class="op">=</span> np.array([<span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>])</span>
@@ -705,7 +705,7 @@ threshold_yen()</code></pre>
 <li><strong>Dilation and erosion</strong> are very useful operations</li>
 </ul></li>
 </ul>
-<div id="5e27851a" class="cell" data-execution_count="22">
+<div id="4b45e55a" class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Dilution and erosion</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's try</span></span>
@@ -717,7 +717,7 @@ threshold_yen()</code></pre>
 <span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Dilution = convolution, max val taken (or: any one  --&gt; one)</span></span>
 <span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Erosion  = convolution, min val taken (or: any zero --&gt; zero)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="59">
+<div class="cell-output cell-output-display" data-execution_count="22">
 <div>
 <figure class="figure">
 <p><img src="Bioimage-analysis_03B_Imageprocessing_files/figure-html/cell-23-output-1.png" class="img-fluid figure-img"></p>
@@ -735,7 +735,7 @@ threshold_yen()</code></pre>
 <p>During <strong>erosion</strong>, similar to convolution, a disk or square shaped mask slides over the image, and for each pixel, the <strong>minimum value in the neighborhood</strong> is taken.</p>
 <p>During <strong>dilation</strong>, similar to convolution, a disk or square shaped mask slides over the image, and for each pixel, the <strong>maximum value in the neighborhood</strong> is taken.</p>
 <p>These operations are also commonly applied to binary images.</p>
-<div id="575bc5e5" class="cell" data-execution_count="23">
+<div id="6558292b" class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># They can also be combined</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Morphological closing (dilation followed by erosion)</span></span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>img_pika_closed <span class="op">=</span> sk.morphology.closing(img_pika, footprint<span class="op">=</span>sk.morphology.disk(<span class="dv">7</span>))</span>
@@ -752,7 +752,7 @@ threshold_yen()</code></pre>
 </div>
 </div>
 </div>
-<div id="0fd50fb3" class="cell" data-execution_count="24">
+<div id="4173d74f" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Blurring can also be done more sophisticated</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>img_pika_gauss07 <span class="op">=</span> sk.filters.gaussian(img_pika, sigma<span class="op">=</span><span class="dv">7</span>)</span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>img_pika_gauss20 <span class="op">=</span> sk.filters.gaussian(img_pika, sigma<span class="op">=</span><span class="dv">20</span>)</span>
@@ -770,7 +770,7 @@ threshold_yen()</code></pre>
 <section id="built-in-edge-detection-methods" class="level4">
 <h4 class="anchored" data-anchor-id="built-in-edge-detection-methods">Built-in edge detection methods</h4>
 <p>As mentioned previously, built-in edge detection methods exist, common ones include: <code>sk.filters.sobel()</code>, <code>sk.filters.prewitt()</code>, <code>sk.filters.laplace()</code>, <code>sk.feature.canny()</code>. See also the <a href="https://scikit-image.org/docs/stable/api/skimage.filters.html">documentation</a>.</p>
-<div id="e9660589" class="cell" data-execution_count="25">
+<div id="5e5be32e" class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's try sobel</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>img_edges <span class="op">=</span> sk.filters.sobel(img_ecoli_inv)</span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.imshow(img_edges)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -782,7 +782,7 @@ threshold_yen()</code></pre>
 </div>
 </div>
 </div>
-<div id="8ec4b8f0" class="cell" data-execution_count="26">
+<div id="1ea08926" class="cell" data-execution_count="26">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># (optional)</span></span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Slightly more advanced sobel</span></span>
@@ -819,7 +819,7 @@ threshold_yen()</code></pre>
 <h2 class="anchored" data-anchor-id="combining-everything">Combining everything</h2>
 <section id="laplacian-gauss" class="level4">
 <h4 class="anchored" data-anchor-id="laplacian-gauss">Laplacian + Gauss</h4>
-<div id="0537cf54" class="cell" data-execution_count="27">
+<div id="681c2505" class="cell" data-execution_count="27">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Now these can also be combined</span></span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co"># E.g. bacterial segmentation</span></span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># we're interested in local edge detection</span></span>
@@ -839,7 +839,7 @@ threshold_yen()</code></pre>
 </div>
 </div>
 </div>
-<div id="af99d761" class="cell" data-execution_count="28">
+<div id="69d80d67" class="cell" data-execution_count="28">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>minmaxval <span class="op">=</span> np.<span class="bu">max</span>(np.<span class="bu">abs</span>(edges_log))</span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.title(<span class="st">"After Gauss &amp; Laplacian"</span>)</span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.imshow(edges_log, cmap<span class="op">=</span><span class="st">'seismic'</span>, vmin<span class="op">=-</span>minmaxval, vmax<span class="op">=</span>minmaxval)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -852,7 +852,7 @@ threshold_yen()</code></pre>
 </div>
 </div>
 <p>As we saw above, edges correspond to values going from positive, through zero, to negative. So we can look for places where negative and positive values are close.</p>
-<div id="11631539" class="cell" data-execution_count="29">
+<div id="b288ef5a" class="cell" data-execution_count="29">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Now identify edge pixels</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># where value goes positive-&gt;negative (or vice versa)</span></span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ie positive and negative value close</span></span>
@@ -873,7 +873,7 @@ threshold_yen()</code></pre>
 </div>
 </div>
 <p>Let’s remove lines due to background noise by using our previous masks to select the colony.</p>
-<div id="5e1ed4d4" class="cell" data-execution_count="30">
+<div id="47df26b7" class="cell" data-execution_count="30">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove artifacts</span></span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Use previous thresholded image </span></span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Make whole-colony mask</span></span>
@@ -888,7 +888,7 @@ threshold_yen()</code></pre>
 </div>
 </div>
 </div>
-<div id="d1509d21" class="cell" data-execution_count="31">
+<div id="0003b076" class="cell" data-execution_count="31">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modify this mask</span></span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove small parts</span></span>
@@ -906,7 +906,7 @@ threshold_yen()</code></pre>
 </div>
 </div>
 </div>
-<div id="bbddb548" class="cell" data-execution_count="32">
+<div id="857c42da" class="cell" data-execution_count="32">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine both</span></span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>img_edges_foreground <span class="op">=</span> np.logical_and(img_edges, mask_ecoli_triangle_filtered)</span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.title(<span class="st">"Edges (colony selected)"</span>)</span>
@@ -919,7 +919,7 @@ threshold_yen()</code></pre>
 </div>
 </div>
 </div>
-<div id="07860064" class="cell" data-execution_count="33">
+<div id="8614a2c9" class="cell" data-execution_count="33">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># And fill outlines</span></span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>img_edges_filled <span class="op">=</span> ndimage.binary_fill_holes(img_edges_foreground)</span>
 <span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.title(<span class="st">"Segmented bacteria (v1)"</span>)</span>
@@ -934,7 +934,7 @@ threshold_yen()</code></pre>
 </div>
 <p>This looks pretty great, except that some bacteria are still “stuck together”.</p>
 <p>Let’s at least identify separate bacteria.</p>
-<div id="340cb326" class="cell" data-execution_count="34">
+<div id="f40f035f" class="cell" data-execution_count="34">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's erode this by 4 px</span></span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="co"># (Aim: get indivdual bacterial locations)</span></span>
 <span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>mask_ecoli_log_eroded <span class="op">=</span> sk.morphology.erosion(img_edges_filled, footprint<span class="op">=</span>sk.morphology.disk(<span class="dv">4</span>))</span>
@@ -949,7 +949,7 @@ threshold_yen()</code></pre>
 </div>
 </div>
 </div>
-<div id="9c52ff15" class="cell" data-execution_count="35">
+<div id="bcf3c0af" class="cell" data-execution_count="35">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># And label</span></span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>mask_bacteria_slim_labeled <span class="op">=</span> sk.measure.label(mask_ecoli_log_eroded)</span>
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.imshow(mask_bacteria_slim_labeled, cmap<span class="op">=</span><span class="st">'tab20'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -967,7 +967,7 @@ threshold_yen()</code></pre>
 <h2 class="anchored" data-anchor-id="watershed">Watershed</h2>
 <p><img src="images/misc/puddles.png" height="200px"> <img src="images/misc/watershed.jpg" height="200px"></p>
 <p><em>(Pictures via user24124133 and <a href="http://dx.doi.org/10.3390/rs6010776">researchgate</a>.) Watershed is a common algorithm to segment touching objects. It is inspired by how water would fill up a landscape. From specific seeds, the water level rises, and once separate regions touch, boundaries are established.</em></p>
-<div id="9993936b" class="cell" data-execution_count="36">
+<div id="32921d55" class="cell" data-execution_count="36">
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply to separate bacteria</span></span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Using mask_ecoli_log</span></span>
 <span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># mask_bacteria_slim_labeled as seeds</span></span>
@@ -983,7 +983,7 @@ threshold_yen()</code></pre>
 </div>
 </div>
 </div>
-<div id="0173ed14" class="cell" data-execution_count="37">
+<div id="b91e25ec" class="cell" data-execution_count="37">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Polish the final image a little bit</span></span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's get regionprops from mask_bacteria_combined</span></span>

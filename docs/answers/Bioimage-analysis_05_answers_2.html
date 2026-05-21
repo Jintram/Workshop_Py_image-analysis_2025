@@ -136,7 +136,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><em>Martijn Wehrens, September 2025</em></p>
 <section id="answers-to-exercises-05" class="level2">
 <h2 class="anchored" data-anchor-id="answers-to-exercises-05">Answers to exercises 05</h2>
-<div id="b744da5e" class="cell" data-execution_count="1">
+<div id="94fa37dc" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tifffile <span class="im">as</span> tiff</span>
@@ -151,7 +151,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="nuclear-data">Nuclear data</h2>
 <section id="segment-nuclei-and-extract-nuclear-ktr-signal-for-a-single-image" class="level3">
 <h3 class="anchored" data-anchor-id="segment-nuclei-and-extract-nuclear-ktr-signal-for-a-single-image">Segment nuclei and extract nuclear KTR signal for a single image</h3>
-<div id="fe0923c5" class="cell" data-execute="false" data-execution_count="2">
+<div id="36d0fd9e" class="cell" data-execute="false" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> seg_nuclei(input_img):</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    thresh <span class="op">=</span> sk.filters.threshold_triangle(input_img)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    mask <span class="op">=</span> input_img <span class="op">&gt;</span> thresh</span>
@@ -197,7 +197,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="extract-nuclear-ktr-signals-over-time" class="level3">
 <h3 class="anchored" data-anchor-id="extract-nuclear-ktr-signals-over-time">Extract nuclear KTR signals over time</h3>
-<div id="cd2ac301" class="cell" data-execute="false" data-execution_count="3">
+<div id="e4cf2400" class="cell" data-execute="false" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ring_mask_for_label(labeled_nuclei, label_id, ring_width<span class="op">=</span><span class="dv">4</span>):</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    nucleus_i <span class="op">=</span> labeled_nuclei <span class="op">==</span> label_id</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> np.<span class="bu">any</span>(nucleus_i):</span>
@@ -281,7 +281,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="background-correction" class="level2">
 <h2 class="anchored" data-anchor-id="background-correction">Background correction</h2>
-<div id="09f6b4b1" class="cell" data-execute="false" data-execution_count="4">
+<div id="867be0bc" class="cell" data-execute="false" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simple correction strategy from chapter text: subtract a per-frame mode.</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> mode_uint(img):</span>

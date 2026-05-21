@@ -3,7 +3,7 @@ title: Workshop Python Image Analysis
 jupyter: python3
 ---
 
-*Martijn Wehrens, September 2025*
+*Martijn Wehrens, May 2026*
 
 **Estimated time:** XX mins presenting + YY mins exercises
 
