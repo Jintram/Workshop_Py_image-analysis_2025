@@ -1,4 +1,21 @@
+""" Analyze KTR data to get C/N ratios
 
+Segments nuclei in KTR data, generates cytoplasmic ROIs, 
+calculates C/N ratios, and saves the data in a csv file.
+
+Exports a csv file with columns "frame", "KTR_ratio", "int_nucleus", "int_cytoplasm",
+where KTR_ratio is the C/N ratio of average cytoplasmic intensity (C) and 
+average nuclear intensity (N).
+
+Example of how to call script:
+python KTR_pipe.py /path/to/Composite_KTR.tif 0 2
+
+With:
+- Argument 1: path to the raw KTR data (tif file)
+- Argument 2: channel number for nuclear marker (counting starts at 0)
+- Argument 3: channel number for KTR sensor (counting starts at 0)
+
+"""
 
 ################################################################################
 # %% Import libraries
@@ -29,9 +46,10 @@ from skimage.morphology import dilation, disk
 
 
 ################################################################################
-# %%
+# %% helper functions for segmentation and analysis
 
 def cmap_random(N):
+    """ generate a cmap with random colors (first one black) """
     cmap = np.zeros((N+1, 3))
     for i in range(1, N+1):
         cmap[i] = np.random.rand(3)*0.7 + 0.3
@@ -95,12 +113,32 @@ def separate_nuclei(seg_mask, split_distance=5, showplot=False):
         
 
 def get_rings(seg_mask, width=2):
+    """ Based on a mask, get areas exactly adjacent to the masks (aka 'rings')
     
+    These areas should correspond to cytoplasm. """ 
+    
+    # dilate to get expanded area
     mask_rings = dilation(seg_mask, disk(width))
+    # then remove original to get rings
     mask_rings[seg_mask>0] = 0
     
     return mask_rings
     
+def get_rings_margin(seg_mask, width=2, margin=1):
+    """ Based on mask, get areas directly adjacent to the masks after margin 
+    
+    These areas should correspond to cytoplasm.
+    """
+    
+    # dilate to get expanded area (plus margin)
+    mask_rings = dilation(seg_mask, disk(width+margin))
+    # remove original + margin to get ring around nucleus, with margin
+    mask_rings[dilation(seg_mask, disk(margin))>0] = 0
+    
+    return mask_rings
+        
+    
+        
 
 def get_mean_intensity(img, mask):
     """Calculate means in areas corresponding to labeled mask in image img."""
@@ -114,7 +152,7 @@ def get_mean_intensity(img, mask):
     return (sums/counts)[1:]
 
 ################################################################################
-# %%
+# %% Code executed when script is called
 
 if __name__ == "__main__":
 
@@ -148,8 +186,9 @@ if __name__ == "__main__":
 
         # Calculate averages
         KTR_means_nucl = get_mean_intensity(img_KTR, mask_nuclei_split)
-        KTR_means_cyto = get_mean_intensity(img_KTR, get_rings(mask_nuclei_split))
+        KTR_means_cyto = get_mean_intensity(img_KTR, get_rings_margin(mask_nuclei_split))
             # plt.imshow(get_rings(mask_nuclei_split), cmap=cmap_random(200))
+            # CM = cmap_random(200); plt.imshow(mask_nuclei_split, cmap=CM); plt.imshow(get_rings_margin(mask_nuclei_split), cmap=CM, alpha=(get_rings_margin(mask_nuclei_split)>1)*1.0)
 
         # Get ratio
         KTR_ratios = KTR_means_cyto/KTR_means_nucl
@@ -162,18 +201,14 @@ if __name__ == "__main__":
             "int_cytoplasm": KTR_means_cyto
         })
 
-# Now merge the dataframes
-df_KTR = pd.concat(df_KTR_list, ignore_index=True)
+    # Now merge the dataframes
+    df_KTR = pd.concat(df_KTR_list, ignore_index=True)
 
-# Save the data in a new directory "analysis" in the parent directory
-# (This assumes the raw data is stored in its own subdirectory in sample folder)
-OUTPUT_PATH = Path(os.path.dirname(img_path_KTR)).parent / "analysis"
-os.makedirs(OUTPUT_PATH, exist_ok=True)
-
-output_path = os.path.join(OUTPUT_PATH, f"KTR_ratios_ch{channel_cyt}.csv")
-df_KTR.to_csv(output_path, index=False)
-print(f"Data saved to {output_path}")
-
-# save in the data directory
-
-
+    # Save the data in a new directory "analysis" in the parent directory
+    # (This assumes the raw data is stored in its own subdirectory in sample folder)
+    output_dir = Path(os.path.dirname(img_path_KTR)).parent / "analysis"
+    os.makedirs(output_dir, exist_ok=True)
+    output_path = os.path.join(output_dir, f"KTR_ratios_ch{channel_cyt}.csv")
+    # actually save
+    df_KTR.to_csv(output_path, index=False)
+    print(f"Data saved to {output_path}")

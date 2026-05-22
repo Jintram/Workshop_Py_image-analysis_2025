@@ -1,4 +1,12 @@
+"""Creates plot of ratios from csv file
 
+Example usage:
+python KTR_plot.py /path/to/KTR_ratios_ch1.csv 25
+
+With:
+- First argument: path to the csv file created by KTR_pipe.py
+- Optional second argument: time of stimulation in minutes (plotted as vertical line)
+"""
 
 ################################################################################
 # %% Import libraries
@@ -32,7 +40,8 @@ def plot_data(DATA_PATH, stim_time = None):
     fig, axs = plt.subplots(1,1, figsize=(5/2.54,5/2.54))
     sns.scatterplot(df_KTR, x="time_s", y="KTR_ratio", ax=axs, color="k", alpha=0.5, s=10)
     sns.lineplot(df_KTR, x="time_s", y="KTR_ratio", estimator="mean", color="r", ax=axs)
-    axs.axvline(stim_time, color="b", ls="--")
+    if stim_time is not None:
+        axs.axvline(stim_time, color="b", ls="--")
     axs.set_xlabel("Time (min)")
     axs.set_ylabel("Sensor C/N ratio")
     axs.set_ylim(0, 1.5)
@@ -46,13 +55,19 @@ def plot_data(DATA_PATH, stim_time = None):
 
 
 ################################################################################        
-# %%
+# %% Code that gets executed when script is called
 
 
-DATA_PATH_ch1 = "/Users/m.wehrens/Data_notbacked/2025_Py-Image-workshop_KTR-example-data/analysis/KTR_ratios_ch1.csv"
-plot_data(DATA_PATH_ch1, stim_time=25)
 
-DATA_PATH_ch2 = "/Users/m.wehrens/Data_notbacked/2025_Py-Image-workshop_KTR-example-data/analysis/KTR_ratios_ch2.csv"
-plot_data(DATA_PATH_ch2, stim_time=25)
+if __name__ == "__main__":
 
-# %%
+    # DATA_PATH = /Users/m.wehrens/Data_notbacked/2025_Py-Image-workshop_KTR-example-data/analysis/KTR_ratios_ch1.csv
+    # STIM_TIME = 25
+
+    # Read input arguments
+    DATA_PATH = sys.argv[1]
+    if len(sys.argv) > 2:
+        STIM_TIME = sys.argv[2]
+        
+    # Make plot
+    plot_data(DATA_PATH, stim_time=STIM_TIME)

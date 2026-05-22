@@ -23,38 +23,165 @@ from scipy import ndimage
 
 To do this, we can make use of the functions provided in [the building block page](../Bioimage-analysis_05a_Pipelines_buildingblocks.qmd). 
 
-As an example solution, we created `bacterial_seg_pipe.py`:
+As an example solution, we created `bacterial_seg_pipe.py`, which 
+loops over the frames in the tiff file:
 
-```{.python include="Bioimage-analysis_05_answers_bacteria/bacterial_seg_pipe.py"}
+```{.python include="Bioimage_analysis_05_answers_bacteria/bacterial_seg_pipe.py"}
 #| eval: false
 ```
 
-PLOTTING FUNCTION???
-This file makes use of the following `config_bacteria_seg.yaml` file:
+A second script allows to create a dataframe out of that data:
 
-```{.python include="Bioimage-analysis_05_answers_bacteria/config_bacteria_seg.yaml"}
+```{.python include="Bioimage_analysis_05_answers_bacteria/bacterial_get_sizes.py"}
 #| eval: false
 ```
 
-And the following file, `bacterial_len_plot.py`, creates a plot using the analyzed data:
+So now you can execute a segmentation pipeline as follows.
 
-```{.python include="Bioimage-analysis_05_answers_bacteria/bacterial_len_plot.py"}
-#| eval: false
+First, analyze the data:
+
+
+```{python}
+
+import Bioimage_analysis_05_answers_bacteria.bacterial_seg_pipe as sp
+import Bioimage_analysis_05_answers_bacteria.bacterial_len_plot as lp
+
+# set up the config
+DATA_FOLDER = "/Users/m.wehrens/Data_notbacked/2025_Py-Image-workshop_Filamentation-example-data/"
+FILENAME_DATA    = "pos3crop_timelapse_switch890.98.tif"
+config = {
+        "path_input": DATA_FOLDER + "rawdata/",
+        "path_output": DATA_FOLDER + "analysis/",
+        "filename_data": FILENAME_DATA,
+        "frame_range": (0, 3),
+        "disksize_range": 20,
+        "sigma_smooth": 3,
+        "disksize_crossing": 1,
+        "min_distance": 5,
+        "sigma_seed": 3,
+        "distance_threshold": 3
+    } 
+
+# run the pipeline
+sp.run_seg_pipeline(config, make_plots = True)
+
+# get the data
+FOLDER_SEGMASKS = DATA_FOLDER + "/analysis/pos3crop_timelapse_switch890.98/seg"
+df_sizes = lp.get_bacterial_sizes(FOLDER_SEGMASKS)
+
 ```
+
+::: {.callout-note}
+#### Technical note 
+The frame range is limited to `(0, 3)` to keep the processing time of rendering
+this web site low, but more data is available as the script was run with
+a range of `(0, 1050)`, and the resulting data stored.
+:::
+
+We're now ready to make some plots. For example a scatter plot of bacterial
+sizes observed over time:
+
+```{python}
+
+import seaborn as sns
+
+delta_t = 86 # interval between frames (approximately)
+df_sizes['time'] = df_sizes['frame'] * delta_t/60 # convert frames to minutes
+df_sizes['size_um2'] = df_sizes['size'] * 0.041**2
+
+# set global plotting parameters, face arial, size 8
+plt.rcParams['font.family'] = 'Arial'
+plt.rcParams['font.size'] = 8
+
+# Plot the data
+axs = sns.scatterplot(data=df_sizes, x="time", y="size", 
+                      color="black", edgecolor="none", s=5)
+axs.set_title("Growth traces for bacterial colony")
+axs.set_xlabel("Time (mins)")
+axs.set_ylabel("Single bacterial sizes (px)")
+
+# and save + close
+fig = axs.get_figure()
+fig.set_size_inches(8.1/2.54, 5/2.54) # typical figure = 17.2cm wide
+plt.tight_layout()
+fig.savefig(DATA_FOLDER + "analysis/" + "bacterial_sizes_over_time.pdf", dpi=300)
+plt.close(fig)
+
+```
+
+Or, we can plot the growth rate of the total colony over time:
+
+```{python}
+
+# Get total area of the colony over time
+df_sizes_aggregated = df_sizes.groupby(by = ['frame','time'],)['size'].sum().reset_index()
+
+# And plot in log-space
+axs = sns.scatterplot(data=df_sizes_aggregated, x="time", y="size", 
+                      color="black", edgecolor="none", s=5)
+                      
+axs.set_yscale('log')
+# Include doubling rate functions
+time_range = np.arange(0,200)
+axs.plot(time_range, -1000+5000*2**((time_range)/60), label="Doubling every hour", color='orange')
+time_range = np.arange(1400,1600)
+axs.plot(time_range, 100*2**((time_range-850)/60), color='orange')
+time_range = np.arange(1200,1500)
+axs.plot(time_range, 5000*2**((time_range-850)/120), label="Doubling every 2 hours", color='green')
+# Legend
+axs.legend(loc="lower right")
+# Axes limits
+axs.set_ylim([np.min(df_sizes_aggregated["size"]), np.max(df_sizes_aggregated["size"])])
+# Labels
+axs.set_ylabel("Total area (px)")
+axs.set_xlabel("Time (min)")
+# Title
+axs.set_title("Overall colony growth")
+
+# And save
+fig = axs.get_figure()
+fig.set_size_inches(8.1/2.54, 5/2.54) 
+plt.tight_layout()
+fig.savefig(DATA_FOLDER + "analysis/" + "total_colony_size_over_time.pdf", dpi=300)
+plt.close(fig)
+
+```
+
+Note that a more advanced analysis is required to investigate what is happening
+in these experiments. To investigate growth traces of single bacteria,
+tracking which label corresponds to an individual bacterium over time is required.
+In addition, the segmentation needs to be of a much higher quality. This could be done
+by employing manual corrections, or perhaps machine learning techniques could
+improve segmentation first.
 
 
 ## KTR data set
 
-The KTR dataset can be analyzed with the following scripts:
+As an example, for the KTR dataset, we chose to write scripts in a way such that they can be called
+directly from the command line. 
 
-Creating a dataframe with C/N values:
+Script that analyzes the data and creates a csv with data:
 
-```{.python include="Bioimage-analysis_05_answers_KTR/KTR_pipe.py"}
+```{.python include="Bioimage_analysis_05_answers_KTR/KTR_pipe.py"}
 #| eval: false
 ```
 
-Creating a plot:
+Creating a plot based on the csv:
 
-```{.python include="Bioimage-analysis_05_answers_KTR/KTR_plot.py"}
+```{.python include="Bioimage_analysis_05_answers_KTR/KTR_plot.py"}
 #| eval: false
 ```
+
+These scripts can be called from the command line. Navigate to the directory
+with the scripts and call:
+
+```{sh}
+
+# To perform the analysis:
+python KTR_pipe.py /path/to/Composite_KTR.tif 0 2
+
+# To create the plot:
+python KTR_plot.py /path/to/KTR_ratios_ch1.csv 25
+
+```
+

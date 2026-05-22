@@ -10,8 +10,11 @@ and store resulting segmentation masks as npz files in output folder.
 import sys, os
 import yaml
 import time, datetime
+from pathlib import Path
 
 import matplotlib.pyplot as plt
+
+from skimage.util import invert
 
 import seaborn as sns
 import tifffile as tiff
@@ -20,7 +23,7 @@ import numpy as np
 ################################################################################
 # %% Custom imports
 
-import answers.Bioimage_analysis_05_answers_bacteria.bacterial_seg_functions as sf
+from . import bacterial_seg_functions as sf
 
 ################################################################################
 # %% Plotting function
@@ -36,7 +39,7 @@ def plot_sidebyside(img_inv_crop, segmask_oneframe, frame_idx):
 
     axs[0].imshow(img_inv_crop, cmap='gray')
     axs[0].set_title(f"Frame {frame_idx}")
-    axs[1].imshow(segmask_oneframe, cmap=cmap_random(200))
+    axs[1].imshow(segmask_oneframe, cmap=sf.cmap_random(200))
     axs[1].set_title(f"Segmentation")
     
     return fig
@@ -44,7 +47,7 @@ def plot_sidebyside(img_inv_crop, segmask_oneframe, frame_idx):
 ################################################################################
 # %% Function to run the whole pipeline
 
-def run_seg_pipeline(config):
+def run_seg_pipeline(config, make_plots = True):
     """
     Runs the whole pipeline.
      
@@ -65,8 +68,9 @@ def run_seg_pipeline(config):
 
     Example:
     config = {
-        "path_input": "/path/to/input.tiff",
+        "path_input": "/path/to/input/folder",
         "path_output": "/path/to/output/folder",
+        "filename_data": "input.tiff",
         "frame_range": (0, 100),
         "disksize_range": 20,
         "sigma_smooth": 3,
@@ -78,7 +82,7 @@ def run_seg_pipeline(config):
     """
 
     # set up output folder (take name of input subfolder as identifier)
-    basename = config['path_input'].split('/')[-1].split('.')[0]
+    basename = Path(config['filename_data']).stem
     output_subfolder = os.path.join(config['path_output'], basename)
     # create output sub folders
     os.makedirs(os.path.join(output_subfolder, "seg"), exist_ok=True)
@@ -88,7 +92,7 @@ def run_seg_pipeline(config):
     yaml.dump(config, open(os.path.join(output_subfolder, 'config_dump.yaml'), 'w'))
     
     # Load data
-    imgs_ecoli = tiff.imread(config['path_input'])
+    imgs_ecoli = tiff.imread(os.path.join(config['path_input'],config['filename_data']))
     
     # loop over frames
     total_time = 0
@@ -117,21 +121,21 @@ def run_seg_pipeline(config):
             distance_threshold=config['distance_threshold']
         )
         
-        # create a side-by-side plot if sys.argv[2]=="plot"
-        if len(sys.argv) > 2:
-            if sys.argv[2] == "plot":
-                fig = plot_sidebyside(img_inv_crop, segmask_oneframe, frame_idx)
-                fig.savefig(
-                    os.path.join(
-                        output_subfolder, "plots/", 
-                        f"png_segmentation_frame{frame_idx:04d}.png"
-                        ), 
-                    dpi=600
-                    )
+        # create a side-by-side plot if make_plots == True
+        if make_plots:
+            fig = plot_sidebyside(img_inv_crop, segmask_oneframe, frame_idx)
+            fig.savefig(
+                os.path.join(
+                    output_subfolder, "plots/", 
+                    f"png_segmentation_frame{frame_idx:04d}.png"
+                    ), 
+                dpi=600
+                )
+            plt.close(fig)
     
-        # save it to npz in output folder
+        # save the segmentation to npz in appropriate output subfolder
         output_path = os.path.join(
-            output_subfolder, 
+            output_subfolder, 'seg/',  
             f"segmentation_frame_{frame_idx:04d}.npz"
             )
         np.savez(
