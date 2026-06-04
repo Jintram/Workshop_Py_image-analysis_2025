@@ -61,7 +61,7 @@ def plot_data(DATA_PATH, stim_time = None):
 
 if __name__ == "__main__":
 
-    # DATA_PATH = /Users/m.wehrens/Data_notbacked/2025_Py-Image-workshop_KTR-example-data/analysis/KTR_ratios_ch1.csv
+    # DATA_PATH = "/Users/m.wehrens/Data_notbacked/2025_Py-Image-workshop_KTR-example-data/analysis/KTR_ratios_ch1.csv"
     # STIM_TIME = 25
 
     # Read input arguments

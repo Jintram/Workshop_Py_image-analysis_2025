@@ -135,7 +135,7 @@ img_spots_convolved = ndimage.convolve(img_spots, the_kernel)
 _ = plt.title("Result of local averaging")
 _ = plt.imshow(img_spots_convolved)
 plt.show()
-_ = plt.title("Result after local averaging")
+_ = plt.title("Histogram after local averaging")
 _ = plt.hist(img_spots_convolved.ravel(), bins = np.arange(0, 255, 5))
 plt.show()
 

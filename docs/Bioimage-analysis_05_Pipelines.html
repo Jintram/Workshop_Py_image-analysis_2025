@@ -203,14 +203,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>You can use one of the following strategies to then execute your script.</p>
 <section id="your-generalized-script-is-imported-like-a-mini-library" class="level4">
 <h4 class="anchored" data-anchor-id="your-generalized-script-is-imported-like-a-mini-library">1. Your generalized script is imported like a “mini library”</h4>
-<p>You can write now write a separate script that is tailored toward a specific dataset, which imports all functionalities from the main script.</p>
+<p>After you have a generalized script, you write a separate script that is tailored toward a specific dataset, which imports all functionalities from the main script.</p>
 <p>This <strong>tailored script</strong> (<code>.py</code> or <code>.ipynb</code>) does <strong>contain hard coded parameters</strong>, and is basically your administration of how a dataset-specific run of your pipeline was performed.</p>
 <p>You make a script like this for each dataset, or otherwise organize scripts like this in a way to easily find back how your analysis where performed. It might be smart to store these scripts in a <strong>separate (sub)folder</strong> like <code>/runs/</code> or <code>/analyses/</code>.</p>
 </section>
 <section id="your-generalized-script-reads-command-line-arguments-or-a-config-file" class="level4">
 <h4 class="anchored" data-anchor-id="your-generalized-script-reads-command-line-arguments-or-a-config-file">2. Your generalized script reads command line arguments, or a config file</h4>
 <p><em>Somewhat more advanced.</em></p>
-<p>Executing your script by <strong>command line</strong>, and have it read its own arguments and <strong>config files</strong>, allows you to maintain a clear record of how each dataset was analyzed.</p>
+<p>Write a generalized script, and execute it by <strong>command line</strong>, and have it read its own arguments and <strong>config files</strong>.</p>
 <p>To read input arguments, use</p>
 <ul>
 <li><code>sys.argv</code>, or</li>
@@ -362,7 +362,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>We’ve seen that sometimes computer annotations require human correction.</p>
 <p>A very convenient tool in image analysis is <code>Napari</code>. This allows a user to interactively view and edit images and segmentation masks. It also allows you to write custom functions that can be executed on click, or with widgets.</p>
 <p>Let’s load some example data:</p>
-<div id="04d706cf" class="cell" data-execution_count="1">
+<div id="9bb78553" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tifffile <span class="im">as</span> tiff</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -384,7 +384,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Now, it would be nice to be able to correct the mask in the picture above. Napari offers a way to do this:</p>
-<div id="e3f0bf62" class="cell" data-execution_count="2">
+<div id="293649f7" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># now show this data in napari</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> napari</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skimage.measure <span class="im">import</span> label</span>

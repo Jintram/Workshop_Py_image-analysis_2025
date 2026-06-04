@@ -197,6 +197,7 @@ More advanced:
     - (Shareable bundle of your workflow including scripts, raw data and instructions, to go from raw data to final figures.)
 - [Test](https://en.wikipedia.org/wiki/Unit_testing) function behavior
 - Validate (function) input (avoid unexpected outcomes)
+- Read a book about coding style, like ["Clean Code"](https://www.google.nl/books/edition/Clean_Code/hjEFCAAAQBAJ) by Robert C. Martin (ISBN 978-0132350884).
 
 Please try this at home!
 

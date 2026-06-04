@@ -66,7 +66,7 @@ You can use one of the following strategies to then execute your script.
 
 #### 1. Your generalized script is imported like a "mini library"
 
-You can write now write a separate script that is tailored toward a specific 
+After you have a generalized script, you write a separate script that is tailored toward a specific 
 dataset, which imports all functionalities from the main script.
 
 This **tailored script** (`.py` or `.ipynb`) does **contain hard coded parameters**, 
@@ -83,9 +83,8 @@ It might be smart to store these scripts in a **separate (sub)folder** like
 
 *Somewhat more advanced.*
 
-Executing your script by **command line**,
-and have it read its own arguments and **config files**,
-allows you to maintain a clear record of how each dataset was analyzed.
+Write a generalized script, and execute it by **command line**,
+and have it read its own arguments and **config files**.
 
 To read input arguments, use
 

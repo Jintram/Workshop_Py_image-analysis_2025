@@ -72,8 +72,8 @@ You can create and activate an environment, plus install the required libraries,
 
 ```{bash}
 # Create and activate conda environment
-conda create -n 2025_py_image_workshop
-conda activate 2025_py_image_workshop
+conda create -n 2026_py_image_workshop
+conda activate 2026_py_image_workshop
 # Add "conda-forge" to default channels
 conda config --add channels conda-forge
 # Libraries to install

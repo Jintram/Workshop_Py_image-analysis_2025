@@ -24,7 +24,7 @@ Multiple data types exist. There are three important distinctions between these 
     - **Relevance:** usually only positive numbers are used in images, so you won't see the 'signed' format often.    
 - Integer vs. Floating Point;
     - Integer can only store whole numbers.
-    - Floating Point is a [technically more complicated]((https://en.wikipedia.org/wiki/Double-precision_floating-point_format)) format, which can store (very large and very small) numbers with a decimal point, such as 2.0005, 3.14159, 100023.93, et cetera.
+    - Floating Point is a [technically more complicated](https://en.wikipedia.org/wiki/Double-precision_floating-point_format) format, which can store (very large and very small) numbers with a decimal point, such as 2.0005, 3.14159, 100023.93, et cetera.
     - **Relevance:** Floating point images are often used in intermediate steps of image processing, but are rarely used for storing raw images.
     
 The table below summarizes common image data formats. In practice, **uint8** and **uint16** are used most frequently.

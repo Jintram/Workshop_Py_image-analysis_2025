@@ -107,7 +107,7 @@ Each of the images above require a different strategy.
     - Statistics both peaks can be used
     - Find good divide between the two peaks
 - The unimodal histogram
-    - The spots don't have above-average values
+    - The spots don't fall outside background distribution
     - Only spatial relationship reveals ROI
     - Direct application global threshold useless
 - Dominant background
@@ -687,11 +687,11 @@ for x,y,lbl in [(p.centroid[1], p.centroid[0], p.label) for p in props]:
 
 ## Exercises
 
+- Write a function to segment a picture of nuclei, e.g. `seg_nuclei(input_img)`.
+    - Test that it works.
 - Write a function that segments a picture of bacteria, e.g. `seg_bacterium(input_img)`.
     - Test that it works.
     - Remember that pixels were 0.041 um wide. An average bacterium is ~1-2 μm long and .5-1 μm wide. Are bacterial sizes we observe consistent with this?
-- Write a function to segment a picture of nuclei, e.g. `seg_nuclei(input_img)`.
-    - Test that it works.
     
 ## Additional exercises
 
