@@ -71,3 +71,5 @@ if __name__ == "__main__":
         
     # Make plot
     plot_data(DATA_PATH, stim_time=STIM_TIME)
+
+    # python KTR_plot.py /Users/m.wehrens/Data_notbacked/2025_Py-Image-workshop_KTR-example-data/analysis/KTR_ratios_ch2.csv 25

@@ -137,7 +137,48 @@ def get_rings_margin(seg_mask, width=2, margin=1):
     
     return mask_rings
         
+
+def correct_bg(img, export_path=None):
+    """
+    Apply background correction to image.
+     
+    Works by determining the mode, and subtracting it.
+    Resulting negative values are set to zero.
     
+    If export_path is given, export picture.
+    """
+    # img = img_KTR; export_path = "/Users/m.wehrens/Desktop/test.png"
+    
+    # determine background level and mask
+    the_mode = np.bincount(img.ravel()).argmax()
+    mask_bg  = img<the_mode
+    
+    # subtract it 
+    img_corr = img - the_mode
+    # set would-be negative values to 0
+    img_corr[mask_bg] = 0 
+    
+    if export_path is not None:
+        
+        fig, axs = plt.subplots(1,3, figsize=(15/2.54,5/2.54))
+        plt.rcParams.update({"font.family": "Arial", "font.size": 7})
+        
+        # Show image, and image with identified background pixels
+        axs[0].imshow(img)
+        axs[1].imshow(img)
+        axs[1].imshow(mask_bg, alpha=mask_bg*1.0)
+
+        # show it in the histogram
+        axs[2].hist(img.ravel(), bins=32, color='grey')
+        axs[2].axvline(the_mode, color='red')
+        axs[2].set_xlabel("Intensity")
+        axs[2].set_ylabel("Counts")
+        
+        plt.tight_layout()
+        fig.savefig(export_path, dpi=600)
+        plt.close()
+        
+    return img_corr
         
 
 def get_mean_intensity(img, mask):
@@ -147,7 +188,7 @@ def get_mean_intensity(img, mask):
     sums   = np.bincount(mask.ravel(), weights=img.ravel())
     # Calculate pixel coverage per index
     counts = np.bincount(mask.ravel())
-    
+        
     # Calculate the means
     return (sums/counts)[1:]
 
@@ -158,12 +199,21 @@ if __name__ == "__main__":
 
     # Input arguments
     img_path_KTR = sys.argv[1]
-    channel_nuc = sys.argv[2]
-    channel_cyt = sys.argv[3]
+    channel_nuc = int(sys.argv[2])
+    channel_ktr = int(sys.argv[3])
+
+    # Set up an output directory named "analysis" in the parent directory
+    # (This assumes the raw data is stored in its own subdirectory in sample folder)
+    # e.g.
+    # ../../projectX/data/sampleXYZ_202606/raw/
+    # ../../projectX/data/sampleXYZ_202606/analysis/
+    output_dir = Path(os.path.dirname(img_path_KTR)).parent / "analysis"
+    os.makedirs(output_dir, exist_ok=True)
+    path_bg_fig = os.path.join(output_dir, f"background_correction_{channel_ktr}.png")
 
     # Load data
     # img_path_KTR = '/Users/m.wehrens/Data_notbacked/2025_Py-Image-workshop_KTR-example-data/raw/Composite_KTR.tif'
-    # channel_nuc = 0; channel_cyt = 2
+    # channel_nuc = 0; channel_ktr = 2
     KTR_data = tiff.imread(img_path_KTR)
 
     # Initialize empty list to store dataframes
@@ -175,10 +225,18 @@ if __name__ == "__main__":
         print(f"Working on frame {fr_idx} / {KTR_data.shape[0]}")
         
         # get nuclei and KTR intensity images
-        img_nuc = KTR_data[fr_idx, channel_nuc, 0:200, 0:200]
-        img_KTR = KTR_data[fr_idx, channel_cyt, 0:200, 0:200]
+        img_nuc = KTR_data[fr_idx, channel_nuc, :, :]
+        img_KTR = KTR_data[fr_idx, channel_ktr, :, :]
             # plt.imshow(img_nuc)
             # plt.imshow(img_KTR)
+            
+        # correct the background
+        if fr_idx == 0:
+            # if first frame, also export image to check whether
+            # background correction was appropriate
+            img_KTR = correct_bg(img_KTR, export_path=path_bg_fig)
+        else:
+            img_KTR = correct_bg(img_KTR)
             
         # Calculate the mask
         mask_nuclei       = seg_nuclei(img_nuc)
@@ -203,12 +261,18 @@ if __name__ == "__main__":
 
     # Now merge the dataframes
     df_KTR = pd.concat(df_KTR_list, ignore_index=True)
-
-    # Save the data in a new directory "analysis" in the parent directory
-    # (This assumes the raw data is stored in its own subdirectory in sample folder)
-    output_dir = Path(os.path.dirname(img_path_KTR)).parent / "analysis"
-    os.makedirs(output_dir, exist_ok=True)
-    output_path = os.path.join(output_dir, f"KTR_ratios_ch{channel_cyt}.csv")
-    # actually save
+   
+    # Save data to csv
+    output_path = os.path.join(output_dir, f"KTR_ratios_ch{channel_ktr}.csv")
     df_KTR.to_csv(output_path, index=False)
     print(f"Data saved to {output_path}")
+
+
+
+# %%
+
+if __name__ == "main":
+
+    """
+    python KTR_pipe.py /Users/m.wehrens/Data_notbacked/2025_Py-Image-workshop_KTR-example-data/raw/Composite_KTR.tif 0 2
+    """
