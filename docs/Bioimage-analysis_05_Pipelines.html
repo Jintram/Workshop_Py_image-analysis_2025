@@ -362,7 +362,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>We’ve seen that sometimes computer annotations require human correction.</p>
 <p>A very convenient tool in image analysis is <code>Napari</code>. This allows a user to interactively view and edit images and segmentation masks. It also allows you to write custom functions that can be executed on click, or with widgets.</p>
 <p>Let’s load some example data:</p>
-<div id="9bb78553" class="cell" data-execution_count="1">
+<div id="f6a1473c" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tifffile <span class="im">as</span> tiff</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -384,7 +384,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Now, it would be nice to be able to correct the mask in the picture above. Napari offers a way to do this:</p>
-<div id="293649f7" class="cell" data-execution_count="2">
+<div id="ab17f5d7" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># now show this data in napari</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> napari</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skimage.measure <span class="im">import</span> label</span>
@@ -432,7 +432,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> plt.imshow(corrected_mask, cmap <span class="op">=</span> <span class="st">'nipy_spectral'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>In the above example we have added a small functionality, that introduces a button on top of the default napari window. (The section <code>Adding a functionality</code> can be left out and the code will still work.)</p>
-<p>Technical note: the <code>@</code> sign in the <code>@magicgui(call_button="Re-label segmentation")</code> syntax, is called a “decorator”. It allows you to add extra functionality to a function in a convenient way. In this case, it adds the functionality of creating a button in the napari side panel that calls the function when clicked. This python syntax is not covered here, see e.g.&nbsp;<a href="https://www.geeksforgeeks.org/python/decorators-in-python/">here</a> for more information.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Technical note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The <code>@</code> sign in the <code>@magicgui(call_button="Re-label segmentation")</code> syntax, is called a “decorator”. It allows you to add extra functionality to a function in a convenient way. In this case, it adds the functionality of creating a button in the napari side panel that calls the function when clicked. This python syntax is not covered here, see e.g.&nbsp;<a href="https://www.geeksforgeeks.org/python/decorators-in-python/">here</a> for more information.</p>
+</div>
+</div>
 <p>Napari is highly customizable, and you can add many custom functions to it. Developers of image analysis packages often use Napari to make it easy for users to interact with pictures and their functionalities.</p>
 <p>It’s beyond the scope of this workshop to show all Napari features, but I wanted to make you aware a tool like this exists.</p>
 <section id="exercise-1" class="level4">

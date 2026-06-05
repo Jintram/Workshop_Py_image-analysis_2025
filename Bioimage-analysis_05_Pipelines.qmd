@@ -291,10 +291,16 @@ In the above example we have added a small functionality, that introduces
 a button on top of the default napari window. (The section `Adding a functionality`
 can be left out and the code will still work.)
 
-Technical note: the `@` sign in the `@magicgui(call_button="Re-label segmentation")`
+::: {.callout-note}
+
+### Technical note
+
+The `@` sign in the `@magicgui(call_button="Re-label segmentation")`
 syntax, is called a "decorator". It allows you to add extra functionality to a function in a convenient way. In this case, it adds the functionality of creating a button in the napari side panel that calls the function when clicked. This python syntax is not covered here,
 see e.g. [here](https://www.geeksforgeeks.org/python/decorators-in-python/)
 for more information.
+
+:::
 
 Napari is highly customizable, and you can add many custom functions to it.
 Developers of image analysis packages often use Napari to make it easy for

@@ -38,7 +38,8 @@ def plot_data(DATA_PATH, stim_time = None):
     plt.rcParams["font.family"] = "Arial"
     plt.rcParams["font.size"] = 8
     fig, axs = plt.subplots(1,1, figsize=(5/2.54,5/2.54))
-    sns.scatterplot(df_KTR, x="time_s", y="KTR_ratio", ax=axs, color="k", alpha=0.5, s=10)
+    sns.scatterplot(df_KTR, x="time_s", y="KTR_ratio", ax=axs, 
+                    color="k", alpha=0.05, s=5, edgecolor=None)
     sns.lineplot(df_KTR, x="time_s", y="KTR_ratio", estimator="mean", color="r", ax=axs)
     if stim_time is not None:
         axs.axvline(stim_time, color="b", ls="--")
@@ -48,7 +49,7 @@ def plot_data(DATA_PATH, stim_time = None):
     plt.tight_layout()
 
     # save to same directory
-    output_path_fig = os.path.join(OUTPUT_DIR, f"{FILENAME}_overtime.pdf")
+    output_path_fig = os.path.join(OUTPUT_DIR, f"{FILENAME}_overtime.png")
     fig.savefig(output_path_fig, dpi=600)
 
     plt.close(fig)
@@ -56,8 +57,6 @@ def plot_data(DATA_PATH, stim_time = None):
 
 ################################################################################        
 # %% Code that gets executed when script is called
-
-
 
 if __name__ == "__main__":
 
@@ -67,7 +66,7 @@ if __name__ == "__main__":
     # Read input arguments
     DATA_PATH = sys.argv[1]
     if len(sys.argv) > 2:
-        STIM_TIME = sys.argv[2]
+        STIM_TIME = int(sys.argv[2])
         
     # Make plot
     plot_data(DATA_PATH, stim_time=STIM_TIME)

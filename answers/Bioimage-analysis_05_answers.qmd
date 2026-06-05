@@ -105,6 +105,7 @@ fig = axs.get_figure()
 fig.set_size_inches(8.1/2.54, 5/2.54) # typical figure = 17.2cm wide
 plt.tight_layout()
 fig.savefig(DATA_FOLDER + "analysis/" + "bacterial_sizes_over_time.pdf", dpi=300)
+plt.show(fig) # for display on workshop website
 plt.close(fig)
 
 ```
@@ -143,16 +144,26 @@ fig = axs.get_figure()
 fig.set_size_inches(8.1/2.54, 5/2.54) 
 plt.tight_layout()
 fig.savefig(DATA_FOLDER + "analysis/" + "total_colony_size_over_time.pdf", dpi=300)
+plt.show(fig) # for display on workshop website
 plt.close(fig)
 
 ```
 
-Note that a more advanced analysis is required to investigate what is happening
+We can now nicely see what happened during the experiment.
+First, the bacteria were growing relatively fast (doubling ± every hour).
+Then, antibiotics were added, and growth is substantially slower.
+Finally, antibiotics are removed, and bacterial growth recovers.
+
+In the previous plot, we can also see the size increase bacteria
+undergo during antibiotic stress (which was also observed in the original
+paper).
+
+Note that a more advanced analysis is required to investigate properly what is happening
 in these experiments. To investigate growth traces of single bacteria,
 tracking which label corresponds to an individual bacterium over time is required.
 In addition, the segmentation needs to be of a much higher quality. This could be done
 by employing manual corrections, or perhaps machine learning techniques could
-improve segmentation first.
+improve segmentation.
 
 
 ## KTR data set

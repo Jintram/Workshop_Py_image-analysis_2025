@@ -137,7 +137,9 @@ def get_rings_margin(seg_mask, width=2, margin=1):
     
     return mask_rings
         
-
+        
+# A background correction is requested in a later exercise.
+# "correct_bg()" is an example solution.
 def correct_bg(img, export_path=None):
     """
     Apply background correction to image.
@@ -230,7 +232,7 @@ if __name__ == "__main__":
             # plt.imshow(img_nuc)
             # plt.imshow(img_KTR)
             
-        # correct the background
+        # correct the background (requested in later exercise)
         if fr_idx == 0:
             # if first frame, also export image to check whether
             # background correction was appropriate
