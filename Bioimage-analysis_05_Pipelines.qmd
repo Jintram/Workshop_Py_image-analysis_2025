@@ -14,7 +14,7 @@ To recap, remember we have seen:
 - Image **thresholding** creates a **mask**
     - This can be **labeled**
     - And **regionprops** can be determined.
-- We can **filter** the image (using labeled image or properties)
+- **Region-based processing** to manipulate an image (using labeled image or properties)
 - We can also *apply* morphology operations
     - **transformations**
     - **blurring**
@@ -158,7 +158,7 @@ to measurements on fluorescent signal are shown:
 
 <img src=images/figures/background_corr_example.png width=25%>
 
-The following table calculates the ratio between the nuclear and cytoplasmic 
+The following table shows the ratio between the nuclear and cytoplasmic 
 signal, both based on the raw signal, and on the background subtracted signal.
 This is done both for the inactive and active kinase. 
 

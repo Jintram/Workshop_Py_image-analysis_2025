@@ -323,6 +323,7 @@ Let's dive into convolutions.
 # Load an example picture
 img_pika = tiff.imread('images/misc/pikachu.tif')
 _= plt.imshow(img_pika)
+_= plt.colorbar()
 ```
 
 
@@ -443,7 +444,11 @@ the second derivative.
 In this case, similar to taking the derivative twice for a line $y(x)$ as in the
 picture above, pixels with a value close to zero constitute edges.
 
-***Technical note.*** Both the derivative and laplacian kernel can be used to find edges.
+::: {.callout-note}
+
+### Technical note
+
+Both the derivative and laplacian kernel can be used to find edges.
 The advantage of the Laplacian is that it better identifies the exact location
 of the edge, as the zero-crossing (pixels with values close to zero) are 
 precisely where the edge is. 
@@ -452,6 +457,8 @@ the derivative in the row-direction, or the derivative in the column-direction),
 so the output of two convolutions needs to be combined.
 Additionally, both can be sensitive to noise, why they are often combined
 with a de-noising convolution (e.g. blur), as we will see below.
+
+:::
 
 ## Dilution and erosion
 
@@ -466,7 +473,7 @@ img_pika_eroded  = sk.morphology.erosion(img_pika, footprint=np.ones((7,7)))
 img_pika_dilated = sk.morphology.dilation(img_pika, footprint=np.ones((7,7)))
 
 # Show
-plot_sidebyside_samecmap(img_pika_eroded, img_pika_dilated)
+_ = plot_sidebyside_samecmap(img_pika_eroded, img_pika_dilated)
 
 # Dilution = convolution, max val taken (or: any one  --> one)
 # Erosion  = convolution, min val taken (or: any zero --> zero)

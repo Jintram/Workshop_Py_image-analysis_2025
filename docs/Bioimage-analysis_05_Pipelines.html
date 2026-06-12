@@ -144,7 +144,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>This can be <strong>labeled</strong></li>
 <li>And <strong>regionprops</strong> can be determined.</li>
 </ul></li>
-<li>We can <strong>filter</strong> the image (using labeled image or properties)</li>
+<li><strong>Region-based processing</strong> to manipulate an image (using labeled image or properties)</li>
 <li>We can also <em>apply</em> morphology operations
 <ul>
 <li><strong>transformations</strong></li>
@@ -283,7 +283,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>An important consideration when quantifying intensity data, is correcting for the background level.</p>
 <p>For example, consider the following example, where intensity values corresponding to measurements on fluorescent signal are shown:</p>
 <p><img src="images/figures/background_corr_example.png" width="25%"></p>
-<p>The following table calculates the ratio between the nuclear and cytoplasmic signal, both based on the raw signal, and on the background subtracted signal. This is done both for the inactive and active kinase.</p>
+<p>The following table shows the ratio between the nuclear and cytoplasmic signal, both based on the raw signal, and on the background subtracted signal. This is done both for the inactive and active kinase.</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 20%">
@@ -362,7 +362,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>We’ve seen that sometimes computer annotations require human correction.</p>
 <p>A very convenient tool in image analysis is <code>Napari</code>. This allows a user to interactively view and edit images and segmentation masks. It also allows you to write custom functions that can be executed on click, or with widgets.</p>
 <p>Let’s load some example data:</p>
-<div id="f6a1473c" class="cell" data-execution_count="1">
+<div id="25625d18" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tifffile <span class="im">as</span> tiff</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -384,7 +384,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Now, it would be nice to be able to correct the mask in the picture above. Napari offers a way to do this:</p>
-<div id="ab17f5d7" class="cell" data-execution_count="2">
+<div id="a4e0c42d" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># now show this data in napari</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> napari</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skimage.measure <span class="im">import</span> label</span>
