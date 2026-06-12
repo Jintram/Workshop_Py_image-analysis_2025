@@ -110,7 +110,7 @@ You can set up a new colab document using the following code:
 !pip install scikit-image tifffile imageio
 ```
 
-#### Images to download
+#### Datasets to download
 
 - Example images;
     - [https://surfdrive.surf.nl/s/m2GE3GBwaxWKSDF](https://surfdrive.surf.nl/s/m2GE3GBwaxWKSDF)
