@@ -77,7 +77,7 @@ conda activate 2026_py_image_workshop
 # Add "conda-forge" to default channels
 conda config --add channels conda-forge
 # Libraries to install
-conda install matplotlib seaborn tifffile numpy scikit-image scipy imageio ipykernel napari
+conda install matplotlib seaborn tifffile numpy scikit-image scipy imageio ipykernel napari pandas pyyaml
 
 # You can choose to also install pytorch (doesn't work on all computers)
 # or use google colab for that chapter.
@@ -104,10 +104,10 @@ You can set up a new colab document using the following code:
 
 ```
 # These are likely already installed on Google Colab:
-!pip install numpy matplotlib seaborn scipy torch
+!pip install numpy matplotlib seaborn scipy torch pandas
 
 # These might need to be installed explicitly:
-!pip install scikit-image tifffile imageio
+!pip install scikit-image tifffile imageio napari pyyaml
 ```
 
 #### Datasets to download
