@@ -54,14 +54,20 @@ Regarding your experience:
 
 On your computer, we require you to have **before the workshop starts**:
 
-- A working conda environment with python installed ([link](https://www.biodsc.nl/posts/installing_conda_python.html)).
 - The software "FIJI" ([link](https://imagej.net/software/fiji/)).
+- 'conda' software (see this [link](https://www.biodsc.nl/posts/installing_conda_python.html)).
+- A 'conda environment' with the libraries listed below installed (see section below, "[Libraries to install](#libraries-to-install)").
 - And editor in which you can edit and run python code
     - For this advanced workshop we require an IDE (integrated development environment)
-    - Good options are Spyder, PyCharm or Visual Studio Code.
-    - See also this [link](https://www.biodsc.nl/posts/installing_conda_python.html) to see how to install Spyder.
-- The libraries listed below installed.
-- Download the datasets linked below.
+    - We'll be using "Spyder" during the workshop.
+    - To install Spyder and your conda environment: 
+        - [follow instructions here](https://docs.spyder-ide.org/current/installation.html) (section "standalone installers").
+        - In the conda environment that you created, type `which python`, to find
+        out your python path.
+        - In Spyder, open settings (pythonX.XX > preferences), go to 'Python interpreter', select 'Selected interpreter', and choose the python path identified in the previous step. (See also [this link](https://docs.spyder-ide.org/current/faq.html#using-existing-environment).)
+    - If you're familiar with Visual Studio Code or Pycharm, you can use those
+    IDEs as well.
+- Download the datasets linked below (see section below, "[Datasets to download](#datasets-to-download)").
 
 If you have trouble with installing any of these, **please contact us before
 the workshop**!
@@ -78,15 +84,15 @@ conda activate 2026_py_image_workshop
 conda config --add channels conda-forge
 # Libraries to install
 conda install matplotlib seaborn tifffile numpy scikit-image scipy imageio ipykernel napari pandas pyyaml
-# Install Spyder as well
-conda install conda-forge::spyder
 
 # You can choose to also install pytorch (doesn't work on all computers)
 # or use google colab for that chapter.
 conda install pytorch -c pytorch
 ```
 
-See also [this blog post](https://www.biodsc.nl/posts/installing_conda_python.html) to find out how to install Conda and an editor.
+To use this environment from the terminal, open a new terminal window, and type `conda activate 2026_py_image_workshop`.
+
+See also [this blog post](https://www.biodsc.nl/posts/installing_conda_python.html) to find out how to install Conda.
 
 #### Google Colab 
 
