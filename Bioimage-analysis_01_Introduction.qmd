@@ -55,7 +55,10 @@ Regarding your experience:
 On your computer, we require you to have **before the workshop starts**:
 
 - The software "FIJI" ([link](https://imagej.net/software/fiji/)).
-- 'conda' software (see this [link](https://www.biodsc.nl/posts/installing_conda_python.html)).
+- Conda software:
+    - See this [link](https://www.biodsc.nl/posts/installing_conda_python.html).
+        - You can stop once you've installed 'conda'.
+        - The rest of the text provides some background.
 - A 'conda environment' with the libraries listed below installed (see section below, "[Libraries to install](#libraries-to-install)").
 - And editor in which you can edit and run python code
     - For this advanced workshop we require an IDE (integrated development environment)
