@@ -56,7 +56,7 @@ On your computer, we require you to have **before the workshop starts**:
 
 - The software "FIJI" ([link](https://imagej.net/software/fiji/)).
 - Conda software:
-    - See this [link](https://www.biodsc.nl/posts/installing_conda_python.html#how-to-install-conda).
+    - See this [link](https://www.biodsc.nl/posts/installing_conda_python.html#how-to-install-conda) (section "How to install Conda").
         - You can stop once you've installed 'conda'.
         - The rest of the linked website provides some background.
 - A 'conda environment' with the libraries listed below installed (see section below, "[Libraries to install](#libraries-to-install)").
