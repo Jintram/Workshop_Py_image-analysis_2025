@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -146,15 +180,19 @@ ul.task-list li input[type="checkbox"] {
 </ul></li>
 </ul></li>
 <li>A ‘conda environment’ with the libraries listed below installed (see section below, “<a href="#libraries-to-install">Libraries to install</a>”).</li>
-<li>And editor in which you can edit and run python code
+<li>An editor in which you can edit and run python code
 <ul>
 <li>For this advanced workshop we require an IDE (integrated development environment)</li>
 <li>We’ll be using “Spyder” during the workshop.</li>
 <li>To install Spyder and your conda environment:
 <ul>
 <li><a href="https://docs.spyder-ide.org/current/installation.html">follow instructions here</a> (section “standalone installers”).</li>
-<li>In the conda environment that you created, type <code>which python</code>, to find out your python path.</li>
-<li>In Spyder, open settings (pythonX.XX &gt; preferences), go to ‘Python interpreter’, select ‘Selected interpreter’, and choose the python path identified in the previous step. (See also <a href="https://docs.spyder-ide.org/current/faq.html#using-existing-environment">this link</a>.)</li>
+<li>Now find out where Conda installed Python. Start the terminal/powershell/prompt. Activate your conda environment by <code>conda activate 2026_py_image_workshop</code>. Then,
+<ul>
+<li><strong>On a macbook:</strong> type <code>which python</code>, to find out the path.</li>
+<li><strong>On Windows:</strong> start Python using the <code>python</code> command. Now type the commands <code>import sys</code> and <code>print(sys.executable)​</code> to find out the path.</li>
+</ul></li>
+<li>In Spyder, open preferences (pythonX.XX &gt; preferences OR Tools &gt; Preferences), go to ‘Python interpreter’, select ‘Selected interpreter’, and choose the python path identified in the previous step. (See also <a href="https://docs.spyder-ide.org/current/faq.html#using-existing-environment">this link</a>.)</li>
 </ul></li>
 <li>If you’re familiar with Visual Studio Code or Pycharm, you can use those IDEs as well.</li>
 </ul></li>
@@ -170,13 +208,55 @@ conda activate 2026_py_image_workshop
 # Add "conda-forge" to default channels
 conda config --add channels conda-forge
 # Libraries to install
-conda install matplotlib seaborn tifffile numpy scikit-image scipy imageio ipykernel napari pandas pyyaml
+conda install matplotlib seaborn tifffile numpy scikit-image scipy imageio napari pandas pyyaml
+
+# Optional: ipykernel (useful when using VS Code)
+conda install ipykernel
 
 # You can choose to also install pytorch (doesn't work on all computers)
 # or use google colab for that chapter.
 conda install pytorch -c pytorch</code></pre>
 <p>To use this environment from the terminal, open a new terminal window, and type <code>conda activate 2026_py_image_workshop</code>.</p>
 <p>See also <a href="https://www.biodsc.nl/posts/installing_conda_python.html">this blog post</a> to find out how to install Conda.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Known challenges and solutions
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<section id="conda-needs-updating" class="level5">
+<h5 class="anchored" data-anchor-id="conda-needs-updating">Conda needs updating</h5>
+<p>Sometimes, conda needs to be updated before commands work. Use:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> update conda</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="installing-all-packages-at-once-not-working" class="level5">
+<h5 class="anchored" data-anchor-id="installing-all-packages-at-once-not-working">Installing all packages at once not working</h5>
+<p>Sometimes Napari will give installation issues. Or sometimes other packages might give issues. Try installing one by one.</p>
+<p>Napari might need to be installed using the following code (use these commands after activating the environment via <code>conda activate 2026_py_image_workshop</code>):</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> pip install <span class="st">"PyQt5&lt;5.16"</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> pip install <span class="st">"napari[pyqt5]"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This will explicitly install the PyQt5 dependency and then Napari.</p>
+</section>
+<section id="things-going-very-slowly" class="level5">
+<h5 class="anchored" data-anchor-id="things-going-very-slowly">Things going very slowly</h5>
+<p>If installation is extremely slow, you can try to use a much faster version of Conda, which is called “Mamba”.</p>
+<p>Install it first (after activating your environment via <code>conda activate 2026_py_image_workshop</code>):</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> install mamba</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>After this, you can replace any “conda” in your command with “mamba”, e.g.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Conda command:</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> install pandas</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Equivalent but faster:</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="ex">mamba</span> install pandas</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</div>
+</div>
+</div>
 </section>
 <section id="google-colab" class="level4">
 <h4 class="anchored" data-anchor-id="google-colab">Google Colab</h4>
