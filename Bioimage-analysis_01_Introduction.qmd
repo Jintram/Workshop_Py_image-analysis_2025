@@ -103,7 +103,7 @@ See also [this blog post](https://www.biodsc.nl/posts/installing_conda_python.ht
 
 ::: {.callout-warning collapse="true"}
 
-# Known challenges and solutions
+# Known issues and solutions
 
 ##### Conda needs updating
 
