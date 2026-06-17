@@ -3,3 +3,7 @@ html/*
 output-test/*
 answers/output-test/*
 .DS_Store
+pdf_py_ipynb/*.pdf
+pdf_py_ipynb/*.py
+pdf_py_ipynb/*.ipynb
+pdf_py_ipynb/*.html
