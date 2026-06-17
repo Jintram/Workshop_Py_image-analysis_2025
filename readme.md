@@ -4,17 +4,15 @@
 
 This is a collection of qmd files that serve as the basis for an image analysis
 workshop. 
-
 The workshop is intended to be given in the Carpentries style.
 
 This means the notebooks are teaching notes for *live coding* sessions, and 
 contain exercises.
-
 In the future, they are also intended as stand-alone course.
 
 For more information, see the rendered version of this repository, at:
 
-https://jintram.github.io/Workshop_Py_image-analysis_2025/
+- https://jintram.github.io/Workshop_Py_image-analysis_2025/
 
 
 
