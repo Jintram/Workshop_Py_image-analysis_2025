@@ -648,7 +648,7 @@
     "href": "Bioimage-analysis_03B_Imageprocessing.html#exercises",
     "title": "Workshop Python Image Analysis",
     "section": "Exercises",
-    "text": "Exercises\n\nWrite a function to segment a picture of nuclei, e.g. seg_nuclei(input_img).\n\nTest that it works.\n\nWrite a function that segments a picture of bacteria, e.g. seg_bacterium(input_img).\n\nTest that it works.\nRemember that pixels were 0.041 um wide. An average bacterium is ~1-2 μm long and .5-1 μm wide. Are bacterial sizes we observe consistent with this?"
+    "text": "Exercises\n\nWrite a function to segment a picture of nuclei, e.g. seg_nuclei(input_img).\n\nThe function should return a labeled mask, where each label corresponds to the respective pixels of a single nucleus.\nTest that it works.\n\nWrite a function that segments a picture of bacteria, e.g. seg_bacterium(input_img).\n\nThe function should return a labeled mask, where each label corresponds to the respective pixels of a single bacterium.\nTest that it works.\nRemember that pixels were 0.041 um wide. An average bacterium is ~1-2 μm long and .5-1 μm wide. Are bacterial sizes we observe consistent with this?"
   },
   {
     "objectID": "Bioimage-analysis_03B_Imageprocessing.html#additional-exercises",
