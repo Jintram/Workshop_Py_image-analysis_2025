@@ -1,0 +1,47 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# # Tools & remarks
+# 
+# ## Convenient tools
+# 
+# -   Generic tools
+#     -   [Napari](https://napari.org/stable/): interactive
+#         multidimensional image viewer and annotation tool, with a rich
+#         plugin ecosystem
+# -   Segmentation tools (ML based)
+#     -   [StarDist](https://github.com/stardist/stardist): robust nucleus
+#         and cell instance segmentation using star-convex shapes
+#     -   [Cellpose](https://www.cellpose.org/): generalist deep-learning
+#         segmentation for many cell types
+#     -   [micro-sam](https://github.com/computational-cell-analytics/micro-sam):
+#         SAM-based interactive and automated segmentation workflows for
+#         microscopy
+#     -   [OrganoidTracker](https://organoidtracker.org/): tracking and
+#         lineage analysis for organoid time-lapse data
+#     -   [ilastik](https://www.ilastik.org/): pixel/object classification
+#         and segmentation with minimal coding
+#     -   [biapy](https://biapyx.github.io/): (generic) deep
+#         learning-based segmentation and tracking for bioimage analysis
+# 
+# Additional tools (*suggested by LLM*):
+# 
+# -   [SimpleITK](https://simpleitk.org/): medical/microscopy image
+#     analysis tool package
+# -   [Squidpy](https://github.com/scverse/squidpy): spatial omics
+#     analysis with image feature extraction support
+# 
+# Convenient non-python tools:
+# 
+# -   [Fiji/ImageJ]((https://imagej.net/software/fiji/)): classic GUI
+#     platform with many plugins and macro support
+#     -   [Labkit](https://imagej.net/plugins/labkit/): interactive
+#         machine learning segmentation in Fiji
+#     -   [TrackMate](https://imagej.net/plugins/trackmate/):
+#         particle/cell tracking in Fiji
+# -   [CellProfiler](https://cellprofiler.org/): pipeline-based
+#     high-throughput image analysis and feature extraction
+# 
+# An extensive list of bio-image analysis tools:
+# 
+# -   <https://github.com/hallvaaw/awesome-biological-image-analysis>

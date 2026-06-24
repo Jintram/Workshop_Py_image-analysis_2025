@@ -1,0 +1,279 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# # Workshop Python Image Analysis
+# 
+# *Martijn Wehrens, 2026-04*
+# 
+# ## Chapter I: About, goals, setting up & introduction
+# 
+# ### About
+# 
+# There exist many good image analysis tutorials. I wrote this one because
+# it’s easier to teach my own texts, and it aims to follow the
+# *Carpentries* style code-along.
+# 
+# In this workshop, there are chunks of code that are intended to be typed
+# by the instructor, to be projected on a large screen. Workshop
+# participants should type along, in order to get “hands on” experience.
+# 
+# In addition, there are exercise parts, which participants can do on
+# their own, supervised by the instructor and helpers. Some parts are
+# notebooks on which you can work completely on your own.
+# 
+# ### Goals and philosophy
+# 
+# The goals of this python-based workshop are to teach you:
+# 
+# -   How to think about images on the computer
+# -   Learn about tools to modify images
+# -   Which tools are available in Python
+# -   Python syntax/concepts required to apply these tools
+# -   How to practically build an image analysis-pipeline
+# -   Some fundamentals of ML
+# 
+# The idea is *not* to train you in every single method that exists in
+# image analysis. We go over main ideas of image analysis, and the basics
+# of how to manipulate images.
+# 
+# Once you know what types of possibilities and tools to look for, you can
+# further explore them on your own using internet resources. Querying
+# Google, or asking “Claude”, “Chat” or “Gem” (ie Large Language Models,
+# or LLMs) for advice is very useful when programming. This course is
+# designed with the idea in mind that many further resources are available
+# to help you build the specific pipeline you need. This workshop intends
+# to give you an overview of what’s out there and a solid foundation to
+# build on.
+# 
+# ### The bioDSC
+# 
+# When you have your own particular challenges and want more specific
+# advice, don’t hesitate to contact me or my colleaguges at the biological
+# Data Science Center for advice at any time.
+# 
+# See <https://www.biodsc.nl/>.
+# 
+# ### Requirements
+# 
+# Regarding your experience:
+# 
+# -   We require you to have followed our “introduction to python” course,
+#     OR ..
+# -   .. require you to be familiar with the topics we taught there.
+# 
+# On your computer, we require you to have **before the workshop starts**:
+# 
+# -   The software “FIJI” ([link](https://imagej.net/software/fiji/)).
+# -   Conda software:
+#     -   See this
+#         [link](https://www.biodsc.nl/posts/installing_conda_python.html#how-to-install-conda)
+#         (section “How to install Conda”).
+#         -   You can stop once you’ve installed ‘conda’.
+#         -   The rest of the linked website provides some background.
+# -   A ‘conda environment’ with the libraries listed below installed (see
+#     section below, “[Libraries to install](#libraries-to-install)”).
+# -   An editor in which you can edit and run python code
+#     -   For this advanced workshop we require an IDE (integrated
+#         development environment)
+#     -   We’ll be using “Spyder” during the workshop.
+#     -   To install Spyder and your conda environment:
+#         -   [follow instructions
+#             here](https://docs.spyder-ide.org/current/installation.html)
+#             (section “standalone installers”).
+#         -   Now find out where Conda installed Python. Start the
+#             terminal/powershell/prompt. Activate your conda environment
+#             by `conda activate 2026_py_image_workshop`. Then,
+#             -   **On a macbook:** type `which python`, to find out the
+#                 path.
+#             -   **On Windows:** start Python using the `python` command.
+#                 Now type the commands `import sys` and
+#                 `print(sys.executable)​` to find out the path.
+#         -   In Spyder, open preferences (pythonX.XX \> preferences OR
+#             Tools \> Preferences), go to ‘Python interpreter’, select
+#             ‘Selected interpreter’, and choose the python path
+#             identified in the previous step. (See also [this
+#             link](https://docs.spyder-ide.org/current/faq.html#using-existing-environment).)
+#     -   If you’re familiar with Visual Studio Code or Pycharm, you can
+#         use those IDEs as well.
+# -   Download the datasets linked below (see section below, “[Datasets to
+#     download](#datasets-to-download)”).
+# 
+# If you have trouble with installing any of these, **please contact us
+# before the workshop**!
+# 
+# #### Libraries to install
+# 
+# You can create and activate an environment, plus install the required
+# libraries, with the commands below.
+# 
+# ``` {bash}
+# # Create and activate conda environment
+# conda create -n 2026_py_image_workshop
+# conda activate 2026_py_image_workshop
+# # Add "conda-forge" to default channels
+# conda config --add channels conda-forge
+# # Libraries to install
+# conda install matplotlib seaborn tifffile numpy scikit-image scipy imageio napari pandas pyyaml
+# 
+# # Optional: ipykernel (useful when using VS Code)
+# conda install ipykernel
+# 
+# # You can choose to also install pytorch (doesn't work on all computers)
+# # or use google colab for that chapter.
+# conda install pytorch -c pytorch
+# ```
+# 
+# To use this environment from the terminal, open a new terminal window,
+# and type `conda activate 2026_py_image_workshop`.
+# 
+# See also [this blog
+# post](https://www.biodsc.nl/posts/installing_conda_python.html) to find
+# out how to install Conda.
+# 
+# > **Known issues and solutions**
+# >
+# > ##### Conda needs updating
+# >
+# > Sometimes, conda needs to be updated before commands work. Use:
+# >
+# > ``` sh
+# > conda update conda
+# > ```
+# >
+# > ##### Installing all packages at once not working
+# >
+# > Sometimes Napari will give installation issues. Or sometimes other
+# > packages might give issues. Try installing one by one.
+# >
+# > Napari might need to be installed using the following code (use these
+# > commands after activating the environment via
+# > `conda activate 2026_py_image_workshop`):
+# >
+# > ``` sh
+# > python -m pip install "PyQt5<5.16"
+# > python -m pip install "napari[pyqt5]"
+# > ```
+# >
+# > This will explicitly install the PyQt5 dependency and then Napari.
+# >
+# > ##### Things going very slowly
+# >
+# > If installation is extremely slow, you can try to use a much faster
+# > version of Conda, which is called “Mamba”.
+# >
+# > Install it first (after activating your environment via
+# > `conda activate 2026_py_image_workshop`):
+# >
+# > ``` sh
+# > conda install mamba
+# > ```
+# >
+# > After this, you can replace any “conda” in your command with “mamba”,
+# > e.g.
+# >
+# > ``` sh
+# > # Conda command:
+# > conda install pandas
+# > # Equivalent but faster:
+# > mamba install pandas
+# > ```
+# 
+# #### Google Colab
+# 
+# There is a Google Colab document, which allows you to perform this
+# workshop online:
+# 
+# See:
+# <https://colab.research.google.com/drive/1qJgibG2-ACfXJZky_VMP8Wjm3quhpgY_?usp=sharing>
+# 
+# I recommend using your own IDE, such that you can later easily analyze
+# your own data. However, for the section on machine learning, this might
+# be necessary, as not all platforms easily allow pytorch installation and
+# configuration.
+# 
+# ##### For reference: specifying the (Colab) environment
+# 
+# You can set up a new colab document using the following code:
+# 
+#     # These are likely already installed on Google Colab:
+#     !pip install numpy matplotlib seaborn scipy torch pandas
+# 
+#     # These might need to be installed explicitly:
+#     !pip install scikit-image tifffile imageio napari pyyaml
+# 
+# #### Datasets to download
+# 
+# -   Example images;
+#     -   <https://surfdrive.surf.nl/s/m2GE3GBwaxWKSDF>
+#         <!-- This is a direct link to the repo.. -->
+# -   KTR example data;
+#     -   <https://surfdrive.surf.nl/s/dHCHgk66DTd7Hnz>
+#         <!-- Links to folder /Users/m.wehrens/Data_UVA/teaching/2026-04-Py_Img_Workshop -->
+# -   Bacterial filamentation data
+#     -   <https://surfdrive.surf.nl/s/FHaHjGWRNTxxzLT>
+#         <!-- Links to folder /Users/m.wehrens/Data_UVA/teaching/2026-04-Py_Img_Workshop -->
+# 
+# ### Regarding the use of LLMs
+# 
+# *Given the omnipresence of LLMs/AIs, a word of advice related to using
+# them.*
+# 
+# Large Language Models (LLMs) can be a very useful tool in building your
+# image analysis pipeline. I think they are most useful when you already
+# have a good level of knowledge of a specific topic (bio-image analysis
+# and python scripting in this case). In that case, you know which
+# questions to ask, and can assess the answers you get for correctness.
+# When you ask them to generate code, you can assess whether the code
+# makes sense, or is bloated with unnecessary parts, or is just plain
+# wrong – the latter two are a common occurence!.
+# 
+# If you want to become (intermediately) proficient in (bio-image
+# analysis) coding, I strongly advice you to *not* use AI to write all
+# your code. To gain skill, at least spend 50% of your time spend on
+# scripts writing your own code (you can ask AI questions ofcourse).
+# 
+# ***During this course, it’s strongly advised to <u>not</u> let AI
+# generate code for you.***
+# 
+# #### Contact us
+# 
+# In case of any problems, please do contact us (info@biodsc.nl)!
+# 
+# ### Acknowledgements
+# 
+# This course is (very loosely) based on https://bioimagebook.github.io/,
+# which is available under the [Creative Commons
+# license](https://creativecommons.org/licenses/by/4.0/).
+# 
+# We’ll be using two example image sets for this tutorial, plus some
+# additional single examples. Those two sets come from:
+# 
+# -   Sergei Chavez-Abiega et al. (2022), “Single-cell imaging of ERK and
+#     Akt activation dynamics and heterogeneity induced by
+#     G-protein-coupled receptors”, Journal of Cell Science,
+#     https://doi.org/10.1242/jcs.259685
+# -   Martijn Wehrens et al. (2018), “Size Laws and Division Ring Dynamics
+#     in Filamentous Escherichia Coli Cells”, Current Biology,
+#     https://doi.org/10.1016/j.cub.2018.02.006.
+# 
+# ## Let’s start: Introduction
+# 
+# ### Organization
+# 
+# -   Slides;
+#     -   Introducing the bioDSC
+#     -   Introduce yourselves
+#     -   Introducing Carpentries style teaching.
+# 
+# ### Why use python to analyze images?
+# 
+# (Ask participants what they think.)
+# 
+# -   Biological data can be generated at scale
+# 
+# -   Automated analysis
+# 
+#     -   Save human labor, scalable
+#     -   Transparant, reproducible
+#     -   Unbiased
+#     -   Highly customizable

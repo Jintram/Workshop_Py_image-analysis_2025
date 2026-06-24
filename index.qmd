@@ -101,3 +101,7 @@ course topics, philosophy and goals.
 4. [Answers to exercises 04](answers/Bioimage-analysis_04_answers.qmd)
 5. [Answers to exercises 05](answers/Bioimage-analysis_05_answers.qmd)
 
+
+
+
+

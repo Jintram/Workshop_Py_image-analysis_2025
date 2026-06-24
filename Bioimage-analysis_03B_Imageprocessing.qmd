@@ -49,7 +49,9 @@ FIGSIZE21 = (10/2.54, 5/2.54)
 ```{python}
 
 # Load part of the KTR data (Chavez-Abiega et al.)
-img_path_KTR = '/Users/m.wehrens/Data_notbacked/2025_Py-Image-workshop_KTR-example-data/raw/Composite_KTR.tif'
+img_path_KTR = \
+    '/Users/m.wehrens/Data_notbacked/'+\
+    '2025_Py-Image-workshop_KTR-example-data/raw/Composite_KTR.tif'
 img_nuclei = tiff.imread(img_path_KTR)[0, 0, 0:200, 0:200]
 
 # Let's also load an image of some bacteria (Wehrens et al.)
@@ -219,7 +221,12 @@ This can be done with the function `threshold_local()`.
 # Let's use the page as an example
 img_page = tiff.imread("images/misc/page_original.tif")
 img_page_inv = np.max(img_page)-img_page
-thresh_local = sk.filters.threshold_local(img_page_inv, block_size=35, offset=-10)
+thresh_local = \
+    sk.filters.threshold_local(
+        img_page_inv, 
+        block_size=35, 
+        offset=-10
+    )
     # block size is the size of the neighborhood
     # offset is the local contrast (is subtracted to create threshold)
     # 
@@ -234,7 +241,8 @@ _ = plt.imshow(img_page_inv>thresh_local, cmap='gray')
 plt.show()
 
 # Note that the image should be inverted to get correct foreground/background
-# Note that the offset parameter is subtracted from preliminary threshold, therefor -10
+# Note that the offset parameter is subtracted from preliminary threshold, 
+# therefor -10
 
 ```
 
@@ -271,7 +279,8 @@ fig = plot_sidebyside(img_ecoli_inv, mask_ecoli_otsu)
 ```{python}
 
 # The Triangle method
-mask_ecoli_triangle = img_ecoli_inv > sk.filters.threshold_triangle(img_ecoli_inv)
+mask_ecoli_triangle = \
+    img_ecoli_inv > sk.filters.threshold_triangle(img_ecoli_inv)
 fig = plot_sidebyside(img_ecoli_inv, mask_ecoli_triangle)
 
 # Challenges:
@@ -287,7 +296,10 @@ some bacteria are not separated well.
 
 ```{python}
 # Applying local thresholding
-mask_ecoli_local = img_ecoli_inv > sk.filters.threshold_local(img_ecoli_inv, block_size=35, offset=-10)
+mask_ecoli_local = \
+    img_ecoli_inv > sk.filters.threshold_local(
+        img_ecoli_inv, block_size=35, offset=-10
+        )
 fig = plot_sidebyside(img_ecoli_inv, mask_ecoli_local)
 
 # Looks good
@@ -386,8 +398,14 @@ kernel_laplacian = np.array(
      [0, -1,  0]])
 
 # Now apply and plot
-img_pika_disk = ndimage.convolve(img_pika.astype(np.float32), kernel_disk.astype(np.float32))
-img_pika_edge = ndimage.convolve(img_pika.astype(np.float32), kernel_laplacian.astype(np.float32))
+img_pika_disk = ndimage.convolve(
+    img_pika.astype(np.float32), 
+    kernel_disk.astype(np.float32)
+    )
+img_pika_edge = ndimage.convolve(
+    img_pika.astype(np.float32), 
+    kernel_laplacian.astype(np.float32)
+    )
 minmaxval1 = np.max(np.abs(img_pika_disk))
 _ = plt.imshow(img_pika_disk, cmap='seismic', vmin=-minmaxval1, vmax=minmaxval1)
 ```
@@ -421,9 +439,12 @@ kernel_1d_laplac = np.array([1, -2, 1])
 # # way such that ndimage.convolve(kernel_1d_deriv, kernel_1d_deriv) returns 
 # # another result.
 
-example_ramp = np.concatenate( (np.zeros(10), 
-                                np.array([1, 1, 2, 5, 15, 25, 35, 45, 48, 49, 49]), 
-                                np.ones(10)*50))
+example_ramp = \
+    np.concatenate( 
+        (np.zeros(10), 
+        np.array([1, 1, 2, 5, 15, 25, 35, 45, 48, 49, 49]), 
+        np.ones(10)*50)
+    )
 example_ramp_deriv      = ndimage.convolve(example_ramp, kernel_1d_deriv)
 example_ramp_derivderiv = ndimage.convolve(example_ramp, kernel_1d_laplac)
  
@@ -490,9 +511,17 @@ These operations are also commonly applied to binary images.
 ```{python}
 # They can also be combined
 # Morphological closing (dilation followed by erosion)
-img_pika_closed = sk.morphology.closing(img_pika, footprint=sk.morphology.disk(7))
+img_pika_closed = \
+    sk.morphology.closing(
+        img_pika,
+        footprint=sk.morphology.disk(7)
+    )
 # Morphological opening (erosion followed by dilation)
-img_pika_opened = sk.morphology.opening(img_pika, footprint=sk.morphology.disk(7))
+img_pika_opened = \
+    sk.morphology.opening(
+        img_pika, 
+        footprint=sk.morphology.disk(7)
+    )
 
 # Show the result
 _ = plot_sidebyside_samecmap(img_pika_closed, img_pika_opened)
@@ -608,9 +637,17 @@ _ = plt.imshow(mask_ecoli_triangle)
 # Modify this mask
 
 # Remove small parts
-mask_ecoli_triangle_filtered = sk.morphology.remove_small_objects(mask_ecoli_triangle, min_size=50)
+mask_ecoli_triangle_filtered = \
+    sk.morphology.remove_small_objects(
+        mask_ecoli_triangle, 
+        min_size=50
+    )
 # Enlarge it
-mask_ecoli_triangle_filtered = sk.morphology.dilation(mask_ecoli_triangle_filtered, footprint=sk.morphology.disk(8))
+mask_ecoli_triangle_filtered = \
+    sk.morphology.dilation(
+        mask_ecoli_triangle_filtered, 
+        footprint=sk.morphology.disk(8)
+    )
 
 _ = plt.title("Whole-colony mask (based triangle)")
 _ = plt.imshow(mask_ecoli_triangle_filtered)
@@ -641,7 +678,11 @@ Let's at least identify separate bacteria.
 ```{python}
 # Let's erode this by 4 px
 # (Aim: get indivdual bacterial locations)
-mask_ecoli_log_eroded = sk.morphology.erosion(img_edges_filled, footprint=sk.morphology.disk(4))
+mask_ecoli_log_eroded = \
+    sk.morphology.erosion(
+        img_edges_filled, 
+        footprint=sk.morphology.disk(4)
+    )
 
 # Show
 _ = plt.imshow(mask_ecoli_log_eroded, cmap='gray')
@@ -666,7 +707,12 @@ _ = plt.imshow(mask_bacteria_slim_labeled, cmap='tab20')
 # Apply to separate bacteria
     # Using mask_ecoli_log
     # mask_bacteria_slim_labeled as seeds
-mask_bacteria_combined = sk.segmentation.watershed(-1*img_edges_filled, markers=mask_bacteria_slim_labeled, mask=img_edges_filled)
+mask_bacteria_combined = \
+    sk.segmentation.watershed(
+        -1*img_edges_filled, 
+        markers=mask_bacteria_slim_labeled, 
+        mask=img_edges_filled
+    )
 
 # Show the result
 _ = plt.imshow(mask_bacteria_combined, cmap='viridis')
