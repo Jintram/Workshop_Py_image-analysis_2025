@@ -196,3 +196,6 @@ python KTR_plot.py /path/to/KTR_ratios_ch1.csv 25
 
 ```
 
+This will generate a plot that looks as follows:
+
+<img src="figures/KTR_ratios_ch1_overtime.png" width=45%>
